@@ -1,0 +1,9 @@
+{
+  "feeds": [
+    { "id": "hatena-it", "name": "はてブ テクノロジー", "url": "https://b.hatena.ne.jp/hotentry/it.rss", "lang": "ja", "maxItems": 10 },
+    { "id": "zenn", "name": "Zenn トレンド", "url": "https://zenn.dev/feed", "lang": "ja", "maxItems": 10 },
+    { "id": "qiita", "name": "Qiita 人気記事", "url": "https://qiita.com/popular-items/feed", "lang": "ja", "maxItems": 10 },
+    { "id": "hackernews", "name": "Hacker News", "url": "https://hnrss.org/frontpage", "lang": "en", "maxItems": 15 },
+    { "id": "publickey", "name": "Publickey", "url": "https://www.publickey1.jp/atom.xml", "lang": "ja", "maxItems": 8 }
+  ]
+}
