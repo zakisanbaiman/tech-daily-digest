@@ -1,3 +1,4 @@
+import { groupByGenre, type GenreGroup } from "./genre.js";
 import type { AiSummary, Article, DigestData, FeedResult } from "./types.js";
 
 export interface RenderOptions {
@@ -30,6 +31,9 @@ function renderTopPicks(summary: AiSummary, articles: Article[]): string {
     .map((pick, i) => {
       const article = byUrl.get(pick.url);
       if (!article) return "";
+      const thumb = pick.imageUrl
+        ? `<img class="pick-thumb" src="${escapeHtml(pick.imageUrl)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`
+        : "";
       return `
       <li class="pick">
         <span class="pick-no">${String(i + 1).padStart(2, "0")}</span>
@@ -38,6 +42,7 @@ function renderTopPicks(summary: AiSummary, articles: Article[]): string {
           <p class="pick-reason">${escapeHtml(pick.reason)}</p>
           <span class="pick-source">${escapeHtml(article.sourceNames.join(" × "))}</span>
         </div>
+        ${thumb}
       </li>`;
     })
     .join("");
@@ -48,13 +53,28 @@ function renderTopPicks(summary: AiSummary, articles: Article[]): string {
   </section>`;
 }
 
-function renderArticle(article: Article, summaryJa: string | undefined): string {
+interface ArticleRenderOptions {
+  /** おすすめ度（ジャンル別レイアウトのみ） */
+  stars?: number;
+  /** 媒体バッジを常に表示するか（ジャンル別レイアウトでは媒体がセクションから消えるため必須） */
+  showSource?: boolean;
+}
+
+function renderArticle(
+  article: Article,
+  summaryJa: string | undefined,
+  options: ArticleRenderOptions = {},
+): string {
   const badges: string[] = [];
-  if (article.sources.length > 1) {
+  if (options.showSource || article.sources.length > 1) {
+    const multi = article.sources.length > 1;
     badges.push(
-      `<span class="badge badge-multi">${escapeHtml(article.sourceNames.join(" × "))}</span>`,
+      `<span class="badge ${multi ? "badge-multi" : "badge-source"}">${escapeHtml(article.sourceNames.join(" × "))}</span>`,
     );
   }
+  const stars = options.stars
+    ? `<span class="stars stars-${options.stars}">${"★".repeat(options.stars)}</span>`
+    : "";
   const metaBits: string[] = [];
   if (article.meta.points !== undefined) {
     metaBits.push(`▲ ${article.meta.points}`);
@@ -75,7 +95,7 @@ function renderArticle(article: Article, summaryJa: string | undefined): string 
     : "";
   return `
     <li class="article">
-      <a class="article-title" href="${escapeHtml(article.url)}">${escapeHtml(article.title)}</a>
+      ${stars}<a class="article-title" href="${escapeHtml(article.url)}">${escapeHtml(article.title)}</a>
       ${badges.join("")}
       ${metaBits.length > 0 ? `<span class="article-meta">${metaBits.join(" · ")}</span>` : ""}
       ${translation}
@@ -108,27 +128,67 @@ function renderFeedSection(
   </section>`;
 }
 
+function renderGenreSection(
+  group: GenreGroup,
+  summaries: Map<string, string>,
+): string {
+  const items = group.articles
+    .map((article) =>
+      renderArticle(article, summaries.get(article.url), {
+        stars: article.stars,
+        showSource: true,
+      }),
+    )
+    .join("");
+  return `
+  <section class="feed genre" style="--g: ${group.genre.color}">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${group.genre.icon}</svg>${escapeHtml(group.genre.label)}<span class="section-count">${group.articles.length}</span></h2>
+    <ul class="articles">${items}</ul>
+  </section>`;
+}
+
+/** ジャンル別レイアウトでは媒体セクションが消えるので、取得失敗はまとめて末尾に出す */
+function renderFeedErrors(feedResults: FeedResult[]): string {
+  const failed = feedResults.filter((result) => result.error);
+  if (failed.length === 0) return "";
+  const notes = failed
+    .map((result) => `${escapeHtml(result.feed.name)}（${escapeHtml(result.error ?? "")}）`)
+    .join("、");
+  return `<p class="feed-errors">取得失敗: ${notes}</p>`;
+}
+
 export function renderDigest(data: DigestData, options: RenderOptions): string {
   const summaries = new Map(
     (data.aiSummary?.enSummaries ?? []).map((s) => [s.url, s.summaryJa]),
   );
-  // 重複除去で統合された記事は「最初に載ったフィード」のセクションにだけ出す
-  const firstOwner = new Map(
-    data.articles.map((a) => [a.url, a.sources[0] ?? ""]),
-  );
-  const sections = data.feedResults
-    .map((result) =>
-      renderFeedSection(
-        result,
-        new Set(
-          data.articles
-            .filter((a) => firstOwner.get(a.url) === result.feed.id)
-            .map((a) => a.url),
+  const classifications = data.aiSummary?.classifications ?? [];
+  let sections: string;
+  if (classifications.length > 0) {
+    // ジャンル別レイアウト（媒体横断）
+    sections =
+      groupByGenre(data.articles, classifications)
+        .map((group) => renderGenreSection(group, summaries))
+        .join("") + renderFeedErrors(data.feedResults);
+  } else {
+    // AI分類なしのフォールバック: 媒体別レイアウト。
+    // 重複除去で統合された記事は「最初に載ったフィード」のセクションにだけ出す
+    const firstOwner = new Map(
+      data.articles.map((a) => [a.url, a.sources[0] ?? ""]),
+    );
+    sections = data.feedResults
+      .map((result) =>
+        renderFeedSection(
+          result,
+          new Set(
+            data.articles
+              .filter((a) => firstOwner.get(a.url) === result.feed.id)
+              .map((a) => a.url),
+          ),
+          summaries,
         ),
-        summaries,
-      ),
-    )
-    .join("");
+      )
+      .join("");
+  }
 
   const overview = data.aiSummary?.dailyOverview
     ? `<p class="overview">${escapeHtml(data.aiSummary.dailyOverview)}</p>`
@@ -269,7 +329,29 @@ section:nth-of-type(7) { animation-delay: .47s; }
   border-radius: 2px;
 }
 .badge-ja { margin: 0 6px 0 0; vertical-align: 1px; }
+.badge-source { border-color: color-mix(in srgb, var(--muted) 55%, transparent); color: var(--muted); }
 .feed-error { color: var(--muted); font-size: 13px; }
+.feed-errors { margin-top: 36px; font-size: 12px; color: var(--muted); }
+
+.genre { --g-disp: var(--g); }
+@media (prefers-color-scheme: dark) {
+  .genre { --g-disp: color-mix(in srgb, var(--g) 55%, #f0e8d8); }
+}
+.genre .section-title { color: var(--g-disp); border-bottom-color: color-mix(in srgb, var(--g-disp) 60%, transparent); align-items: center; }
+.genre .section-count { color: var(--muted); }
+.genre-icon { width: 19px; height: 19px; flex-shrink: 0; }
+.stars { font-size: 11.5px; letter-spacing: 2px; margin-right: 8px; color: var(--accent); vertical-align: 1.5px; }
+.stars-1 { color: var(--muted); opacity: .55; }
+.pick-thumb {
+  width: 108px;
+  height: 76px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
+}
+@media (max-width: 480px) { .pick-thumb { width: 80px; height: 60px; } }
 
 footer {
   margin-top: 56px;
