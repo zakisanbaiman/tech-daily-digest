@@ -28,10 +28,28 @@ export interface FeedResult {
   error?: string;
 }
 
+export type GenreId =
+  | "ai-llm"
+  | "web"
+  | "infra"
+  | "security"
+  | "lang-tools"
+  | "career"
+  | "science"
+  | "misc";
+
+export interface ArticleClassification {
+  url: string;
+  genre: GenreId;
+  /** おすすめ度 1〜3（3が必読） */
+  stars: number;
+}
+
 export interface AiSummary {
   dailyOverview: string;
-  topPicks: { url: string; reason: string }[];
+  topPicks: { url: string; reason: string; imageUrl?: string }[];
   enSummaries: { url: string; summaryJa: string }[];
+  classifications: ArticleClassification[];
 }
 
 export interface DigestData {
