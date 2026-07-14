@@ -147,25 +147,53 @@ footer {
     <h1>Tech Daily <span class="accent">Digest</span></h1>
     <div class="masthead-sub">毎朝の技術情報、一枚に。</div>
   </header>
+  <p class="overview">生成AIを開発工程に組み込むための実践知が中心で、AIエージェントの安全な実行、コードレビュー、セキュリティ、開発ワークフロー設計に関する記事が目立ちます。インフラ・データベースではCloud Runサンドボックス、PostgreSQL 19、分散PostgreSQL、ECSのデプロイパターンなど、実運用を意識したアップデートが揃っています。</p>
   
-  
+  <section class="top-picks">
+    <h2 class="section-title">今日の注目</h2>
+    <ol class="picks">
+      <li class="pick">
+        <span class="pick-no">01</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.publickey1.jp/blog/26/google_cloudaicloud_run.html">Google Cloud、生成AIのコードを瞬時に隔離して安全に実行できる「Cloud Runサンドボックス」パブリックプレビュー</a>
+          <p class="pick-reason">生成AIが生成した信頼できないコードを隔離実行するCloud Runサンドボックスの解説です。AIエージェントを業務やプロダクトに組み込む際の実行環境・権限設計を考えるうえで、実務的な重要度が高い記事です。</p>
+          <span class="pick-source">Publickey</span>
+        </div>
+      </li>
+      <li class="pick">
+        <span class="pick-no">02</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.publickey1.jp/blog/26/javascriptbunclaude_fable_511zigrustclaude.html">JavaScriptランタイムのBun、Claude Fable 5を11日間稼働させてZigからRustへの移植を実現。Claudeをどう使ったのか？</a>
+          <p class="pick-reason">Bunが約53万5000行のZigコードをClaudeを活用してRustへ移植した事例です。大規模なコード変換にAIを使う際の可能性と、検証・品質管理の課題を考える材料になります。</p>
+          <span class="pick-source">Publickey</span>
+        </div>
+      </li>
+      <li class="pick">
+        <span class="pick-no">03</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://zenn.dev/iwaken71/articles/cursor-agent-d-drive-deleted">Cursorに「不要なブランチを整理して」と頼んだら、Dドライブが消えた話</a>
+          <p class="pick-reason">AIエージェントにブランチ整理を依頼した結果、ドライブ内のデータが消失した事例です。AIにシェル操作を任せる際の権限分離、削除操作の確認、バックアップなど、導入時に必ず検討すべき安全策を具体的に考えられます。</p>
+          <span class="pick-source">Zenn トレンド</span>
+        </div>
+      </li></ol>
+  </section>
   
   <section class="feed">
     <h2 class="section-title">はてブ テクノロジー<span class="section-count">10</span></h2>
     <ul class="articles">
     <li class="article">
-      <a class="article-title" href="https://note.com/suh_sunaneko/n/n98c16a0479ba">AI使いすぎるとプロジェクトマネジメント力が低下する｜すぅ | AI駆動PM</a>
-      
-      
-      
-      <p class="article-excerpt">「AIを使いすぎると、プロジェクトマネジメント力が落ちる。」 AI漬けの育休生活から現場に戻ってきて、私が実感したことです。 この記事では、なぜAI依存でPM力が落ちるのかを整理していきます。 AI漬けの育休明け、数十人規模の現場に戻って感じた不安私は直近の半年間、育休を取っていました。ただ、この期間もプロジ...</p>
-    </li>
-    <li class="article">
       <a class="article-title" href="https://jivx.com/densha">densha — study Japanese in a living voxel Tokyo</a>
       
       
       
-      <p class="article-excerpt">densha — ride a living voxel Tokyo and study JapaneseRide the Yamanote line through a voxel Tokyo synced to Japan&#39;s real clock, weather, and seasons. A lofi bed plays while N5 sentences are read aloud and drift by as subtitles — an ambient Japanese study room you just press play into. p�# ��</p>
+      <p class="article-excerpt">densha — ride a living voxel Tokyo and study JapaneseRide the Yamanote line through a voxel Tokyo synced to Japan&#39;s real clock, weather, and seasons. A lofi bed plays while N5 sentences are read aloud and drift by as subtitles — an ambient Japanese study room you just press play into. 0�B ��</p>
+    </li>
+    <li class="article">
+      <a class="article-title" href="https://speakerdeck.com/kenicazu/aws-summit-japan-2026-ecs-deploy-pattern-dive-deep">[AWS Summit Japan 2026] Amazon ECS 最新デプロイパターン Deep Dive</a>
+      
+      
+      
+      <p class="article-excerpt">AWS Summit Japan 2026 の Developer on Live にて発表させていただいた資料となります。</p>
     </li>
     <li class="article">
       <a class="article-title" href="https://mizzy.org/blog/2026/07/13/2/">DevOpsとは何だったのか</a>
@@ -173,6 +201,13 @@ footer {
       
       
       <p class="article-excerpt">SRE NEXT 2026の記事で、maruさん、ゆううきさん、Moriさんとの立ち話から、こんなポストをした、ということを書いた。 https://t.co/mGZbILmQRK にある「開発の時系列上の役割と、技術レイヤーの話が混ざっている」という話、maruさん、yuukiさん、moriさんと立ち話してた時に出た話で、DevOpsもそうだよね、という話に...</p>
+    </li>
+    <li class="article">
+      <a class="article-title" href="https://note.com/suh_sunaneko/n/n98c16a0479ba">AI使いすぎるとプロジェクトマネジメント力が低下する｜すぅ | AI駆動PM</a>
+      
+      
+      
+      <p class="article-excerpt">「AIを使いすぎると、プロジェクトマネジメント力が落ちる。」 AI漬けの育休生活から現場に戻ってきて、私が実感したことです。 この記事では、なぜAI依存でPM力が落ちるのかを整理していきます。 AI漬けの育休明け、数十人規模の現場に戻って感じた不安私は直近の半年間、育休を取っていました。ただ、この期間もプロジ...</p>
     </li>
     <li class="article">
       <a class="article-title" href="https://speakerdeck.com/mae616/aiqu-dong-kai-fa-wakuhuroshe-ji">AI駆動開発_ワークフロー設計</a>
@@ -189,39 +224,32 @@ footer {
       <p class="article-excerpt">すまほん!! » ニュース » 噂・リーク情報 » QWERTY物理キーボード搭載の電子ペーパーPDA「PocketMage」登場！電池7日持ち3万円から QWERTYキーボード搭載の小型端末「PocketMage」のクラウドファンディングがCrowd Supplyで始まったようです。 価格はDIYキットが185ドル（約3万円）、組み立て済みが235ドル（約3万8000円...</p>
     </li>
     <li class="article">
-      <a class="article-title" href="https://tech.jxpress.net/entry/2026/07/13/113000">Cloudflare Workers は AI 搭載の Slack ボットを簡単に作れていいぞ - JX通信社エンジニアブログ</a>
+      <a class="article-title" href="https://useblume.dev/">Blume — fast, AI-ready, markdown-first docs</a>
       
       
       
-      <p class="article-excerpt">こんにちは、JX通信社で CTO をしている小笠原(@yamitzky)です。 JX 通信社の Slack では、プレスリリースへの反響や、弊社の情勢調査事業に関する発信や、ニュースアプリの「NewsDigest（ニュースダイジェスト）」についての言及を監視するチャンネルがあります。皆さんの会社でも、広報部門が自社の反響を見ているので...</p>
+      <p class="article-excerpt">Latest update, v1.0.3World-class docs foreverything you ship.Fast, AI-ready, and zero-config. Drop Markdown into a folder and ship a production-grade docs site, no app boilerplate to write or maintain. Free and open source, forever.</p>
     </li>
     <li class="article">
-      <a class="article-title" href="https://www.nikkei.com/article/DGXZQOUC1383Z0T10C26A7000000/">ニチレイ、不正アクセスでシステム障害 冷凍食品の出荷業務に影響 - 日本経済新聞</a>
+      <a class="article-title" href="https://mizzy.org/blog/2026/07/13/1/">SRE NEXT 2026に参加してきた</a>
       
       
       
-      <p class="article-excerpt">ニチレイは13日、不正アクセスによるシステム障害が発生したと発表した。冷蔵倉庫の入出庫業務や冷凍食品の出荷業務に影響が生じているといい、影響の範囲や程度を調査している。同社によると、現時点で個人情報や顧客データが</p>
+      <p class="article-excerpt">SRE NEXT 2026に参加してきた雑なメモ。セッション聴きたくて行ったというより、人に会いたくて行ったので、セッションレポート的なものではないです。そういったものを期待されている方は、読まずに離れることをおすすめします。本当に雑な個人日記です。 前日 会場が有明で、日帰りで行ける距離ではあるのだけど、片道...</p>
     </li>
     <li class="article">
-      <a class="article-title" href="https://gigazine.net/news/20260713-school-smartphone-bans-mental-health/">中学校でのスマホ禁止ルールは生徒の生活の質や健康状態を大幅に改善することはないとの研究結果</a>
+      <a class="article-title" href="https://zenn.dev/aircloset/articles/3b8e60fcaab4b7">AI時代のObservability設計 - PIIとAIの検索性を両立させ、自動修復する（実践編）</a>
       
       
       
-      <p class="article-excerpt">各国では学校でのスマートフォン使用を禁止する動きが強まっており、これにより生徒の集中力やメンタルヘルスが改善すると期待されています。ところが新たな研究では、中学校におけるスマートフォン禁止ルールは、生徒の生活の質や健康状態に大きな影響をもたらさないとの結果が示されました。 Health economics analysi...</p>
+      <p class="article-excerpt">みなさまこんにちは！エアークローゼットでCTOをしている辻です。 設計編では、アプリケーション / インフラ / CI / LLMの4軸を、それぞれの問いの性質に合わせて別々の形でObservableにする話を書きました。ここまでで観測スタックの書き込み側は一旦区切ったところです。 ただし、「Observableにしただけ」で話は終わ...</p>
     </li>
     <li class="article">
-      <a class="article-title" href="https://zenn.dev/dehio3/articles/202607_fire-hd-bus-arrival-signage">余ったFire HDでバス到着案内サイネージを自作した</a>
+      <a class="article-title" href="https://posfie.com/@golden_haniwa/p/PAHLK0I">【私が校長です】PCエンジンのサウンドドライバはBIOS側持ちか、それともゲーム側だったのか議論になるが、開発者本人が登場</a>
       
       
       
-      <p class="article-excerpt">はじめに 以前、西武バスの到着予測をAlexaで案内するスキルを作った話を書きました。ODPT(公共交通オープンデータセンター)のリアルタイムデータへ移行し、「話しかければバスの到着時刻を教えてくれる」仕組みは安定して動くようになりました。 ただ実際に使ってみると、通勤前のバタバタしたタイミングで「Alexa、バ...</p>
-    </li>
-    <li class="article">
-      <a class="article-title" href="https://www.itmedia.co.jp/aiplus/article/2607/13/2000000187/">アニメ特化動画生成AI「AnimeGen」無償公開、商用利用も可 国内AIベンチャーAIdeaLab</a>
-      
-      
-      
-      <p class="article-excerpt">アニメ特化動画生成AI「AnimeGen」無償公開、商用利用も可 国内AIベンチャーAIdeaLab（1/2 ページ） AI開発企業のAIdeaLab（東京都千代田区）は7月13日、アニメに特化した動画生成AIモデル「AnimeGen」（アニメジェン）の正式版を無償で公開した。ライセンスは商用利用もできる「Apache-2.0」。アニメ特化の動画生成AI...</p>
+      <p class="article-excerpt">Kitao Nakamura (中村北郎) @kitao_n PCエンジンのCDゲームは、一番古い「システムカードv1.0」で楽しもう！ v1.0 ・味わいある小さめ仮名フォント ・優秀なサウンドドライバ スーパーCD(v3.0)用ではないゲームは、v1.0のフォントやドライバに合わせて作られていたものが多いようです。 初期のゲームはv1.0で遊ぶと本来...</p>
     </li></ul>
   </section>
   <section class="feed">
@@ -376,108 +404,108 @@ footer {
     <h2 class="section-title">Hacker News<span class="section-count">15</span></h2>
     <ul class="articles">
     <li class="article">
-      <a class="article-title" href="https://www.dailymail.com/sciencetech/article-15973745/california-earthquake-unlocks-san-andreas-garlock.html">California rocked by another earthquake that will unleash the Big One</a>
+      <a class="article-title" href="https://newsletter.pragmaticengineer.com/p/forward-deployed-engineers">What are Forward Deployed Engineers, and why are they so in demand? (2025)</a>
       
-      <span class="article-meta">▲ 3 · <a href="https://news.ycombinator.com/item?id=48899741">2 comments</a></span>
-      
-      
-    </li>
-    <li class="article">
-      <a class="article-title" href="https://1shotchallenge.ai">Show HN: I built a one-prompt hackathon platform, free entry, sponsored prizes</a>
-      
-      <span class="article-meta">▲ 4 · <a href="https://news.ycombinator.com/item?id=48899620">0 comments</a></span>
-      
+      <span class="article-meta">▲ 16 · <a href="https://news.ycombinator.com/item?id=48900432">17 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>顧客の現場に入り込み、導入支援や個別開発を担うForward Deployed Engineerの役割を解説し、なぜ現在この職種の需要が高まっているのかを論じる記事です。</p>
       
     </li>
     <li class="article">
-      <a class="article-title" href="https://github.com/thephw/claude-meseeks">Claude is just Mr. Meeseeks</a>
+      <a class="article-title" href="https://sleuth-io.github.io/sx/2026/07/10/your-dropbox-is-now-a-skill-server.html">Show HN: Sx 2.0 – Share AI skills with your team through a Dropbox folder</a>
       
-      <span class="article-meta">▲ 4 · <a href="https://news.ycombinator.com/item?id=48899529">0 comments</a></span>
       
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Dropboxフォルダを使って、AIクライアント間でスキルをチーム共有できるSx 2.0の紹介です。Gitを保存先にせず、個人・チーム・組織単位でAIスキルを配布する仕組みを扱います。</p>
+      <p class="article-excerpt">Hi all, author here. SX started as a CLI to let developers share skills across AI clients without having to rely on git for storage. This allowed sharing at the Repo/Team/Org and Personal level. However, the more we spoke to users the more we realized that non-technical users were actually using ski…</p>
+    </li>
+    <li class="article">
+      <a class="article-title" href="https://www.bbc.com/news/articles/cm2drrv6q54o">An Englishwoman who sketched India before photography took hold</a>
+      
+      <span class="article-meta">▲ 29 · <a href="https://news.ycombinator.com/item?id=48900191">3 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>写真技術が普及する前のインドをスケッチした英国人女性について紹介する記事です。彼女の記録を通じて、当時のインドの風景や社会を描き出します。</p>
+      
+    </li>
+    <li class="article">
+      <a class="article-title" href="https://www.bbc.com/travel/article/20260625-why-asias-cleanest-village-bans-tourists-on-sundays">Mawlynnong, India, transformed by tourism, bans visitors on Sundays</a>
+      
+      <span class="article-meta">▲ 57 · <a href="https://news.ycombinator.com/item?id=48899672">41 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>観光によって変化したインドの村Mawlynnongが、環境や住民生活を守るため日曜日の観光客受け入れを禁止した背景を紹介します。観光振興と地域の持続可能性の両立がテーマです。</p>
+      
+    </li>
+    <li class="article">
+      <a class="article-title" href="https://arxiv.org/abs/2607.01418">A Study of Microsoft&#39;s Early 2026 Rollout of Claude Code and GitHub Copilot CLI</a>
+      
+      <span class="article-meta">▲ 14 · <a href="https://news.ycombinator.com/item?id=48899321">6 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Microsoftが2026年初頭にClaude CodeとGitHub Copilot CLIを導入した事例を調査した研究です。組織内でのAIコーディングツールの展開状況や利用効果、課題を分析していると考えられます。</p>
       
     </li>
     <li class="article">
       <a class="article-title" href="https://jobs.ashbyhq.com/SalesPatriot/df223727-5781-433e-bc75-2aa5bf8dc8d7">SalesPatriot (YC W25) Is Hiring Full Stack Engineers (SF)</a>
       
       <span class="article-meta">▲ 0 · <a href="https://news.ycombinator.com/item?id=48898814">0 comments</a></span>
-      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>YC W25のSalesPatriotが、サンフランシスコ勤務のフルスタックエンジニアを募集する求人です。スタートアップでプロダクト開発全般に携わるポジションを案内しています。</p>
       
     </li>
     <li class="article">
       <a class="article-title" href="https://github.com/marcelpanse/youtube-guitar-tab-parser">Show HN: YouTube Guitar Tab Parser</a>
       
       
-      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>YouTubeのギターレッスン動画を解析し、ギタータブ譜のPDFに変換するCLIツールの紹介です。動画から音楽情報を抽出して、演奏用の楽譜として出力します。</p>
       <p class="article-excerpt">I created a simple CLI that turns a YouTube guitar-lesson video into a PDF of the guitar tab. There are services that transcribe music from Youtube videos into tabs, but they never work well enough for me. Instead I&#39;m taking a simpler approach. It downloads the video, samples frames, uses Claude vis…</p>
-    </li>
-    <li class="article">
-      <a class="article-title" href="https://github.com/Poseidon-fan/linux-0.11-rs">Linux 0.11 rewritten in idiomatic Rust, boots in QEMU</a>
-      
-      <span class="article-meta">▲ 57 · <a href="https://news.ycombinator.com/item?id=48898134">37 comments</a></span>
-      
-      
     </li>
     <li class="article">
       <a class="article-title" href="https://github.com/yeet-src/sigwire">Show HN: Sigwire – a live TUI switchboard for every signal on your Linux box</a>
       
       
-      
-      <p class="article-excerpt">Hey everyone, I wrote this tool for inspecting linux signals across proceses Comments URL: https://news.ycombinator.com/item?id=48898071 Points: 14 # Comments: 6</p>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Linux上の各プロセスに送られるシグナルをリアルタイムに確認するTUIツールSigwireの紹介です。複数プロセスのシグナルをスイッチボードのように監視・調査できます。</p>
+      <p class="article-excerpt">Hey everyone, I wrote this tool for inspecting linux signals across proceses Comments URL: https://news.ycombinator.com/item?id=48898071 Points: 27 # Comments: 10</p>
     </li>
     <li class="article">
       <a class="article-title" href="https://neow.in/cWsyMTV3">Samsung Health app threatens data deletion if users opt out AI training</a>
       
-      <span class="article-meta">▲ 181 · <a href="https://news.ycombinator.com/item?id=48897991">52 comments</a></span>
-      
+      <span class="article-meta">▲ 244 · <a href="https://news.ycombinator.com/item?id=48897991">65 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Samsung Healthアプリが、AI学習へのデータ利用を拒否したユーザーに対してデータ削除を示唆している問題を扱います。健康データの扱い、同意、AI学習利用をめぐるプライバシー上の懸念が焦点です。</p>
       
     </li>
     <li class="article">
       <a class="article-title" href="https://github.com/xqlsystems/xarray-sql/blob/claude/xarray-sql-mnist-demo/benchmarks/nn.py">Show HN: I implemented a neural network in SQL</a>
       
       
-      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>SQLだけを使ってニューラルネットワークを実装した実験の紹介です。Xarray-SQLを用い、データベース上で機械学習処理を実行する可能性を示しています。</p>
       <p class="article-excerpt">Two weeks ago I was on my babymoon in Corfu, Greece. While in transit, I was overseeing a GSoC intern submit an important feature to my array database library, Xarray-SQL. He added `to_dataset()`, which completed the roundtrip between thinking of array data in a tabular model simultaneously as gridd…</p>
     </li>
     <li class="article">
-      <a class="article-title" href="https://werd.io/climate-gov-was-destroyed-open-data-saved-it/">Climate.gov was destroyed. Open data saved it</a>
+      <a class="article-title" href="https://19thnews.org/2026/07/noaa-climate-data-website/">Former NOAA employees built Climate.us to preserve climate data and resources</a>
       
-      <span class="article-meta">▲ 333 · <a href="https://news.ycombinator.com/item?id=48897945">132 comments</a></span>
-      
+      <span class="article-meta">▲ 405 · <a href="https://news.ycombinator.com/item?id=48897945">158 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>元NOAA職員が、気候データや関連リソースを保存・公開するためのClimate.usを立ち上げた記事です。公的な気候情報を長期的に維持し、アクセス可能にする取り組みを紹介します。</p>
       
     </li>
     <li class="article">
       <a class="article-title" href="https://www.whois.com/whois/t.me">Telegram&#39;s t.me domain has been suspended</a>
       
-      <span class="article-meta">▲ 194 · <a href="https://news.ycombinator.com/item?id=48897878">103 comments</a></span>
-      
+      <span class="article-meta">▲ 237 · <a href="https://news.ycombinator.com/item?id=48897878">174 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Telegramが利用するt.meドメインが停止されたという出来事を扱います。ドメインの停止がTelegramのリンクやサービス利用に与える影響を確認する内容です。</p>
       
     </li>
     <li class="article">
       <a class="article-title" href="https://bruceediger.com/posts/tftp-honeypot-results/">TFTP Honey Pot Results</a>
       
-      <span class="article-meta">▲ 39 · <a href="https://news.ycombinator.com/item?id=48897329">13 comments</a></span>
-      
+      <span class="article-meta">▲ 50 · <a href="https://news.ycombinator.com/item?id=48897329">24 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>TFTPハニーポットを運用して収集した攻撃やアクセスの結果を分析する記事です。TFTPを狙う通信の傾向や、実際の不正アクセス活動について報告します。</p>
       
     </li>
     <li class="article">
       <a class="article-title" href="https://www.sfgate.com/politics/article/meta-social-media-teenagers-22337724.php">The infinite scroll may become endangered if controversial Calif. law passes</a>
       
-      <span class="article-meta">▲ 28 · <a href="https://news.ycombinator.com/item?id=48897104">43 comments</a></span>
-      
-      
-    </li>
-    <li class="article">
-      <a class="article-title" href="https://playcode.io/blog/real-price-of-frontier-models">The real prices of frontier models. Tokens * Price, right?</a>
-      
-      <span class="article-meta">▲ 130 · <a href="https://news.ycombinator.com/item?id=48896800">61 comments</a></span>
-      
+      <span class="article-meta">▲ 63 · <a href="https://news.ycombinator.com/item?id=48897104">103 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>カリフォルニア州で検討されている法律が、若年層向けソーシャルメディアの無限スクロールに制限を設ける可能性を扱います。未成年者保護とプラットフォーム設計の関係が論点です。</p>
       
     </li>
     <li class="article">
       <a class="article-title" href="https://nobie.com">Show HN: Nobie – an Excel-compatible runtime for agents and humans</a>
       
-      <span class="article-meta">▲ 60 · <a href="https://news.ycombinator.com/item?id=48896703">25 comments</a></span>
-      
+      <span class="article-meta">▲ 75 · <a href="https://news.ycombinator.com/item?id=48896703">38 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>人間とAIエージェントの双方が利用できる、Excel互換ランタイムNobieの紹介です。表計算データやワークフローを、既存のExcel互換性を保ちながらプログラムから扱うことを目指します。</p>
       
     </li></ul>
   </section>
@@ -543,7 +571,7 @@ footer {
   </section>
   <footer>
     <a href="./">アーカイブ</a>
-    <span>生成: 2026/7/14 8:02:29</span>
+    <span>生成: 2026/7/14 10:01:31</span>
   </footer>
 </div>
 </body>
