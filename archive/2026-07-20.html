@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-07-20 | Tech Daily Digest</title>
+<style>
+:root {
+  --paper: #f6f1e7;
+  --card: #fffdf7;
+  --ink: #211d18;
+  --muted: #75695a;
+  --accent: #c23a28;
+  --rule: #d9cfbd;
+  --rule-strong: #211d18;
+  --mincho: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  --gothic: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1a1712;
+    --card: #221f19;
+    --ink: #eae2d3;
+    --muted: #9c917d;
+    --accent: #e2593f;
+    --rule: #3b352a;
+    --rule-strong: #eae2d3;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--gothic);
+  font-size: 15px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+.sheet { max-width: 720px; margin: 0 auto; padding: 28px 20px 64px; }
+
+header.masthead { text-align: center; padding: 18px 0 14px; border-bottom: 4px double var(--rule-strong); }
+.masthead-date { font-family: var(--gothic); font-size: 12px; letter-spacing: .35em; color: var(--muted); text-transform: uppercase; }
+.masthead h1 {
+  margin: 6px 0 4px;
+  font-family: var(--mincho);
+  font-weight: 600;
+  font-size: clamp(28px, 7vw, 40px);
+  letter-spacing: .08em;
+}
+.masthead h1 .accent { color: var(--accent); }
+.masthead-sub { font-size: 12px; color: var(--muted); letter-spacing: .18em; }
+
+.overview {
+  font-family: var(--mincho);
+  font-size: 17px;
+  line-height: 2.1;
+  margin: 28px 2px 8px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-title {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  margin: 0 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule-strong);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-count { font-family: var(--gothic); font-size: 11px; color: var(--muted); letter-spacing: .05em; }
+
+section { margin-top: 40px; animation: rise .5s ease both; }
+section:nth-of-type(1) { animation-delay: .05s; }
+section:nth-of-type(2) { animation-delay: .12s; }
+section:nth-of-type(3) { animation-delay: .19s; }
+section:nth-of-type(4) { animation-delay: .26s; }
+section:nth-of-type(5) { animation-delay: .33s; }
+section:nth-of-type(6) { animation-delay: .40s; }
+section:nth-of-type(7) { animation-delay: .47s; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { section { animation: none; } }
+
+.picks { list-style: none; margin: 0; padding: 0; }
+.pick {
+  display: flex;
+  gap: 16px;
+  padding: 18px 16px;
+  margin-top: 14px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+}
+.pick-no {
+  font-family: var(--mincho);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.pick-title { font-family: var(--mincho); font-size: 17px; font-weight: 600; line-height: 1.7; }
+.pick-reason { margin: 6px 0 4px; color: var(--muted); font-size: 13.5px; }
+.pick-source { font-size: 11px; color: var(--accent); letter-spacing: .1em; }
+
+.articles { list-style: none; margin: 0; padding: 0; }
+.article { padding: 14px 2px; border-bottom: 1px dotted var(--rule); }
+.article-title { font-weight: 600; }
+.article-meta { margin-left: 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.article-excerpt { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+.article-translation { margin: 4px 0 0; font-size: 13.5px; line-height: 1.8; }
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  vertical-align: 2px;
+  border-radius: 2px;
+}
+.badge-ja { margin: 0 6px 0 0; vertical-align: 1px; }
+.badge-source { border-color: color-mix(in srgb, var(--muted) 55%, transparent); color: var(--muted); }
+.feed-error { color: var(--muted); font-size: 13px; }
+.feed-errors { margin-top: 36px; font-size: 12px; color: var(--muted); }
+
+.genre { --g-disp: var(--g); }
+@media (prefers-color-scheme: dark) {
+  .genre { --g-disp: color-mix(in srgb, var(--g) 55%, #f0e8d8); }
+}
+.genre .section-title { color: var(--g-disp); border-bottom-color: color-mix(in srgb, var(--g-disp) 60%, transparent); align-items: center; }
+.genre .section-count { color: var(--muted); }
+.genre-icon { width: 19px; height: 19px; flex-shrink: 0; }
+.stars { font-size: 11.5px; letter-spacing: 2px; margin-right: 8px; color: var(--accent); vertical-align: 1.5px; }
+.stars-1 { color: var(--muted); opacity: .55; }
+.pick-thumb {
+  width: 108px;
+  height: 76px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
+}
+@media (max-width: 480px) { .pick-thumb { width: 80px; height: 60px; } }
+
+footer {
+  margin-top: 56px;
+  padding-top: 14px;
+  border-top: 4px double var(--rule-strong);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <div class="masthead-date">2026年7月20日（月）</div>
+    <h1>Tech Daily <span class="accent">Digest</span></h1>
+    <div class="masthead-sub">毎朝の技術情報、一枚に。</div>
+  </header>
+  <p class="overview">生成AIエージェントの実運用に向けたサンドボックス、安全対策、開発プロセス設計に関する記事が目立ちます。加えて、テスト高速化やVite+、.NETのサポート終了など、日々の開発基盤に直結する実践的な話題も多く、AI活用と既存ソフトウェア運用の両面で変化が進んでいます。</p>
+  
+  <section class="top-picks">
+    <h2 class="section-title">今日の注目</h2>
+    <ol class="picks">
+      <li class="pick">
+        <span class="pick-no">01</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.publickey1.jp/blog/26/google_cloudaicloud_run.html">Google Cloud、生成AIのコードを瞬時に隔離して安全に実行できる「Cloud Runサンドボックス」パブリックプレビュー</a>
+          <p class="pick-reason">生成AIが生成した信頼できないコードをCloud Run上で隔離実行する仕組みを紹介しています。AIエージェントを業務や開発環境に組み込む際の安全設計に直結する、今日の重要テーマです。</p>
+          <span class="pick-source">Publickey</span>
+        </div>
+        <img class="pick-thumb" src="https://www.publickey1.jp/2026/cloudrun-sandboxes-pp.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">02</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://qiita.com/minamijoyo/items/854ce04da1490b43a848?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">AIエージェントのためのDocker Sandboxes実践入門</a>
+          <p class="pick-reason">Docker SandboxesをAIエージェントのコーディング環境として使う実践記事です。Cloud RunサンドボックスやClaude Code専用マシンの記事とも関連する、エージェント実行環境の具体的な選択肢を学べます。</p>
+          <span class="pick-source">Qiita 人気記事</span>
+        </div>
+        <img class="pick-thumb" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-user-contents.imgix.net%2Fhttps%253A%252F%252Fcdn.qiita.com%252Fassets%252Fpublic%252Farticle-ogp-background-afbab5eb44e0b055cce1258705637a91.png%3Fixlib%3Drb-4.1.1%26w%3D1200%26blend64%3DaHR0cHM6Ly9xaWl0YS11c2VyLXByb2ZpbGUtaW1hZ2VzLmltZ2l4Lm5ldC9odHRwcyUzQSUyRiUyRnFpaXRhLWltYWdlLXN0b3JlLnMzLmFtYXpvbmF3cy5jb20lMkYwJTJGNjExNTIlMkZwcm9maWxlLWltYWdlcyUyRjE0NzM2OTU0NDM_aXhsaWI9cmItNC4xLjEmYXI9MSUzQTEmZml0PWNyb3AmbWFzaz1lbGxpcHNlJmJnPUZGRkZGRiZmbT1wbmczMiZzPWQ5NzRlOTkyNTY5NWU2OGU0MjljNTE3ZGNiOTcxM2M4%26blend-x%3D120%26blend-y%3D462%26blend-w%3D90%26blend-h%3D90%26blend-mode%3Dnormal%26mark64%3DaHR0cHM6Ly9xaWl0YS1vcmdhbml6YXRpb24taW1hZ2VzLmltZ2l4Lm5ldC9odHRwcyUzQSUyRiUyRnMzLWFwLW5vcnRoZWFzdC0xLmFtYXpvbmF3cy5jb20lMkZxaWl0YS1vcmdhbml6YXRpb24taW1hZ2UlMkYyMDRlZjcyYjhlOWQ0NmFkNTFhM2MwYzhiYjBjNmM4M2YwNWVmMDhkJTJGb3JpZ2luYWwuanBnJTNGMTY1NjUwNjg3NT9peGxpYj1yYi00LjEuMSZ3PTQ0Jmg9NDQmZml0PWNyb3AmbWFzaz1jb3JuZXJzJmNvcm5lci1yYWRpdXM9OCZiZz1GRkZGRkYmYm9yZGVyPTIlMkNGRkZGRkYmZm09cG5nMzImcz1mMTkwMDAxNWQxYTgzYzE5ZmI5MjFiODZkZDEyYzU2NA%26mark-x%3D186%26mark-y%3D515%26mark-w%3D40%26mark-h%3D40%26s%3D2e6789139975c8b4643678f12ac7872e?ixlib=rb-4.1.1&amp;amp;w=1200&amp;amp;fm=jpg&amp;amp;mark64=aHR0cHM6Ly9xaWl0YS11c2VyLWNvbnRlbnRzLmltZ2l4Lm5ldC9-dGV4dD9peGxpYj1yYi00LjEuMSZ3PTk2MCZoPTMyNCZ0eHQ9QUklRTMlODIlQTglRTMlODMlQkMlRTMlODIlQjglRTMlODIlQTclRTMlODMlQjMlRTMlODMlODglRTMlODElQUUlRTMlODElOUYlRTMlODIlODElRTMlODElQUVEb2NrZXIlMjBTYW5kYm94ZXMlRTUlQUUlOUYlRTglQjclQjUlRTUlODUlQTUlRTklOTYlODAmdHh0LWFsaWduPWxlZnQlMkN0b3AmdHh0LWNvbG9yPSUyMzFFMjEyMSZ0eHQtZm9udD1IaXJhZ2lubyUyMFNhbnMlMjBXNiZ0eHQtc2l6ZT01NiZ0eHQtcGFkPTAmcz1mYjNkOThlNjUzOGZhMTQxMDczNDY4NGE4YzEwMjY4Zg&amp;amp;mark-x=120&amp;amp;mark-y=112&amp;amp;blend64=aHR0cHM6Ly9xaWl0YS11c2VyLWNvbnRlbnRzLmltZ2l4Lm5ldC9-dGV4dD9peGxpYj1yYi00LjEuMSZ3PTgzOCZoPTU4JnR4dD0lNDBtaW5hbWlqb3lvJnR4dC1jb2xvcj0lMjMxRTIxMjEmdHh0LWZvbnQ9SGlyYWdpbm8lMjBTYW5zJTIwVzYmdHh0LXNpemU9MzYmdHh0LXBhZD0wJnM9OGRiNzUxMjljNTJjYjYyZGZlOTg1ZDA0MDgzNTc2OGY&amp;amp;blend-x=242&amp;amp;blend-y=454&amp;amp;blend-w=838&amp;amp;blend-h=46&amp;amp;blend-fit=crop&amp;amp;blend-crop=left%2Cbottom&amp;amp;blend-mode=normal&amp;amp;txt64=44Kv44Op44Km44OJ44Ov44O844Kv44K544Kw44Or44O844OX&amp;amp;txt-x=242&amp;amp;txt-y=539&amp;amp;txt-width=838&amp;amp;txt-clip=end%2Cellipsis&amp;amp;txt-color=%231E2121&amp;amp;txt-font=Hiragino%20Sans%20W6&amp;amp;txt-size=28&amp;amp;s=12b44c709f3da8e603dd66f530832772" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">03</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://zenn.dev/berry_blog/articles/39392e1da7ca71">E2Eテストをユニットテスト並みの実行時間に — Playwright並列化とGitHub Actionsチューニングの実践</a>
+          <p class="pick-reason">PlaywrightとGitHub Actionsの並列化・チューニングにより、100 spec超のE2Eテストを6〜8分で実行した事例です。CIの待ち時間を減らすための具体的な改善策がまとまっており、実務への再利用性が高い記事です。</p>
+          <span class="pick-source">はてブ テクノロジー</span>
+        </div>
+        <img class="pick-thumb" src="https://res.cloudinary.com/zenn/image/upload/s--tWaHdcWm--/c_fit%2Cg_north_west%2Cl_text:notosansjp-medium.otf_55:E2E%25E3%2583%2586%25E3%2582%25B9%25E3%2583%2588%25E3%2582%2592%25E3%2583%25A6%25E3%2583%258B%25E3%2583%2583%25E3%2583%2588%25E3%2583%2586%25E3%2582%25B9%25E3%2583%2588%25E4%25B8%25A6%25E3%2581%25BF%25E3%2581%25AE%25E5%25AE%259F%25E8%25A1%258C%25E6%2599%2582%25E9%2596%2593%25E3%2581%25AB%2520%25E2%2580%2594%2520Playwright%25E4%25B8%25A6%25E5%2588%2597%25E5%258C%2596%25E3%2581%25A8GitHub%2520Actions%25E3%2583%2581%25E3%2583%25A5%25E3%2583%25BC%25E3%2583%258B...%2Cw_1010%2Cx_90%2Cy_100/g_south_west%2Cl_text:notosansjp-medium.otf_34:Niwayama%2520Yasuhiro%2Cx_220%2Cy_108/bo_3px_solid_rgb:d6e3ed%2Cg_south_west%2Ch_90%2Cl_fetch:aHR0cHM6Ly9zdGF0aWMuemVubi5zdHVkaW8vdXNlci11cGxvYWQvYXZhdGFyLzFiMWVhYjdiNDMuanBlZw==%2Cr_20%2Cw_90%2Cx_92%2Cy_102/g_south_west%2Ch_34%2Cl_default:og-publication-pro-mark-xcosax%2Cw_34%2Cx_217%2Cy_158/co_rgb:6e7b85%2Cg_south_west%2Cl_text:notosansjp-medium.otf_30:%25E6%25A0%25AA%25E5%25BC%258F%25E4%25BC%259A%25E7%25A4%25BEBerry%2Cx_255%2Cy_160/bo_4px_solid_white%2Cg_south_west%2Ch_50%2Cl_fetch:aHR0cHM6Ly9zdGF0aWMuemVubi5zdHVkaW8vdXNlci11cGxvYWQvYXZhdGFyLzllNzMyY2M2MTQuanBlZw==%2Cr_max%2Cw_50%2Cx_139%2Cy_84/v1627283836/default/og-base-w1200-v2.png?_a=BACMTiAE" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li></ol>
+  </section>
+  
+  <section class="feed genre" style="--g: #c23a28">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M18.5 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>AI・LLM<span class="section-count">13</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://qiita.com/Koukyosyumei/items/e9ee8e26cfdc40a8c2f9">マルチエージェントに関する論文を40本再実装してみて分かったこと - Qiita</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">コロンビア大学の博士課程でAI・セキュリティの研究をしている Koukyosyumei です。 最近暇なので、マルチエージェントLLMに関する40本の論文で提案されているワークフローを再実装してみました。論文で報告されているベンチマーク結果を再現するというよりは、それぞれの手法が、どのようなループを持ち、どのような役...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://thenextweb.com/news/ai-advice-suppresses-critical-thinking-wrong-answers-study">AI advice made people 3x less accurate but 2x confident, researchers found</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 97 · <a href="https://news.ycombinator.com/item?id=48971738">38 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>AIの助言を使うと、回答の正確さが低下する一方で、自分の判断に対する自信は高まるという研究結果を紹介しています。AI利用による批判的思考への影響がテーマです。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://twitter.com/kimi_moonshot/status/2078855608565207130">Moonshot AI suspends new subscriptions due to Kimi K3 demand</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 171 · <a href="https://news.ycombinator.com/item?id=48969291">59 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Moonshot AIがKimi K3への需要急増を受け、新規サブスクリプションの受付を一時停止したことを告知しています。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://techfeed.io/entries/6a5be90b3d5307dbb0d5d745">【海外記事紹介】余ったMacをClaude Code専用の「何でもやらせるマシン」にする — SSH・tmux・LaunchAgentで権限フル解放のエージェント環境を構築</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://courrier.jp/news/archives/452714/">欧州の古書店に入る不可解な大量発注─その裏に潜む「AI」の存在 | 本は喰われて、捨てられる…</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">「古書の買い占めだ」──カナダ企業による不可解な中古本取引について、スイスの放送局「RTS」はそう断言している。 RTSは、スペインメディア「エル・ディアリオ」とドイツ紙「ターゲスツァイトゥング（TAZ）」の調査を掘り下げ、「中古書籍が買い取られ、デジタル化された後、人工知能（AI）の言語モデルを学習させるた...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/r_kaga/articles/a27a3879dd3ce4">ゴールまで自走するだけではない？——ループエンジニアリングの本質はどこにあるのか</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">ループエンジニアリングという言葉が流行っています。エージェントが人の手を離れて、コーディングから何から最後まで自走する。そういう話として語られることが多い気がします。 ただ、少し引っかかってもいました。それって、昔からあった話じゃなかったっけ? 一方で最近は、Software Factoryという言葉も聞くようになりました。 エージェントを都度呼び出すのではなく、仕事が来れば仕組みが起動するようにして、人間は設計者や監督者として関わる。そういう世界観です。 この記事では、この引っかかりから出発して、ループエンジニアリングの本質はむしろこのソフトウェアファクトリーが指している側にあるんじゃ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/u1/articles/codex-referent-before-label">codexの独自用語乱立･曖昧問題への対策</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">この記事はXの元記事をZenn向けに再掲載したものです。 codexで起きやすい問題 codexでよく起きる問題として､言葉の定義を適当にして設計や実装をしてしまう問題があります｡経験上､claudeだと少し起きづらいのですがcodexの場合､5.5のときからも駄目で5.6にしてもやはり継続して起きていて困っていた件への対策です｡ 例えば､調査レポートの一節に「圧縮時点」という見出しがありました。本文を読むと、その語は「会話履歴が設定量に達したこと」「自動要約を始めるしきい値」「実際に要約が始まる時」の三つを行き来していました。 文章は流暢で、技術的な説明らしく見えます。 しかし、一...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/jodycraft/articles/dfe38e73e1ef8a">ループエンジニアリングの次は本当に「グラフ」なのか考えてみた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">📋 この記事の前提 前回記事「ループエンジニアリングをGitHub Copilotで組めるか調べてみた」を読んでいると話が早い 「ハーネスエンジニアリング」「ループエンジニアリング」という言葉を見聞きしたことがある この記事は2026年7月18日時点、生まれて1日も経っていない議論を扱っている。数日後には前提が変わっている可能性がある 結論: グラフは配線図、品質を決めるのは配線の交差点 先に結論を書く。 「ループの次はグラフだ」という言い方は、半分正しくて半分は言葉が足りない。グラフは複数のループを束ねる配線図としては確かに上位概念だが、配線をどれだけ賢くしても、各交差点で下す...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/fallout/items/d732b94ff0f68c5cd1ab?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">バイブコーディング(笑) と言われないための考え方</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">「(笑)」を最初に付けたのは Karpathy 本人 2025年2月2日の Andrej Karpathy のポスト（原文）: I &quot;Accept All&quot; always, I don&#39;t read the diffs anymore. (...) It&#39;s not ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/3ai.html">さくらのクラウドで、3つの国内開発された大規模言語モデルの試用を開始、デジタル庁がガバメントAI「源内」用に評価</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">デジタル庁は、国内開発された3つの大規模言語モデルの試用をさくらのクラウド上で開始すると発表しました。 これはデジタル庁が中心となって進めている、行政業務の効率化や住民サービスの向上のために整備を進めているガバメントAI「源内」（げんない）の実装に向けて、源内で活用する大規模言語モデルの評価を行うための取り組みです。 A/Bテストによるユーザー評価を実施 具体的には、さくらのクラウド上で、NTTデータが開発した「tsuzumi 2」、富士通が開発した「Takane 32B」、……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.zaikei.co.jp/article/20260717/861772.html">Google「Gemini 3.5 Pro」が3度目の延期か、ハルシネーション問題で暫定版投入の観測も | 財経新聞</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">Google「Gemini 3.5 Pro」が3度目の延期か、ハルシネーション問題で暫定版投入の観測も Google DeepMindの次世代AIモデル「Gemini 3.5 Pro」のリリースが、当初目標とされた6月、そして7月17日の期限を超え、3度目の延期に直面していると報じられている。非公式のリーク情報によると、再設計された同モデルは依然として...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/miruky/items/42b892805eb1d754109c?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【徹底解説】文系でもわかる！機械学習に入門しよう</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに こんばんは、元ゴリゴリ文系（ゴリ文）のmirukyです。 機械学習、と聞くと「うげっ」と拒否反応を示す半年前の自分がいました。大学でCS（コンピューターサイエンス）を専攻している人の領分だという勝手なイメージと、複雑な数式が無限に出てくる先入観があったためです...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://github.com/Pedroshakoor/grok-build-ios">Grok-iOS – remote Grok Build from your iPhone over ACP</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 7 · <a href="https://news.ycombinator.com/item?id=48971999">0 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>iPhoneからACP経由でリモートのGrok Buildを操作するためのプロジェクトです。モバイル端末をAI開発環境の操作端末として利用します。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #6b5a9e">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg>言語・ツール<span class="section-count">8</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/net_8net_911.html">.NET 8と.NET 9は今年の11月でサポート終了、マイクロソフトが警告</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">マイクロソフトの包括的なソフトウェアフレームワーク「.NET 8」と「.NET 9」のサポートが今年（2026年）11月10日に終了します。 サポート終了後も.NET 8や.NET 9で開発されたアプリケーションはそのまま動作し、使えなくなることはありませんが、バグや脆弱性が発見されたとしてもマイクロソフトから修正のためのパッチなどは提供されなくなります。 そのため、アプリケーション開発者は速やかに2026年11月以後もサポートが継続される新たなバージョンの.NETへ移行する……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://speakerdeck.com/watany/questionable-technical-choices">穢れた技術選定について</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">Developers Summit 2026 summerで話した内容です。 https://event.shoeisha.jp/devsumi/20260716/session/6900</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/uhyo/articles/import-lint-intro">ImportLintの紹介: import専門の高速なリンター</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">皆さんこんにちは。今回は、筆者が最近Claude Fable 5さんと一緒に開発したImportLintを紹介します。 https://github.com/uhyo/import-lint eslint-plugin-import-accessを知っている・使っている方向けの概要 ImportLintは、筆者がESLintプラグインとして公開していたeslint-plugin-import-accessを移植し、Rust製の独立したCLIツールとして再実装したものです。eslint-plugin-import-accessの全てのオプションをサポートしており、簡単に移行できます。 ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://raymii.org/s/blog/Intel_Itanium_IA-64-Emulator_that_boots_Windows.html">A new Intel Itanium (IA-64) emulator that boots Windows</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 27 · <a href="https://news.ycombinator.com/item?id=48971566">13 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Intel Itanium向けの新しいIA-64エミュレーターが開発され、Windowsを起動できるようになった事例を紹介しています。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/konn/articles/2026-07-13-fp-matsuri-2026">関数型まつり2026参加記</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">昨年に引き続き、関数型まつり2026に二日間参加してきました。去年に引き続き50分枠での登壇もしました。 https://2026.fp-matsuri.org 昨年はPLDIに参加するために最後の講演をスキップして韓国に飛ぶ必要があり泣いていましたが、今年は二日間丸々楽しむことができました。やったぜ〜！ 以下まず聴講・登壇した各講演について概要と感想を簡単に。 Day 0 などというものはないんですが、その、スライドの進捗がかなりわるかったので、金曜に有給を取ってガッとスライドを書くなどしていました。 一、二週間前くらいからスライドを書く雰囲気を手に入れようとしていたんですが、なん...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/shimpei_takeda/articles/d2f51eb6256c53">『Clean Architecture 達人に学ぶソフトウェアの構造と設計』を読んだまとめ 01</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">ドメイン駆動設計とともにクリーンアーキテクチャを理解するためにあらためて本書を手に取った。 参考になった箇所などをまとめていく。 TL;DR（私の感想） 『Clean Architecture』は、単一責任の原則（SRP）で変更理由の異なるものを分け、オープン・クローズドの原則（OCP）により既存コードを変更せず拡張できる構造を目指し、その実現手段として依存関係逆転の原則（DIP）で依存方向を制御する、という設計原則を、アーキテクチャ全体へ拡張した本だった。 全体としては、外側のDB・UI・フレームワークなどの詳細が、内側のユースケースやドメインモデルといった方針・業務ルールに依存...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/nacanaca/items/2038140a154f003245e4?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">VSCodeの拡張機能メモ(2026年版)</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">自分用にVS Codeの拡張機能のメモ FastAPIを勉強中です。 開発・言語サポート Japanese Language Pack for VS Code 日本語化 Code Spell Checker 英語のスペルチェッカー。変数名などのスペルミスを防ぐ。...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://retrogamecoders.com/c64-basic-dungeon-part8/">C64 Basic Dungeon Crawler: Goblin Attack (C64 Basic Part 8)</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 51 · <a href="https://news.ycombinator.com/item?id=48968949">3 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Commodore 64のBASICでダンジョンクローラーを制作する連載の第8回で、ゴブリンの攻撃を実装する内容とみられます。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #2f6b8f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/></svg>Web開発<span class="section-count">7</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://zenn.dev/berry_blog/articles/39392e1da7ca71">E2Eテストをユニットテスト並みの実行時間に — Playwright並列化とGitHub Actionsチューニングの実践</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">私たちのチームでは、品質管理システム（QMS）SaaS「QMSmart」の開発で、約 100 spec / 140 テストケースの E2E テストを、PR ごとに CI で自動実行し、wall-clock 6〜8 分で完走させる運用が回っています。これはユニットテスト（Vitest）の CI とほぼ同じ所要時間です。 本記事では、これを実現するために行った 並列...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/T-furukubo/items/3ace375e1b8aafd014a2?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">そのSQL、本当に大丈夫？実務で意識したい5つの基本ルール</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">目次 はじめに SELECT * を多用しない WHERE句を意識する ORDER BYを書こう NULLの扱いを理解する エイリアスを活用する まとめ SQLを書く前に知っておきたい5つの基本ルール はじめに SQLはデータベースを扱ううえで欠かせない言語ですが...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.phoronix.com/news/Last-MPEG-4-Patent-Expired">The Last MPEG-4 Visual Patent Has Expired</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 131 · <a href="https://news.ycombinator.com/item?id=48969635">29 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>MPEG-4 Visualに関する最後の特許が失効したことを伝える記事です。これにより同コーデックの利用に関する法的・ライセンス上の制約が一部変化します。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/vite.html">フロントエンド開発に必要なツールをまとめて統合した「Vite+」、ベータ公開</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">オープンソースのWebアプリケーションビルドツール「Vite」（ヴィットあるいはヴィート）を開発しているVoidZeroは、ViteをベースとしたJavaScriptアプリケーションのための統合開発ツールチェーン「Vite+」をベータ公開しました。 Vite+ is now in beta One CLI for your whole toolchain, now more powerful than ever:◆ Smarter caching (vp run auto-t……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/tsukinagake/articles/648413296bf940">ローカルRSSリーダーをAIと作り、有料RSSサービスを解約するまで</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">初投稿です。よろしくお願いします。 はじめに 9年間使ってきた有料RSSリーダーを解約した。 理由はサービスへの強い不満ではない。日常的に使う機能を振り返ると、必要だったのは 未読記事のタイトルを流し見る 気になる記事を読む（ブラウザでリンク先を見に行く） フィードのフォルダ分け 特定キーワードの検索 の4つだけだった。 そこで、最低限の4つの機能に絞って、ブラウザで動くローカルRSSリーダーをAIと一緒に作った。 実際に作り始めると、並び順、未読数、テーマ、壊れたフィードの扱いまで気になり、結果としてそれなりに多機能なアプリになっていた。 この記事では、完成したアプリの全機能を...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.passinote.app/">Show HN: A canvas-based note taking and organizer app</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>長文ノートと短文メモをキャンバス上で視覚的に整理できる、キャンバス型のノート・オーガナイザーアプリです。</p>
+      <p class="article-excerpt">So I&#39;ve been working on this app for a very long time now. Started off by wanting an app that separates long form notes from short form notes visually and keeps everything organized on a canvas. The app features: -Sticky notes for quick, small notes and A4 notes for long form documents -A quick mode…</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/javascriptspreadjs.html">リアルタイム共同編集が可能なJavaScriptの表計算コンポーネント、メシウスが「SpreadJS」の新バージョンをリリース</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">メシウス（旧グレープシティ）は、Excelライクな機能とユーザーインターフェイスを備えたJavaScriptの表計算コンポーネント上で、リアルタイムな共同編集を可能にする機能を備えたJavaScriptライブラリ「SpreadJS」の最新版「SpreadJS V19.1J」を7月23日にリリースすると発表しました。 離れた場所で働く複数のユーザーが同時にWebブラウザ上で1つの表計算を共有し、データの入力や確認、修正作業を同時に進めることができるため、ファイルの受け渡しや更新……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #3f7f7a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3h4M11 3v6l-5.5 9.2A2 2 0 007.2 21h9.6a2 2 0 001.7-2.8L13 9V3"/><path d="M8.5 15h7"/></svg>サイエンス<span class="section-count">7</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/syu_tan/books/chatgpt-satellite-image-intro">ChatGPTで始める衛星画像処理入門</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">生成AIで対話のみの成果物で知識なしでも JAXA の公式配信経路やSTACからデータを取得し、Google Colab で処理します。 用意した題材に、生成AIへ任せてよいこと、人間とコードで検証すべきことを整理します。事前データがあるので、衛星画像処理の入門書としても活用できます。</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/daikusutora3/articles/7117adb61aeb45">2端子直並列ネットワーク上の最小費用流</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは〜だいくすとらです！Xで最近けんちょんさんが直並列グラフ(series-parallel graph)という割と自分が好きなグラフクラスについて言及していてテンションが上がったので記事をまとめました。 私はもうアルゴリズム系のアカデミアにはいない人間なので細かい定義や用語が慣習的な使い方とずれていたらコメント欄で優しく教えていただけると助かります🙏 あと分からないところがあれば気軽にコメントして聞いていってください！コメントしていただければいただけるほど記事も改善していくので💪 https://x.com/drken_procon/status/2076243575923527.…</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/ishi720/items/3e4597bc50695fa9bf79?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">白って1600色あんねん！</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに 「白って200色あんねん」というアンミカさんが残したミームがありますが、200色って少なくないかと思い、本当に白が200色なのか調べてみることにしました。 200色の白の範囲 RGBそれぞれを256階調(0~255)とした場合の色の数は、16,777,216 ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://github.com/holland202/Principia-Artificialis">Principia Artificialis – Mathematical Foundations of Artificial Thought</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 3 · <a href="https://news.ycombinator.com/item?id=48972197">0 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>人工的な思考の数学的基礎を構築することを目指す研究・ソフトウェアプロジェクトとみられます。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.nytimes.com/2026/07/17/climate/company-climate-change-commitments-renege.html">How to Abandon Your Climate Commitments and Get Away with It</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 19 · <a href="https://news.ycombinator.com/item?id=48971781">1 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>企業が気候変動対策の公約を撤回・形骸化させても責任を問われにくい仕組みや実態を扱う記事です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.onepercentbrighter.com/p/natural-experiments-prove-feeding">Natural experiments prove phytoplankton carbon removal works</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 31 · <a href="https://news.ycombinator.com/item?id=48968701">15 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>自然実験の結果をもとに、植物プランクトンへの栄養供給による海洋の炭素除去が有効だと論じる記事です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.bbc.com/news/articles/cvg8edqq5g5o">Bananas sprout in Rayleigh Garden UK after 15 years</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 109 · <a href="https://news.ycombinator.com/item?id=48968063">82 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>英国のRayleigh Gardenで、15年間を経てバナナが実をつけた出来事を伝えるニュースです。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #a04a1f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>セキュリティ<span class="section-count">5</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://qiita.com/Nakanishi_RareTECH/items/16fd0b847aa68c152e00">セキュリティの勉強になるサイト138選(2026年版) - Qiita</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">セキュリティを独学するときに役立つサイトを、Webアプリ・クラウド・CTF・マルウェア解析・資格まで分野ごとにまとめました。ほとんどが無料で、ブラウザだけ、あるいはDockerで自分のマシンに立てればすぐ試せます。 全部で138本。リンクはすべて2026年7月17日に到達を確認しています。上から順に読む必要はないので、...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://qiita.com/minamijoyo/items/854ce04da1490b43a848?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">AIエージェントのためのDocker Sandboxes実践入門</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに AIエージェントのコーディング環境として、Docker Sandboxesを使っています。 本稿執筆時点ではまだExperimentalな扱いなので、まとめ記事を書くタイミングが難しいのだけど、とは言え「やってみた」以上の情報がまだまだWeb上に少なく、周りに勧...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/google_cloudaicloud_run.html">Google Cloud、生成AIのコードを瞬時に隔離して安全に実行できる「Cloud Runサンドボックス」パブリックプレビュー</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Google Cloudは、生成AIによる信頼できないコードの実行を安全に隔離して実行できる環境を瞬時に起動させることができる「Cloud Run Sandboxes」（以下、Cloud Runサンドボックス）をパブリックプレビューとして公開しました。 生成AIは信頼できないコードを実行する 生成AIに何らかのタスクを依頼した場合、生成AIはそのタスクを実行するために何らかのコードを生成して実行したり、ヘッドレスブラウザ経由でWebにアクセスしたり、データを参照し保存するため……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/udowanllc/items/9a1c5da9a36b7f74691a?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">あと10日で攻撃コストが激変する。Kimi K3公開前にやるべきセキュリティ対策</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">Kimi K3公開まであと10日。開発者・企業がやるべきセキュリティ対策チェックリスト はじめに 2026年7月27日、Moonshot AIの「Kimi K3」のモデル重み（モデル本体）が公開される予定です。総パラメータ数2.8兆、パラメータ数ベースでは世界最大のオ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.eff.org/deeplinks/2026/07/we-want-texans-know-their-rights-qa-mayday-health-impact-surveillance-abortion">We want Texans to know their rights</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 33 · <a href="https://news.ycombinator.com/item?id=48972062">6 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>テキサス州の住民に対し、監視や中絶関連の医療をめぐってどのような権利があるのかを解説するEFFの記事です。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #b0813a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c.7-3.4 2.8-5.5 5.5-5.5s4.8 2.1 5.5 5.5M16 5.5a3.5 3.5 0 010 6.6M17.5 14.8c2 .7 3.4 2.5 4 5.2"/></svg>キャリア・組織<span class="section-count">5</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://blog.cybozu.io/entry/2026/07/16/113000">「間に合いませんでした」をスプリント最終日に言わないために - Cybozu Inside Out | サイボウズエンジニアのブログ</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">この記事は、CYBOZU SUMMER BLOG FES &#39;26の記事です。 こんにちは。スクラムマスターのToshinari（@10shinari）です⚡️ 本記事では、スプリント最終日になってはじめて間に合わないと気づく、そんな状況を繰り返さないために、スプリント中にチームで計画と現実のズレへ気づき、進め方を適応させていく「再計画」の考え方...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/202960.html">より小さなソフトウェアエンジニアリングチームを、2029年までに60％の組織が本格展開するとの予測、ガートナー</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">調査会社のガートナーは、2029年までに60％の組織がより小さなソフトウェアエンジニアリングチームを本格的に展開するだろうとの予測を発表しました。 人間とAIの強みを活かすためのチームの再編成 この背景には、AIの発達によって人間に代わってAIが日常的なエンジニアリングの作業を処理してくれる能力を持つようになったことがあります。 人間のソフトウェアエンジニアは日常的な作業から解放され、複雑な問題解決やイノベーションに専念できるようになるため、これまでよりも少人数の小さなソフト……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/free-honda/items/f689f1402bfa613b2c0e?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【個人的なこと】仕事を時間内に終わらせようと思って取り入れた6つのこと</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに 最近全然書けていなかったのですが、「仕事を時間内に終わらせよう！！」と思って取り組んだことについて、自分なりにまとめていきたいと思います。 ありがたいことに、いろいろな案件に関わらせていただいており、各案件でさまざまなタスクをやらせていただいています。それぞれ扱...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/it_2026_si.html">IT系上場企業の平均年収を業種別にみてみた 2026年版［後編］ ～ ソフトウェア／サービス系、SI／システム開発系、クラウド／通信キャリア系企業</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">IT系企業で平均年収が高いのは、勢いのあるネットベンチャー系企業なのか、それとも伝統的なSIerなのでしょうか。毎年恒例の記事を今年も公開します。 上場企業は毎年「有価証券報告書」の発行を義務づけられており、そこには従業員の人数や平均年齢、平均年収などが掲載されています。この記事では、これら公開情報を基に、Publickeyが独自の判断で主な企業をピックアップして業種を分類。平均年収が高い順に並べてみたものです。 ただし、持ち株会社など現場の社員の給与を反映していないと思わ……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/it_2026_1.html">IT系上場企業の平均年収を業種別にみてみた 2026年版［前編］ ～ ネットベンチャー、ゲーム、メディア系</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">IT系企業で平均年収が高いのは、勢いのあるネットベンチャー系企業なのか、それとも伝統的なSIerなのでしょうか。毎年恒例の記事を今年も公開します。 上場企業は毎年「有価証券報告書」の発行を義務づけられており、そこには従業員の人数や平均年齢、平均勤続年数、平均年収などが掲載されています。この記事では、これら公開情報を基に、Publickeyが独自の判断で主な企業をピックアップして業種を分類。平均年収が高い順に並べてみたものです。 ただし、持ち株会社など現場の社員の給与を反映し……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #4a7a52">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></svg>インフラ・クラウド<span class="section-count">4</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/yumemi_inc/articles/github-release-not-a-publish-trigger">GitHub Release 作成をパッケージリリースのトリガーにするな！</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">はじめに GitHub Actions からパッケージを公開するとき，こんなワークフローを組んでいないでしょうか？ GitHub 上で Release を作成する → on: release: types: [published] でワークフローが起動する → npm publish が走る 操作する側から見ると，非常に分かりやすいですよね。Release を作れば NPM にも公開される。...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/blue_jam/articles/08b31e29699b56">AWSのBilling障害の対応への反省点</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">7月17日午後5時半頃からAWSのコストが過大に表示されるという障害が発生しています。この問題への自分の対応があまり良くなかったと反省しています。障害対応のだめな例として参考にしていただくために、恥を忍んで公開します。 前提 影響があったのは個人のアカウント（ISUCONに参加するために作り、あとで使うかもと思い放置していた） AWSの操作にはあまり慣れていない（とくにIAM周り） 主な反省点 コストアラートのメールを見た後の自分のとった行動のなかで、よくなかったと思うことは次の点です。 （個人のアカウントの問題とはいえ、AIすら頼らず）1人でパニック状態のまま初動対応を...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://justsomebody.dev/blog/mikrotik-home-router">HomeLab #1: MikroTik as a Home Router</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 55 · <a href="https://news.ycombinator.com/item?id=48970772">37 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>MikroTikの機器を自宅ネットワークのルーターとして構築・運用する方法をまとめた、Homelab連載の第1回です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://news.ycombinator.com/item?id=48968606">Show HN: I replaced a $120k bowling center system with $1,600 in ESP32s</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>総額12万ドル規模のボウリング場システムを、ESP32を中心とする約1,600ドルの構成で置き換えた事例を紹介しています。</p>
+      <p class="article-excerpt">I might be the only SRE on Earth with his own bowling center. It&#39;s a more in-depth gig than you&#39;d think. My family and I bought an abandoned 8-lane bowling center in the rural mid-west. In our small town there weren&#39;t many recreation options for families. You&#39;ve heard of a food desert? This is an R&amp;…</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #75695a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>その他<span class="section-count">2</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://president.jp/articles/-/115203">稼げないと言われる農業で｢時給6000円｣を叩き出す…国産キウイで｢キーエンス超え｣を目指す元県庁職員の戦略</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">ビタミンや食物繊維が豊富なフルーツとして人気のキウイ。国内消費量は年間約12万トンに達する一方、国産生産量は最盛期の約3分の1まで激減している。この流れに戦いを挑む元県庁職員がいる。農業ライターの鈴木雄人さんは「香川県の職員時代に11種類もの品種を開発した末澤克彦さんは、キウイ業界のレジェンドと呼ばれ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://videocardz.com/newz/modder-runs-gta-iii-inside-gta-san-andreas-on-an-in-game-tv">Modder Runs GTA III Inside GTA: San Andreas on an In-Game TV</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 52 · <a href="https://news.ycombinator.com/item?id=48970991">11 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>改造によって、GTA: San Andreas内のゲーム内テレビでGTA IIIを動作させる技術的な試みを紹介しています。</p>
+      
+    </li></ul>
+  </section>
+  <footer>
+    <a href="./">アーカイブ</a>
+    <span>生成: 2026/7/20 7:59:30</span>
+  </footer>
+</div>
+</body>
+</html>
