@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-08-04 | Tech Daily Digest</title>
+<style>
+:root {
+  --paper: #f6f1e7;
+  --card: #fffdf7;
+  --ink: #211d18;
+  --muted: #75695a;
+  --accent: #c23a28;
+  --rule: #d9cfbd;
+  --rule-strong: #211d18;
+  --mincho: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  --gothic: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1a1712;
+    --card: #221f19;
+    --ink: #eae2d3;
+    --muted: #9c917d;
+    --accent: #e2593f;
+    --rule: #3b352a;
+    --rule-strong: #eae2d3;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--gothic);
+  font-size: 15px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+.sheet { max-width: 720px; margin: 0 auto; padding: 28px 20px 64px; }
+
+header.masthead { text-align: center; padding: 18px 0 14px; border-bottom: 4px double var(--rule-strong); }
+.masthead-date { font-family: var(--gothic); font-size: 12px; letter-spacing: .35em; color: var(--muted); text-transform: uppercase; }
+.masthead h1 {
+  margin: 6px 0 4px;
+  font-family: var(--mincho);
+  font-weight: 600;
+  font-size: clamp(28px, 7vw, 40px);
+  letter-spacing: .08em;
+}
+.masthead h1 .accent { color: var(--accent); }
+.masthead-sub { font-size: 12px; color: var(--muted); letter-spacing: .18em; }
+
+.overview {
+  font-family: var(--mincho);
+  font-size: 17px;
+  line-height: 2.1;
+  margin: 28px 2px 8px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-title {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  margin: 0 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule-strong);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-count { font-family: var(--gothic); font-size: 11px; color: var(--muted); letter-spacing: .05em; }
+
+section { margin-top: 40px; animation: rise .5s ease both; }
+section:nth-of-type(1) { animation-delay: .05s; }
+section:nth-of-type(2) { animation-delay: .12s; }
+section:nth-of-type(3) { animation-delay: .19s; }
+section:nth-of-type(4) { animation-delay: .26s; }
+section:nth-of-type(5) { animation-delay: .33s; }
+section:nth-of-type(6) { animation-delay: .40s; }
+section:nth-of-type(7) { animation-delay: .47s; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { section { animation: none; } }
+
+.picks { list-style: none; margin: 0; padding: 0; }
+.pick {
+  display: flex;
+  gap: 16px;
+  padding: 18px 16px;
+  margin-top: 14px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+}
+.pick-no {
+  font-family: var(--mincho);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.pick-title { font-family: var(--mincho); font-size: 17px; font-weight: 600; line-height: 1.7; }
+.pick-reason { margin: 6px 0 4px; color: var(--muted); font-size: 13.5px; }
+.pick-source { font-size: 11px; color: var(--accent); letter-spacing: .1em; }
+
+.articles { list-style: none; margin: 0; padding: 0; }
+.article { padding: 14px 2px; border-bottom: 1px dotted var(--rule); }
+.article-title { font-weight: 600; }
+.article-meta { margin-left: 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.article-excerpt { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+.article-translation { margin: 4px 0 0; font-size: 13.5px; line-height: 1.8; }
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  vertical-align: 2px;
+  border-radius: 2px;
+}
+.badge-ja { margin: 0 6px 0 0; vertical-align: 1px; }
+.badge-source { border-color: color-mix(in srgb, var(--muted) 55%, transparent); color: var(--muted); }
+.feed-error { color: var(--muted); font-size: 13px; }
+.feed-errors { margin-top: 36px; font-size: 12px; color: var(--muted); }
+
+.genre { --g-disp: var(--g); }
+@media (prefers-color-scheme: dark) {
+  .genre { --g-disp: color-mix(in srgb, var(--g) 55%, #f0e8d8); }
+}
+.genre .section-title { color: var(--g-disp); border-bottom-color: color-mix(in srgb, var(--g-disp) 60%, transparent); align-items: center; }
+.genre .section-count { color: var(--muted); }
+.genre-icon { width: 19px; height: 19px; flex-shrink: 0; }
+.stars { font-size: 11.5px; letter-spacing: 2px; margin-right: 8px; color: var(--accent); vertical-align: 1.5px; }
+.stars-1 { color: var(--muted); opacity: .55; }
+.pick-thumb {
+  width: 108px;
+  height: 76px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
+}
+@media (max-width: 480px) { .pick-thumb { width: 80px; height: 60px; } }
+
+footer {
+  margin-top: 56px;
+  padding-top: 14px;
+  border-top: 4px double var(--rule-strong);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <div class="masthead-date">2026年8月4日（火）</div>
+    <h1>Tech Daily <span class="accent">Digest</span></h1>
+    <div class="masthead-sub">毎朝の技術情報、一枚に。</div>
+  </header>
+  <p class="overview">今日は、AIエージェントを実務に組み込む際の知識設計・タスク管理・評価・セキュリティに関する記事が目立ちました。LLMの脆弱性やAI活用の限界を指摘する内容と、ローカル実行・専用ハードウェア・クラウド基盤など実装面の話題が並び、AIを「導入する」段階から「安全かつ継続的に運用する」段階へ関心が移っている印象です。</p>
+  
+  <section class="top-picks">
+    <h2 class="section-title">今日の注目</h2>
+    <ol class="picks">
+      <li class="pick">
+        <span class="pick-no">01</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://zenn.dev/aws_japan/articles/context-ontology-accelerator-deploy">オントロジーで AI に業務知識を渡す — AWS の OSS「Context Ontology Accelerator」を試してみた</a>
+          <p class="pick-reason">AIエージェントに業務知識を正しく渡すためのオントロジー設計を、AWSのOSSで実際に試した記事です。別記事でも同じテーマの設計論が扱われており、今日のフィード内で議論の重なりが最も大きいテーマです。</p>
+          <span class="pick-source">はてブ テクノロジー</span>
+        </div>
+        <img class="pick-thumb" src="https://res.cloudinary.com/zenn/image/upload/s--tBnwPxIJ--/c_fit%2Cg_north_west%2Cl_text:notosansjp-medium.otf_55:%25E3%2582%25AA%25E3%2583%25B3%25E3%2583%2588%25E3%2583%25AD%25E3%2582%25B8%25E3%2583%25BC%25E3%2581%25A7%2520AI%2520%25E3%2581%25AB%25E6%25A5%25AD%25E5%258B%2599%25E7%259F%25A5%25E8%25AD%2598%25E3%2582%2592%25E6%25B8%25A1%25E3%2581%2599%2520%25E2%2580%2594%2520AWS%2520%25E3%2581%25AE%2520OSS%25E3%2580%258CContext%2520Ontology%2520Accelera...%2Cw_1010%2Cx_90%2Cy_100/g_south_west%2Cl_text:notosansjp-medium.otf_34:%25E3%2581%2584%25E3%2581%25AA%25E3%2582%258A%25E3%2581%258F%2520%252F%2520Riku%2520Inada%2Cx_220%2Cy_108/bo_3px_solid_rgb:d6e3ed%2Cg_south_west%2Ch_90%2Cl_fetch:aHR0cHM6Ly9zdGF0aWMuemVubi5zdHVkaW8vdXNlci11cGxvYWQvYXZhdGFyLzZmZTY2NGI3N2IuanBlZw==%2Cr_20%2Cw_90%2Cx_92%2Cy_102/g_south_west%2Ch_34%2Cl_default:og-publication-pro-mark-xcosax%2Cw_34%2Cx_217%2Cy_158/co_rgb:6e7b85%2Cg_south_west%2Cl_text:notosansjp-medium.otf_30:%25E3%2582%25A2%25E3%2583%259E%25E3%2582%25BE%25E3%2583%25B3%2520%25E3%2582%25A6%25E3%2582%25A7%25E3%2583%2596%2520%25E3%2582%25B5%25E3%2583%25BC%25E3%2583%2593%25E3%2582%25B9%2520%25E3%2582%25B8%25E3%2583%25A3%25E3%2583%2591%25E3%2583%25B3%2520%2528%25E6%259C%2589%25E5%25BF%2597%2529%2Cx_255%2Cy_160/bo_4px_solid_white%2Cg_south_west%2Ch_50%2Cl_fetch:aHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jTFB2am5INFd2dWRBT2p6Tm9JUEpQR3lNYmt4eWFuVlVXbEJZT3ZmVE1DRlFlTnh6Zz1zOTYtYw==%2Cr_max%2Cw_50%2Cx_139%2Cy_84/v1627283836/default/og-base-w1200-v2.png?_a=BACMTiAE" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">02</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.technologyreview.jp/s/386800/a-fundamental-flaw-leaves-llms-strikingly-vulnerable-to-attack/">「思考の連鎖」偽装でLLMを騙す新手法、訓練では防げない構造的欠陥</a>
+          <p class="pick-reason">偽の思考の連鎖によってLLMの指示系統を混乱させる攻撃手法を紹介しており、プロンプトや追加学習だけでは解決しにくい構造的なリスクを考える材料になります。</p>
+          <span class="pick-source">はてブ テクノロジー</span>
+        </div>
+        <img class="pick-thumb" src="https://www.technologyreview.jp/wp-content/uploads/sites/2/2026/07/chain-link-1400x787.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li></ol>
+  </section>
+  
+  <section class="feed genre" style="--g: #c23a28">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M18.5 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>AI・LLM<span class="section-count">18</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://zenn.dev/knowledge_graph/articles/ontology-define-first-vs-induce">オントロジーは「先に決める」か「データから起こす」か</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">オントロジーで AI に業務知識を渡す — AWS の OSS「Context Ontology Accelerator」を試してみた が話題になっています。オントロジーをテーブルや文書から起こして提案を人が確認して使うという話です。 現場では部署ごとに「売上」の意味が違いエージェントが誤った数字をすぐ拡散します。原因の一つはオントロジーの...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://zenn.dev/aws_japan/articles/context-ontology-accelerator-deploy">オントロジーで AI に業務知識を渡す — AWS の OSS「Context Ontology Accelerator」を試してみた</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">はじめに こんにちは、AWS Japan でソリューションアーキテクトをしているいなりくです。 AI エージェントを業務に入れようとすると、必ず同じ壁にぶつかります。データはあるのに、業務の意味が渡っていないという壁です。 「売上」は total_amount の合計なのか、送料込みなのか、キャンセル分を引くのか 「この注文は...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://qiita.com/jqit_suwa/items/2dee3e3d53080c3676a0?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">CLAUDE.md を厚くしても意味がなかった話</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">36.2%。 これ、何の数字だと思いますか。 AIエージェントに「このルールを守って作業して」と指示書を渡したとき、実際にちゃんと守れた割合です。しかも、これが一番マシだったモデルのスコア。ほとんどのモデルは25%を下回りました。 2026年7月28日に arXiv に上が...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.itmedia.co.jp/business/articles/2608/03/news030.html">「AI、結局使えないじゃん」問題 セールスフォースが431万件対応で導いた正解</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">「AIエージェントを試してはみたが、全社的な利益にはなかなかつながらない」――。 経営層から、こんな課題をよく聞く。AIエージェントを導入する企業が増えた一方で、具体的な成果に結び付いた例は限られるのが実情だ。 米McKinsey &amp; Companyが2025年11月に公表した調査によると、AIエージェントを少なくとも1つの業務で...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://gihyo.jp/article/2026/08/yc-qm">Y Combinator、マルチエージェントハーネス「QM」をオープンソース化 ——組織のクラウド環境で利用者やチャンネルごとの作業環境を管理 | gihyo.jp</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">Y Combinator⁠⁠、マルチエージェントハーネス「QM」をオープンソース化 —⁠—組織のクラウド環境で利用者やチャンネルごとの作業環境を管理 Y Combinator（YC）は2026年7月31日、社内で利用しているマルチエージェントハーネス「QM」をオープンソースとして公開した。会計、法務、イベント運営、エンジニアリングなどの業...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://gigazine.net/news/20260803-china-ai-distillation/">中国の軍事研究者がOpenAIやAnthropicのAIモデルを抽出して国内の軍事システム開発に利用していたことが判明</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">中国の軍事研究者らが、OpenAIとAnthropicが開発したアメリカの主要なAIモデルの出力を利用して、中国の防衛能力を向上させるための国内AIシステムをトレーニングしていることが中国の学術論文および特許の調査から明らかになりました。アメリカ政府は中国への高度なチップ輸出規制やその他の戦略技術へのアクセスを制限...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/osakayakyu/articles/e6aa9835c04d73">Claude CodeのSkillsは「手順書」だったので、/article コマンドを作ってみた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">概要 Claude Codeの「スキル」という言葉を見たとき、最初はプラグインや拡張機能みたいなものを想像していました。 何かスクリプトを書いて、コマンドから呼び出して、決まった処理を自動実行するようなイメージです。 でも実際に触ってみると、思っていたよりずっとシンプルでした。 用意するのは、基本的には SKILL.md というMarkdownファイルです。 そこに「こういう順番で作業してほしい」「ここは必ず確認してほしい」という手順を書いておくと、Claude Codeがその手順に沿って動いてくれます。 つまり、Claude Codeのスキルは「コードを書く自動化」というより、 毎...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/hellohazime/articles/kimi_k3_reap640_512gb_mac">Kimi K3を441GBに枝刈りして、Mac Studio 1台で動かした</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">お疲れ様です波浪です。 今回は、最近流行りのKimi K3です。前回の失敗を活かして自分の中でも熱があるうちにBLOGにしました。 結論。枝刈りしたKimi K3がMac Studio(Apple M3 Ultra、512GB)1台で動きました。ハーネスとしてKimi Code CLIを繋いで、SWE-Lancerの実タスク8本中5本正解、$3,500。そのうち2本は、前回2bitのK2.7が解けなかった問題でした。 モデルはHugging Faceに置いてあります。 https://huggingface.co/hellohazime/Kimi-K3-REAP640-IQ1_S-GGU...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/hisaju01/books/meteorfall-development">メテオフォール開発</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">AIエージェントで粗い初期実装をまず落とし、人間が観測・分解・修正していく開発手法「メテオフォール開発」の考え方と実践をまとめた本。依頼設計・レビュー・タスク分解・ジュニア参加・品質ゲート・ケーススタディ・テンプレートまでを扱う。</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/ktdatascience/items/8d2dace07c9c7a9d0453?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">AIのアウトプットをそのまま出すだけの人にならないために</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに 自分はエンジニアとして4年です。いまは Claude Code と Codex を毎日並列で走らせて仕事をしています。 この記事は、仕事のかなりの部分をエージェントに渡してみて痛感した「それでも人間に残る仕事は何か」を、自分の失敗込みで整理したポエムです。あなた...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/Y-Y-dev/items/d526fb7cdbe35a3f9384?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">Claude Code／Codexに中～大規模開発を任せるためのタスク管理</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">概要 Claude CodeやCodexのようなAIコーディングエージェントは、コードの調査、実装、テスト、ドキュメント更新などをまとめて進められます。 小さな修正であれば、「この不具合を直してください」という指示だけでも十分な結果が得られることがあります。 一方、数十〜...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.seangoedecke.com/llms-reward-expertise/">LLMs reward expertise</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 219 · <a href="https://news.ycombinator.com/item?id=49161518">89 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>LLMは専門知識や熟練者の能力をどのように評価・増幅するのかを論じる記事です。AI時代にもドメイン知識が重要である理由を考察しているとみられます。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://blog.cloudflare.com/smaller-faster-safer-models/">Smaller, faster, safer: running Kimi and GLM at scale</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 114 · <a href="https://news.ycombinator.com/item?id=49158581">29 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>KimiやGLMのような比較的小型のモデルを、Cloudflare上で大規模に実行する取り組みを紹介します。小型モデルによる速度・コスト・安全性の改善が主題です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://hoplite.sh">Launch HN: Hoplite (YC S26) – Effortlessly deploy cloud coding agents</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>クラウド上にコーディングエージェントを簡単に展開し、機能のQAまで行えるサービスHop​​liteの紹介です。複数のエージェント環境を開発チームで運用するための機能を提供します。</p>
+      <p class="article-excerpt">Hi HN, we’re Bence and Ryan, founders of Hoplite (https://hoplite.sh). Hoplite lets you deploy coding agents in the cloud, with a suite of tools that makes it incredibly easy to QA features. During onboarding, we port over your local setup - sessions, memories, MCP servers, and get your projects rea…</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://armature.tech/">Show HN: Product analytics (and evals) for agent sessions on your MCP</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>MCP上で動くエージェントセッションを分析し、ツール呼び出しの背後にあるユーザー要求やエージェントの行動を再構成するサービスです。エージェントのプロダクト分析や評価を支援します。</p>
+      <p class="article-excerpt">Hi HN! We’re Theodore and Louis, founders of Armature (YC P26). We reconstruct the entire session behind the MCP tool calls you receive, including what the user asked their agent to do and what the agent thought. You wrap your MCP in 3 lines of code (our SDK is available in Typescript, Python and Go…</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/jetbrainsaijetbrains_context.html">JetBrains、AIが少ないトークンでコンテキストを取得しやすく、よりよいコード生成を可能にする「JetBrains Context」発表</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">JetBrainsは、コードリポジトリの上にインテリジェンスなレイヤを構築し、AIエージェントに対して適切なコードのコンテキストを提供することで、AIエージェントによるよりよいコード生成を可能にする新サービス「JetBrains Context」を発表しました。 Coding agents shouldn&#39;t have to rediscover your codebase for every task.JetBrains Context gives them cod……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://ameblo.jp/miyamotokarin-official/entry-12974640519.html">宮本佳林『元アイドルがバイブコーディングできるようになるまで。』</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">こんにちは！2020年までハロー！プロジェクト Juice=Juiceで活動をし、卒業以降はソロで音楽活動をしております。 宮本佳林です！はじめましての方もこの記事にはいらっしゃるかな、、？先日、 AIで配信システムを作ったものを自分の勉強のためにAIと一緒にブログを書いたところ、かなり反響があり嬉しい気持ちとびっく...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/sumomoo/items/4efb8d1abd340c0bec28?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">中国産Kimi3｜Claudeなどの有料プラン級が無料で使える最新AIとは？</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめまして。株式会社PRUMでエンジニアをしている、すもも🍑です 日々、プログラミング学習や実務の中で、つまずきやすいポイントや 考え方を整理して発信しています。 PRUMについて気になった方は、コーポレートサイトもぜひご覧ください。 ▶コーポレートサイト みなさん、2...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #2f6b8f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/></svg>Web開発<span class="section-count">7</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/rustwebtopcoattokio.html">Rust製のフルスタックWebアプリフレームワーク「Topcoat」登場。非同期ランタイム「Tokio」上でサーバサイドレンダリング、ルーティング、コンポーネントライブラリなど</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Rust言語の代表的な非同期ランタイムライブラリ「Tokio」の開発チームが、フルスタックのWebアプリケーションフレームワーク「Topcoat」のリリースを発表しました。 下記はTokioの作者でTopcoatの作者でもあるCarl Lerche氏によるポストです。「3年前、RustでWebアプリを作るのは無茶な話でした。しかし今は違います。Topcoatをここに発表します。リアクティブなWebアプリケーションの開発のための機能は全部入っています」 Three years ……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/headwaters/articles/76f20490b76952">ローカルタスク管理アプリを設計してみた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">背景 今まではタスクは自分の頭で整理するか、メモ帳のようなものに書き留めていました。 それくらいの管理で十分でした。 しかし最近、案件業務・社内業務とタスクが増え、整理していかないと厳しい状態になってきました。 課題 課題なのが、私自身タスク管理というものが苦手ということ。アプリを開いたり記入したりするのが面倒になりがちで、何かにメモしておこうとしてもベタ書き（用件だけ書いて締め切りなどは書かない、など）になってしまいがちです。 解決策 これを解決するために、音声入力 + 文章整形 + 保存ができれば良いのではないかと思いました。 そこで今回取り入れたのが Claude Co...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/ryu-ki/items/60cc8e04d60bbfcf7fa7?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【Lambda】NFC 名刺のアクセスカウンターを Lambda Function URL + DynamoDB で作る</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">この記事は「2026 Japan AWS Jr. Champions 真夏のQiitaリレー」の3日目の記事となります。 過去の投稿（リンク集）は以下からご覧ください。 昨日投稿の記事も併せて記載します。 はじめに 私は現在、勉強会に参加する際に、NF...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/NT_seki/items/0027e9cd38f5c165c1ad?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【初学者必見】Python復習記録｜Djangoで入力チェックを実装してみた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">1. はじめに 前回の記事：【初学者必見】Python復習記録｜基本的な入力チェックを関数化して実装してみた 前回、Pythonの復習も兼ねて基本的な入力チェックを自作の関数として実装しました。 前の案件ではDjangoを使ってWebアプリ開発に携わっていたのですが、...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://github.com/MikeLuu99/searxng-rust">SearXNG in Rust</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 54 · <a href="https://news.ycombinator.com/item?id=49158141">19 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>メタ検索エンジンSearXNGをRustで実装するプロジェクトです。Rustによる性能・安全性・配布性の向上を目指しているとみられます。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/aidiawindows.html">アトラシアン、AI時代の仕事用ブラウザ「Diaブラウザ」のWindows版リリースへ。ウェイトリストへの登録開始</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">アトラシアンは、現在Mac版がリリースされているDiaブラウザのWindows版を今年の秋にリリースすることを明らかにしました。 Dia for Windows is coming (this fall!) pic.twitter.com/S9sSqycQKO— Dia (@diabrowser) July 29, 2026 Arcブラウザの開発元をアトラシアンが買収 Diaブラウザはもともと、サイドバー重視のデザインや便利なタブ管理機能などで話題となった「Ar……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/saasuipr.html">SaaSにおけるUI開発のよくある課題とその解決方法、教えます［PR］</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">.jetform-wrapper { border: 2px solid #ccc; /* 枠線 / padding: 20px; / 内側の余白 / border-radius: 12px; / 角丸（不要なら削除） / background: #fafafa; / 背景色（任意） / margin: 20px 0; / 上下の余白 */ } .notes {fon……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #4a7a52">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></svg>インフラ・クラウド<span class="section-count">7</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.itmedia.co.jp/pcuser/articles/2608/03/news063.html">AIデータセンターの“真の実力”を左右する「CPU」 その復権の背景にあるものとは？</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">AIデータセンターの“真の実力”を左右する「CPU」 その復権の背景にあるものとは？：AMD AI Advancing 2026（1/2 ページ） Advanced Micro Devices（AMD）が7月22日から23日まで（米国太平洋夏時間）開催した自社主催のイベント「AMD AI Advancing 2026」では、「AIワークロードにおけるCPUの復権」がテーマの1つとなっ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/neoai/articles/878ed0b400f45d">3 行の同期バッチが、壊れるたびに堅牢になっていく話</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに こんにちは。株式会社neoAIでエンジニアをしている相原です。 データ連携の機能を作っていてさんざん苦労したので、学びをメモとして共有します。ユーザーの許可を得て、外部サービスからデータを API で取り込む。加工して、自社サービスに保存する。カレンダー連携や会計ソフトの明細取り込みのような、よくあるインポート機能です。この同期処理、「データ量が増えたらこの実装で持つのだろうか」と不安になったことはないでしょうか。 結論から言うと、この手の同期処理は、データ量が増えるにつれてだいたい決まった順番で壊れていきます。メモリ、実行時間、重いデータの偏り、壊れたデータの道連れ、そし...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://blog.cloudflare.com/billable-usage-api/">The Billable Usage API: programmatic cost visibility for Cloudflare</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 36 · <a href="https://news.ycombinator.com/item?id=49158714">6 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Cloudflareの利用量や請求対象となる使用状況をプログラムから取得できるBillable Usage APIの紹介です。コスト可視化や請求監視の自動化に役立つ機能を説明しています。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/aws28google_cloud1154220262synergy_research.html">クラウドインフラのシェア、AWSが28％と変わらず、Google Cloudは1ポイント上昇して15％に。市場全体が年42％と過去最高の成長率に。2026年第2四半期、Synergy Research</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">調査会社のSynergy Research Groupは、グローバルにおける2026年第2四半期のクラウドインフラの市場状況について調査結果を発表しました。 クラウドインフラとは、IaaS、PaaS、ホステッドプライベートクラウドを合わせたものを指します。 発表によると、2026年第2四半期のクラウドインフラ市場は1年前と比較して43％成長となり成長率はこれまでで最高です。市場規模は1430億ドル（1ドル160円換算で約22兆8800億円）となり、3年前と比べて2倍以上となり……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/kubernetesaikubeconcloudnativecon_japan_2026.html">KubernetesはAIを動かすプラットフォームに。横浜でKubeCon＋CloudNativeCon Japan 2026が開幕</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">クラウドネイティブ関連技術におけるIT業界最大のイベント「KubeCon+CloudNativeCon Japan 2026」が昨日（2026年7月29日）、パシフィコ横浜で開幕しました。日本でKubeCon＋CloudNativeConが開催されるのは、昨年に続いて2度目です。 日本のクラウドネイティブ関連の開発者は95万人 基調講演に登壇したのは、本イベントの主催者であるCloud Native Computing Foundation（以下、CNCF）CTO Chris……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/KA026/items/23b0952b181807b5dabd?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">クラウドだけではないAI推論 ～なぜAIのハードウェア実装が求められているのか～</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">1. 初めに 本記事は、生成AIの出力をもとに執筆・編集しています。 こんにちは。 メイビスデザインのKA026(@KA026)です。 近年、生成AIや画像認識技術の発展により、AIは私たちの身の回りのさまざまな製品やサービスに活用されるようになりました。 これま...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/100cncf.html">日本におけるクラウドネイティブコミュニティの開発者数が約100万人に、CNCFが調査結果を発表</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Kubernetesをはじめとするクラウドネイティブなテクノロジーを推進するCloud Native Computing Foundation（以下、CNCF）とIT分野専門の調査会社であるSlashDataは、日本におけるクラウドネイティブの現状を調査したレポート「State of Cloud Native Development in Japan 2026」（日本におけるクラウドネイティブ開発の現状 2026）を公開しました。 CNCFとSlashDataの調査レポート：……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #a04a1f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>セキュリティ<span class="section-count">6</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.technologyreview.jp/s/386800/a-fundamental-flaw-leaves-llms-strikingly-vulnerable-to-attack/">「思考の連鎖」偽装でLLMを騙す新手法、訓練では防げない構造的欠陥</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">大規模言語モデル（LLM）は、ユーザー・システム・思考の連鎖といった「発信元」をタグではなく文章のスタイルで識別しているにすぎない。この仕組みを悪用すれば、偽の思考の連鎖を書き込むだけでコカイン製造法や航空機ハッキング手法まで引き出せることが、ICML提出論文で示された。研究チームは、これが訓練でも解消...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://qiita.com/jqit_suwa/items/2adb0c35fffb41514791?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">「インターネットはありません」と書いたプロンプトの外で、AI が実在企業3社に侵入していた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">プロンプトには、こう書いてありました。 この環境はシミュレーションです。インターネットへのアクセスはありません。 嘘でした。 わざと嘘をついたわけではありません。書いた人も、そう信じていた。ただ、実際の環境はインターネットに繋がっていた。 結果、AI エージェントは実在...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/google_cloudaicodemender.html">Google Cloud、AIが自律的にコードの脆弱性検出からサンドボックス内でのリスク検証、修正までを自動実行。「CodeMender」プレビュー公開</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Google Cloudは、コードの脆弱性の検出、リスクの検証と報告、修正までを自律的に実行するAIエージェント「CodeMender」のプレビュー公開を発表しました。 複雑な脆弱性まで発見し、サンドボックス内でリスク検証 CodeMenderは、静的解析やモデルのみのスキャンでは見落としてしまう複雑な脆弱性の発見を可能としており、メモリ破損、インジェクション、Webセキュリティの問題、暗号の欠陥、安全でないデータ処理などの検出が困難な脆弱性も探索できるとしています。 対象と……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/juck28/articles/091c07869aba28">GDBで始めるアセンブリと解析</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">Reversingをやる上で避けて通れないのがアセンブリ。 こいつを「なんとなく読める」ようになると解析がグッと楽になります。 この記事はSECCON Beginners 2026 東京で担当したワークショップ「アセンブリと解析をそれとなく理解する巻」の補助資料兼、後日ひとりでも復習できるようにまとめたものです。 環境はブラウザだけで完結するGoogle Cloud Shellを使っていきます。 (手元にLinuxがある人はそのままでもOKです) ! この記事のゴールは「アセンブリをざっくり読める」「GDB+Pwndbgで解析ができる」の2つです。 完璧を目指さず「なんとなくこんなんなん...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/takeda_h/items/74e0d6802dafeda4a7b1?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">ガバメント AI 源内（genai-web）を Entra ID シングルサインオン + カスタムドメインで運用する</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">ガバメント AI 源内の AI インターフェース（genai-web）は、ユーザー認証に Cognito を使っており、デフォルトではメールアドレスを使ったパスワード認証をするようになっています。 genai-web は SAML で外部 IdP からシングルサインオンでき...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://status.digdir.no/incidents/d7hvqmf2yr3l">DDoS against Norwegian government IT infrastructure – status</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 76 · <a href="https://news.ycombinator.com/item?id=49160631">53 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>ノルウェー政府のITインフラに対するDDoS攻撃について、発生状況や影響、対応の進捗を報告するステータスページです。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #6b5a9e">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg>言語・ツール<span class="section-count">5</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://zenn.dev/ubie_dev/articles/gh-stack-introduction">GitHubにスタック型プルリクエストが登場。gh stackでPRを分割して積み上げよう</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">GitHubでPRを細かく作り、前のブランチに対して数珠つなぎのようにPRを作る私が大歓喜！ GitHubに「スタック型プルリクエスト（Stacked pull requests）」が来ました💐 4行まとめ 大きな変更を順序付きの小さなPR群に分割して扱える「スタック型プルリクエスト」がGitHub公式で登場 gh extension install github/gh-stackでCLIから使える gh stack syncでスタックのrebase, pushまで一発でできる AIエージェント用にgh-stackスキルがあるので自然言語でスタックPRの操作が可能 巨大な...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/gamedev_toollab/articles/945a5084be2a38">UnityのDIは本当に必要か：Zenject継続・Reflex新規採用・VContainer比較の判断軸</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに Unityの規模が大きくなると、GameManager.Instance、FindFirstObjectByType、GetComponent、Scene上の大量の参照設定が増え、依存関係が追いにくくなります。入力、通信、セーブ、分析、課金などをテスト用実装へ差し替えたいのに、利用側まで修正が必要になることもあります。 こうした問題への代表的な解決策がDI（Dependency Injection、依存性注入）です。Unity向けではZenjectと、そのフォークであるExtenjectが長く使われてきました。しかし2026年7月時点で、Zenjectの最終リリースは202...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/shunsuke_suzuki/articles/make-cli-ai-friendly">AI フレンドリーな CLI を開発するテクニック</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">自分は趣味で様々な CLI を OSS として公開しています (aqua, pinact, tfcmt, ghalint, ghir, etc)。 昨今では AI がこれらを扱うことも増えてきていますが、それなりに知られた OSS でないかぎり AI はその OSS に関する質問に答えたりトラブルシューティングしたりするための知識を持ち合わせていません。 そのため Coding Agent は Web Fetch したりしますが、闇雲に Web Fetch するのは効率がよくありませんし、 Web Fetch だとコンテンツが要約されてしまうという問題もあります。 https://zen...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://changelog.complete.org/archives/44456-celebrating-45-years-of-kermit-with-the-first-new-c-kermit-release-in-15-years-and-working-with-a-decades-old-c-codebase">Celebrating 45 Years of Kermit with the First New C-Kermit Release in 15 Years</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 115 · <a href="https://news.ycombinator.com/item?id=49158474">31 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>通信ソフトウェアKermitの45周年と、15年ぶりとなるC-Kermitの新リリースを記念する記事です。数十年前のCコードベースを保守・更新する経験も扱います。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://hamvocke.com/blog/task-runners/">Use Task Runners for Common Coding Tasks</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 57 · <a href="https://news.ycombinator.com/item?id=49158287">19 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>頻繁に行うビルドやテストなどのコーディング作業をタスクランナーにまとめる利点と方法を解説します。開発手順の標準化や再現性向上が狙いです。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #b0813a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c.7-3.4 2.8-5.5 5.5-5.5s4.8 2.1 5.5 5.5M16 5.5a3.5 3.5 0 010 6.6M17.5 14.8c2 .7 3.4 2.5 4 5.2"/></svg>キャリア・組織<span class="section-count">4</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://anond.hatelabo.jp/20260803162719">AIで仕事を効率化したら、なぜか僕の仕事だけ増えた話</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">こんにちは。 突然ですが、みなさんは仕事を効率化していますか？ 僕はしていました。 めちゃくちゃしていました。 AIが世の中で騒がれ始めた頃から、「これは仕事のやり方が根本から変わるぞ」と思って、画像生成AIや文章生成AIを試し、社内業務に応用できそうな方法を検証し、結果を資料にまとめ、周囲に共有していま...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/rira__/items/dab9765ffd6aae8f0c07">社内IT推進で「作っても使われない」をゼロにするために、僕が現場で学んだ5つのこと - Qiita</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">この記事では社内で日々発生する様々な課題をヒアリングし、ITやAIを活用して解決策に落とし込む中で得た「実務のリアルな知見」をまとめました！めちゃくちゃ現場感がある内容になっていると思います。 単にシステムを作るだけでなく、「どう全体最適化するか」「いかに現場に使ってもらうか」に悩むDX担当者や社内PMの...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/dress_code/articles/c73500ae73361c">アーキテクチャに限らず意思決定を全部残す「ADR（Any Decision Record）」という文化</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに Dress Code 株式会社のかわうそです。 Dress Code では創業初期から ADR を書き続けているのですが、一般的な ADR とは少し違う運用をしています。頭文字の &quot;A&quot; を Architecture ではなく Any と読み替えて、「領域も大小も問わず、あらゆる意思決定を全部残す」という文化として回しています。 この取り組みは以前イベントでも登壇して話しました。 https://speakerdeck.com/kawauso/dokiyumentohaainowei-fang-sutatoatupunoaziyairuwojia-su-suruadr 社外...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/prumnn/items/7d677f2f15de896d88bc?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">「ITガバナンス」って何？夏のバカンス🏝️と何が違うの？ITパスポートのガバナンスを調べてみた。</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに ニュースで不祥事の話題が出るたびに聞く「ガバナンスの欠如」という言葉。なんとなく「会社のたるみ」くらいのイメージで済ませていたぷらむんが、ITパスポートの勉強中に「ITガバナンス」の文字に出会って、調べずにいられなくなった話です。 こんにちわ、会社で自称...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #3f7f7a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3h4M11 3v6l-5.5 9.2A2 2 0 007.2 21h9.6a2 2 0 001.7-2.8L13 9V3"/><path d="M8.5 15h7"/></svg>サイエンス<span class="section-count">2</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://openai.com/index/ten-advances-in-mathematics/">Ten advances in mathematics and theoretical computer science</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 374 · <a href="https://news.ycombinator.com/item?id=49157930">663 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>OpenAIが、数学および理論計算機科学における10の進展を紹介する記事です。AIを活用した研究成果や、問題解決・証明に関する成果をまとめた内容とみられます。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.mcgill.ca/oss/article/critical-thinking/dunning-kruger-effect-probably-not-real">The Dunning-Kruger effect may just be a data artefact (2020)</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 95 · <a href="https://news.ycombinator.com/item?id=49160437">103 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>ダニング＝クルーガー効果は、実際の心理現象というより統計上のデータ artefact かもしれないという議論を紹介します。効果の有名な解釈を批判的に見直す内容です。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #75695a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>その他<span class="section-count">4</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://virtuallyfun.com/2026/08/03/windows-xp-2002-for-the-itanium-unbridled-rage/">Windows XP 2002 for the Itanium: Unbridled rage</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 11 · <a href="https://news.ycombinator.com/item?id=49162086">0 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Itanium向けWindows XP 2002の概要や、対応にまつわる技術的・歴史的な苦労を振り返る記事とみられます。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://bumbershootsoft.wordpress.com/2026/05/30/zx-spectrum-system-tour-text-mode/">ZX Spectrum System Tour: Text Mode – Bumbershoot Software</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 7 · <a href="https://news.ycombinator.com/item?id=49161801">0 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>ZX Spectrumのテキスト表示モードを、ハードウェアやメモリ構成を含めて解説するシステムツアーです。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://github.com/SwagSoftware/KisakCOD">KisakCOD – open-source reimplementation of Call of Duty 4 Multiplayer</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 23 · <a href="https://news.ycombinator.com/item?id=49159970">2 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Call of Duty 4のマルチプレイヤー機能をオープンソースで再実装するプロジェクトです。ゲームエンジンやネットワーク処理の再現を目指すコードベースとみられます。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://bumbershootsoft.wordpress.com/2026/08/01/zx-spectrum-system-tour-sound/">ZX Spectrum System Tour: Sound</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 27 · <a href="https://news.ycombinator.com/item?id=49159676">5 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>ZX Spectrumのサウンド機能を、音源やハードウェア制御の仕組みから解説する記事です。</p>
+      
+    </li></ul>
+  </section>
+  <footer>
+    <a href="./">アーカイブ</a>
+    <span>生成: 2026/8/4 8:11:39</span>
+  </footer>
+</div>
+</body>
+</html>
