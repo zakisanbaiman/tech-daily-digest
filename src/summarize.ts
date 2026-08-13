@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
+import type { ComicCharacter } from "./comic.js";
 import type { AiSummary, Article } from "./types.js";
 
 const MODEL = "gpt-5.6-luna";
@@ -26,9 +27,12 @@ const aiSummarySchema = z.object({
       }),
     )
     .describe("lang=en の全記事の日本語要約"),
+  comicQuip: z
+    .string()
+    .describe("紙面冒頭の1コマ漫画でマスコットが言うセリフ。日本語40字以内、絵文字なし"),
 });
 
-function buildPrompt(articles: Article[]): string {
+function buildPrompt(articles: Article[], speaker: ComicCharacter): string {
   const list = articles.map((a) => ({
     url: a.url,
     title: a.title,
@@ -43,6 +47,7 @@ function buildPrompt(articles: Article[]): string {
     "1. dailyOverview: 全体の傾向を日本語2〜3文で",
     "2. topPicks: エンジニアが今日読むべき注目記事をちょうど3件選び、理由を添える（複数ソースに載っている記事や議論が盛り上がっている記事を優先）",
     "3. enSummaries: lang が en の記事すべてについて、タイトルから推測できる内容の日本語要約を1〜2文で",
+    `4. comicQuip: 紙面冒頭の1コマ漫画のセリフ。今日のニュース全体を眺めた軽いひとことを、次のキャラクターとして書く: ${speaker.persona} 40字以内・絵文字なし・キャラの口調を厳守`,
     "",
     "urlフィールドは一覧の値をそのまま転記すること。",
     "",
@@ -54,7 +59,10 @@ function buildPrompt(articles: Article[]): string {
  * 全記事を1回の呼び出しで要約する。
  * APIキー未設定・API失敗・スキーマ不一致はすべて null を返し、呼び出し側は要約なしで継続する。
  */
-export async function summarize(articles: Article[]): Promise<AiSummary | null> {
+export async function summarize(
+  articles: Article[],
+  speaker: ComicCharacter,
+): Promise<AiSummary | null> {
   if (!process.env["OPENAI_API_KEY"]) {
     console.warn("[summarize] OPENAI_API_KEY not set; skipping AI summary");
     return null;
@@ -69,7 +77,7 @@ export async function summarize(articles: Article[]): Promise<AiSummary | null> 
           content:
             "あなたは日本のソフトウェアエンジニア向けデイリーダイジェストの編集者です。",
         },
-        { role: "user", content: buildPrompt(articles) },
+        { role: "user", content: buildPrompt(articles, speaker) },
       ],
       text: { format: zodTextFormat(aiSummarySchema, "digest_summary") },
     });
@@ -92,5 +100,6 @@ function sanitize(summary: AiSummary, articles: Article[]): AiSummary {
     dailyOverview: summary.dailyOverview,
     topPicks: summary.topPicks.filter((p) => known.has(p.url)).slice(0, 3),
     enSummaries: summary.enSummaries.filter((s) => known.has(s.url)),
+    comicQuip: summary.comicQuip?.trim() || undefined,
   };
 }

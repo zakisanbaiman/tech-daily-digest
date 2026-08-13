@@ -1,3 +1,4 @@
+import { fallbackQuip, pickCharacter, wrapQuip } from "./comic.js";
 import type { AiSummary, Article, DigestData, FeedResult } from "./types.js";
 
 export interface RenderOptions {
@@ -21,6 +22,40 @@ export function formatDateJa(isoDate: string): string {
   if (!y || !m || !d) return isoDate;
   const weekday = WEEKDAYS_JA[new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
   return `${y}年${m}月${d}日（${weekday}）`;
+}
+
+/**
+ * マストヘッド直下の1コマ漫画。キャラは日替わり、セリフは AI 概況（comicQuip）、
+ * AI なしの日はキャラ固有のフォールバックセリフで必ず描画される。
+ */
+function renderComicStrip(data: DigestData): string {
+  const character = pickCharacter(data.date);
+  const quip = data.aiSummary?.comicQuip || fallbackQuip(character, data.date);
+  const lines = wrapQuip(quip);
+  const lineHeight = 24;
+  const bubbleH = lines.length * lineHeight + 28;
+  const bubbleY = Math.round((170 - bubbleH) / 2);
+  const firstLineY = bubbleY + bubbleH / 2 - ((lines.length - 1) * lineHeight) / 2 + 6;
+  const text = lines
+    .map(
+      (line, i) =>
+        `<tspan x="418" y="${firstLineY + i * lineHeight}">${escapeHtml(line)}</tspan>`,
+    )
+    .join("");
+  const tag = `今日の${character.name}`;
+  const tagWidth = [...tag].length * 13 + 14;
+  return `
+  <section class="comic">
+    <svg viewBox="0 0 680 170" role="img" aria-label="${escapeHtml(`今日の一コマ: ${character.name}「${quip}」`)}">
+      <rect x="2" y="2" width="676" height="166" rx="6" fill="#FFFDF7" stroke="#4A4A4A" stroke-width="3"/>
+      <rect x="14" y="12" width="${tagWidth}" height="22" fill="#4A4A4A"/>
+      <text x="${14 + tagWidth / 2}" y="28" font-size="12" fill="#FFFFFF" text-anchor="middle">${escapeHtml(tag)}</text>
+      <g transform="translate(30 38) scale(1.18)">${character.svg}</g>
+      <rect x="188" y="${bubbleY}" width="460" height="${bubbleH}" rx="16" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5"/>
+      <path d="M190 75 L156 89 L190 97" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5" stroke-linejoin="round"/>
+      <text font-size="16.5" fill="#4A4A4A" text-anchor="middle">${text}</text>
+    </svg>
+  </section>`;
 }
 
 function renderTopPicks(summary: AiSummary, articles: Article[]): string {
@@ -196,6 +231,9 @@ header.masthead { text-align: center; padding: 18px 0 14px; border-bottom: 4px d
 .masthead h1 .accent { color: var(--accent); }
 .masthead-sub { font-size: 12px; color: var(--muted); letter-spacing: .18em; }
 
+.comic { margin-top: 26px; }
+.comic svg { display: block; width: 100%; height: auto; }
+
 .overview {
   font-family: var(--mincho);
   font-size: 17px;
@@ -290,6 +328,7 @@ footer {
     <h1>Tech Daily <span class="accent">Digest</span></h1>
     <div class="masthead-sub">毎朝の技術情報、一枚に。</div>
   </header>
+  ${renderComicStrip(data)}
   ${overview}
   ${topPicks}
   ${sections}

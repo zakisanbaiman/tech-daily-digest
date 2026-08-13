@@ -32,6 +32,8 @@ export interface AiSummary {
   dailyOverview: string;
   topPicks: { url: string; reason: string }[];
   enSummaries: { url: string; summaryJa: string }[];
+  /** 冒頭1コマ漫画のセリフ（その日の担当キャラの口調で書かれる） */
+  comicQuip?: string;
 }
 
 export interface DigestData {

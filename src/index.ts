@@ -1,4 +1,5 @@
 import { buildSite } from "./archive.js";
+import { pickCharacter } from "./comic.js";
 import { loadFeeds } from "./config.js";
 import { dedupeArticles } from "./dedupe.js";
 import { fetchAllFeeds } from "./fetch.js";
@@ -20,10 +21,11 @@ if (feedResults.every((result) => result.error)) {
 }
 
 const articles = dedupeArticles(feedResults);
-const aiSummary = await summarize(articles);
+const date = todayInJst();
+const aiSummary = await summarize(articles, pickCharacter(date));
 
 const data: DigestData = {
-  date: todayInJst(),
+  date,
   generatedAt: new Date().toISOString(),
   feedResults,
   articles,
