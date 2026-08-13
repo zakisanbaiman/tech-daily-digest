@@ -29,7 +29,9 @@ const aiSummarySchema = z.object({
     .describe("lang=en の全記事の日本語要約"),
   comicQuip: z
     .string()
-    .describe("紙面冒頭の1コマ漫画でマスコットが言うセリフ。日本語40字以内、絵文字なし"),
+    .describe(
+      "紙面冒頭の1コマ漫画でマスコットが言うセリフ。その日の記事の中で目立つトピックを具体名入りで要約する。日本語45字以内、絵文字なし",
+    ),
 });
 
 function buildPrompt(articles: Article[], speaker: ComicCharacter): string {
@@ -47,7 +49,7 @@ function buildPrompt(articles: Article[], speaker: ComicCharacter): string {
     "1. dailyOverview: 全体の傾向を日本語2〜3文で",
     "2. topPicks: エンジニアが今日読むべき注目記事をちょうど3件選び、理由を添える（複数ソースに載っている記事や議論が盛り上がっている記事を優先）",
     "3. enSummaries: lang が en の記事すべてについて、タイトルから推測できる内容の日本語要約を1〜2文で",
-    `4. comicQuip: 紙面冒頭の1コマ漫画のセリフ。今日のニュース全体を眺めた軽いひとことを、次のキャラクターとして書く: ${speaker.persona} 40字以内・絵文字なし・キャラの口調を厳守`,
+    `4. comicQuip: 紙面冒頭の1コマ漫画のセリフ。今日の記事一覧を要約するひとことを、次のキャラクターとして書く: ${speaker.persona} 必ずその日の記事にある具体的な話題（技術名・プロダクト名・出来事）を1つ以上入れ、読者が「今日はこういう日か」と分かるようにする。一般論だけのセリフは禁止。45字以内・絵文字なし・キャラの口調を厳守`,
     "",
     "urlフィールドは一覧の値をそのまま転記すること。",
     "",

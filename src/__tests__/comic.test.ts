@@ -45,6 +45,11 @@ describe("wrapQuip", () => {
     expect(lines).toEqual(["あいうえ", "おかき…"]);
   });
 
+  it("行頭禁則文字は前の行にぶら下げる", () => {
+    expect(wrapQuip("あいうえ！かきくけ", 4)).toEqual(["あいうえ！", "かきくけ"]);
+    expect(wrapQuip("あいうえ！？かきくけ", 4)).toEqual(["あいうえ！？", "かきくけ"]);
+  });
+
   it("サロゲートペアを分断しない", () => {
     expect(wrapQuip("𠮷野家で𠮷野家で", 4)).toEqual(["𠮷野家で", "𠮷野家で"]);
   });
