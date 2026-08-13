@@ -2,10 +2,13 @@ import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import type { ComicCharacter } from "./comic.js";
-import type { AiSummary, Article } from "./types.js";
+import { GENRES } from "./genre.js";
+import type { AiSummary, Article, GenreId } from "./types.js";
 
 const MODEL = "gpt-5.6-luna";
 const MAX_EXCERPT_FOR_PROMPT = 200;
+
+const GENRE_GUIDE = GENRES.map((g) => `${g.id}=${g.label}`).join(", ");
 
 const aiSummarySchema = z.object({
   dailyOverview: z
@@ -27,6 +30,20 @@ const aiSummarySchema = z.object({
       }),
     )
     .describe("lang=en の全記事の日本語要約"),
+  classifications: z
+    .array(
+      z.object({
+        url: z.string().describe("記事のURL（そのまま転記）"),
+        genre: z
+          .enum(GENRES.map((g) => g.id) as [GenreId, ...GenreId[]])
+          .describe(`ジャンル: ${GENRE_GUIDE}`),
+        stars: z
+          .number()
+          .int()
+          .describe("おすすめ度 1〜3。3=必読（全体の1割程度に絞る）、2=読む価値あり、1=流し見でよい"),
+      }),
+    )
+    .describe("全記事のジャンル分類とおすすめ度"),
   comicQuip: z
     .string()
     .describe(
@@ -49,7 +66,8 @@ function buildPrompt(articles: Article[], speaker: ComicCharacter): string {
     "1. dailyOverview: 全体の傾向を日本語2〜3文で",
     "2. topPicks: エンジニアが今日読むべき注目記事をちょうど3件選び、理由を添える（複数ソースに載っている記事や議論が盛り上がっている記事を優先）",
     "3. enSummaries: lang が en の記事すべてについて、タイトルから推測できる内容の日本語要約を1〜2文で",
-    `4. comicQuip: 紙面冒頭の1コマ漫画のセリフ。今日の記事一覧を要約するひとことを、次のキャラクターとして書く: ${speaker.persona} 必ずその日の記事にある具体的な話題（技術名・プロダクト名・出来事）を1つ以上入れ、読者が「今日はこういう日か」と分かるようにする。一般論だけのセリフは禁止。45字以内・絵文字なし・キャラの口調を厳守`,
+    "4. classifications: 全記事にジャンルとおすすめ度を付ける。ジャンルは内容が最も近いもの1つ、迷ったら misc。おすすめ度は 3=必読（全体の1割程度）、2=読む価値あり、1=流し見",
+    `5. comicQuip: 紙面冒頭の1コマ漫画のセリフ。今日の記事一覧を要約するひとことを、次のキャラクターとして書く: ${speaker.persona} 必ずその日の記事にある具体的な話題（技術名・プロダクト名・出来事）を1つ以上入れ、読者が「今日はこういう日か」と分かるようにする。一般論だけのセリフは禁止。45字以内・絵文字なし・キャラの口調を厳守`,
     "",
     "urlフィールドは一覧の値をそのまま転記すること。",
     "",
@@ -95,13 +113,17 @@ export async function summarize(
   }
 }
 
-/** モデルが実在しないURLを返した場合に備え、記事一覧に存在するURLだけ残す */
+/** モデルが実在しないURLや範囲外の値を返した場合に備えて整える */
 function sanitize(summary: AiSummary, articles: Article[]): AiSummary {
   const known = new Set(articles.map((a) => a.url));
+  const seen = new Set<string>();
   return {
     dailyOverview: summary.dailyOverview,
     topPicks: summary.topPicks.filter((p) => known.has(p.url)).slice(0, 3),
     enSummaries: summary.enSummaries.filter((s) => known.has(s.url)),
+    classifications: summary.classifications
+      .filter((c) => known.has(c.url) && !seen.has(c.url) && seen.add(c.url))
+      .map((c) => ({ ...c, stars: Math.min(3, Math.max(1, c.stars)) })),
     comicQuip: summary.comicQuip?.trim() || undefined,
   };
 }

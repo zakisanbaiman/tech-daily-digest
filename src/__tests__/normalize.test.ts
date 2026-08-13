@@ -22,6 +22,10 @@ describe("stripHtml", () => {
   it("タグ除去・エンティティ復元・空白圧縮を行う", () => {
     expect(stripHtml("<p>foo &amp; <b>bar</b></p>\n  baz")).toBe("foo & bar baz");
   });
+
+  it("フィード側の壊れたバイト列（U+FFFD）を除去する", () => {
+    expect(stripHtml("text 0�B �� end")).toBe("text 0B end");
+  });
 });
 
 describe("truncate", () => {

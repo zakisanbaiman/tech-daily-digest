@@ -3,6 +3,7 @@ import { pickCharacter } from "./comic.js";
 import { loadFeeds } from "./config.js";
 import { dedupeArticles } from "./dedupe.js";
 import { fetchAllFeeds } from "./fetch.js";
+import { attachThumbnails } from "./ogp.js";
 import { summarize } from "./summarize.js";
 import type { DigestData } from "./types.js";
 
@@ -23,6 +24,7 @@ if (feedResults.every((result) => result.error)) {
 const articles = dedupeArticles(feedResults);
 const date = todayInJst();
 const aiSummary = await summarize(articles, pickCharacter(date));
+if (aiSummary) await attachThumbnails(aiSummary);
 
 const data: DigestData = {
   date,

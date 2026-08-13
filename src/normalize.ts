@@ -12,6 +12,7 @@ export function stripHtml(html: string): string {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#0?39;/g, "'")
+    .replace(/�/g, "")
     .replace(/\s+/g, " ")
     .trim();
 }
