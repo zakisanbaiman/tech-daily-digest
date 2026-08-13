@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
+import type { ComicCharacter } from "./comic.js";
 import { GENRES } from "./genre.js";
 import type { AiSummary, Article, GenreId } from "./types.js";
 
@@ -43,9 +44,14 @@ const aiSummarySchema = z.object({
       }),
     )
     .describe("全記事のジャンル分類とおすすめ度"),
+  comicQuip: z
+    .string()
+    .describe(
+      "紙面冒頭の1コマ漫画でマスコットが言うセリフ。その日の記事の中で目立つトピックを具体名入りで要約する。日本語45字以内、絵文字なし",
+    ),
 });
 
-function buildPrompt(articles: Article[]): string {
+function buildPrompt(articles: Article[], speaker: ComicCharacter): string {
   const list = articles.map((a) => ({
     url: a.url,
     title: a.title,
@@ -61,6 +67,7 @@ function buildPrompt(articles: Article[]): string {
     "2. topPicks: エンジニアが今日読むべき注目記事をちょうど3件選び、理由を添える（複数ソースに載っている記事や議論が盛り上がっている記事を優先）",
     "3. enSummaries: lang が en の記事すべてについて、タイトルから推測できる内容の日本語要約を1〜2文で",
     "4. classifications: 全記事にジャンルとおすすめ度を付ける。ジャンルは内容が最も近いもの1つ、迷ったら misc。おすすめ度は 3=必読（全体の1割程度）、2=読む価値あり、1=流し見",
+    `5. comicQuip: 紙面冒頭の1コマ漫画のセリフ。今日の記事一覧を要約するひとことを、次のキャラクターとして書く: ${speaker.persona} 必ずその日の記事にある具体的な話題（技術名・プロダクト名・出来事）を1つ以上入れ、読者が「今日はこういう日か」と分かるようにする。一般論だけのセリフは禁止。45字以内・絵文字なし・キャラの口調を厳守`,
     "",
     "urlフィールドは一覧の値をそのまま転記すること。",
     "",
@@ -72,7 +79,10 @@ function buildPrompt(articles: Article[]): string {
  * 全記事を1回の呼び出しで要約する。
  * APIキー未設定・API失敗・スキーマ不一致はすべて null を返し、呼び出し側は要約なしで継続する。
  */
-export async function summarize(articles: Article[]): Promise<AiSummary | null> {
+export async function summarize(
+  articles: Article[],
+  speaker: ComicCharacter,
+): Promise<AiSummary | null> {
   if (!process.env["OPENAI_API_KEY"]) {
     console.warn("[summarize] OPENAI_API_KEY not set; skipping AI summary");
     return null;
@@ -87,7 +97,7 @@ export async function summarize(articles: Article[]): Promise<AiSummary | null> 
           content:
             "あなたは日本のソフトウェアエンジニア向けデイリーダイジェストの編集者です。",
         },
-        { role: "user", content: buildPrompt(articles) },
+        { role: "user", content: buildPrompt(articles, speaker) },
       ],
       text: { format: zodTextFormat(aiSummarySchema, "digest_summary") },
     });
@@ -114,5 +124,6 @@ function sanitize(summary: AiSummary, articles: Article[]): AiSummary {
     classifications: summary.classifications
       .filter((c) => known.has(c.url) && !seen.has(c.url) && seen.add(c.url))
       .map((c) => ({ ...c, stars: Math.min(3, Math.max(1, c.stars)) })),
+    comicQuip: summary.comicQuip?.trim() || undefined,
   };
 }

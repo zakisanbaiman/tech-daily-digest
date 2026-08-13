@@ -50,6 +50,8 @@ export interface AiSummary {
   topPicks: { url: string; reason: string; imageUrl?: string }[];
   enSummaries: { url: string; summaryJa: string }[];
   classifications: ArticleClassification[];
+  /** 冒頭1コマ漫画のセリフ（その日の担当キャラの口調で書かれる） */
+  comicQuip?: string;
 }
 
 export interface DigestData {
