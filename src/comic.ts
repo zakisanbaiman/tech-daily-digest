@@ -22,7 +22,7 @@ export const COMIC_CAST: ComicCharacter[] = [
     id: "ragu",
     name: "らぐ",
     persona:
-      "好奇心旺盛な子犬の学習者「らぐ」。何にでも感動して前のめり。元気な語尾（〜だ！／〜しよう！）。",
+      "好奇心旺盛で元気いっぱいな後輩の女の子「らぐ」。何にでも感動して前のめり。元気な語尾（〜だ！／〜しよう！）。",
     fallbackQuips: [
       "きょうも気になる記事がいっぱいだ！",
       "新しいこと、ひとつおぼえて帰ろう！",
@@ -30,29 +30,30 @@ export const COMIC_CAST: ComicCharacter[] = [
     ],
     svg: `
       <g ${LINE}>
-        <ellipse cx="15" cy="42" rx="9" ry="17" transform="rotate(18 15 42)" fill="#FFE8C2"/>
-        <ellipse cx="85" cy="42" rx="9" ry="17" transform="rotate(-18 85 42)" fill="#FFE8C2"/>
-        <circle cx="50" cy="54" r="36" fill="#FFE8C2"/>
-        <path d="M42 20 Q46 12 50 19 Q54 12 58 20" fill="none" stroke-width="2.2"/>
-        <ellipse cx="9" cy="25" rx="6" ry="11" transform="rotate(-38 9 25)" fill="#FFE8C2"/>
-        <ellipse cx="91" cy="25" rx="6" ry="11" transform="rotate(38 91 25)" fill="#FFE8C2"/>
-        <ellipse cx="36" cy="48" rx="6" ry="7.5" fill="#4A4A4A" stroke="none"/>
-        <ellipse cx="64" cy="48" rx="6" ry="7.5" fill="#4A4A4A" stroke="none"/>
-        <circle cx="38.2" cy="45.2" r="2.3" fill="#FFFFFF" stroke="none"/>
-        <circle cx="66.2" cy="45.2" r="2.3" fill="#FFFFFF" stroke="none"/>
-        <circle cx="34.2" cy="51" r="1.1" fill="#FFFFFF" stroke="none"/>
-        <circle cx="62.2" cy="51" r="1.1" fill="#FFFFFF" stroke="none"/>
-        <ellipse cx="50" cy="58" rx="3" ry="2.2" fill="#4A4A4A" stroke="none"/>
-        <path d="M44 63 Q47 67 50 63 Q53 67 56 63" fill="none" stroke-width="2.2"/>
-        <ellipse cx="26" cy="59" rx="6" ry="4" fill="#FF9FB2" stroke="none" opacity="0.55"/>
-        <ellipse cx="74" cy="59" rx="6" ry="4" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+        <ellipse cx="50" cy="52" rx="36" ry="34" fill="#FFD66E"/>
+        <ellipse cx="50" cy="60" rx="29" ry="27" fill="#FFE8C2"/>
+        <path d="M21 58 Q18 22 50 20 Q82 22 79 58 Q73 44 68 55 Q62 42 55 53 Q50 41 44 53 Q38 42 32 55 Q27 44 21 58 Z" fill="#FFD66E"/>
+        <path d="M46 20 Q38 5 56 8 Q48 11 53 19" fill="#FFD66E" stroke-width="2.2"/>
+        <path d="M28 54 Q36 49 44 54" stroke-width="3.2" fill="none"/>
+        <path d="M56 54 Q64 49 72 54" stroke-width="3.2" fill="none"/>
+        <ellipse cx="36" cy="62" rx="6" ry="7.5" fill="#8EC9FF" stroke="none"/>
+        <ellipse cx="64" cy="62" rx="6" ry="7.5" fill="#8EC9FF" stroke="none"/>
+        <ellipse cx="36" cy="62" rx="2.8" ry="3.8" fill="#4A4A4A" stroke="none"/>
+        <ellipse cx="64" cy="62" rx="2.8" ry="3.8" fill="#4A4A4A" stroke="none"/>
+        <circle cx="38.2" cy="59.2" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="66.2" cy="59.2" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="33.8" cy="65" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <circle cx="61.8" cy="65" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <path d="M44 74 Q50 82 56 74 Z" fill="#FF9FB2" stroke-width="2.2"/>
+        <ellipse cx="25" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+        <ellipse cx="75" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
       </g>`,
   },
   {
     id: "vectra",
     name: "べくとら",
     persona:
-      "クールな猫の先輩エンジニア「べくとら」。ひとこと多いツッコミ気質。断定口調で、たまに毒。",
+      "クールな先輩エンジニアの女の子「べくとら」。ひとこと多いツッコミ気質。断定口調で、たまに毒。",
     fallbackQuips: [
       "流行に飛びつく前に、まず一次情報な",
       "今日の分、ざっと目を通しときな",
@@ -60,33 +61,35 @@ export const COMIC_CAST: ComicCharacter[] = [
     ],
     svg: `
       <g ${LINE}>
-        <path d="M23 36 L28 11 L45 25 Z" fill="#D5C8F0"/>
-        <path d="M77 36 L72 11 L55 25 Z" fill="#D5C8F0"/>
-        <path d="M27 31 L29.5 17 L39 25 Z" fill="#FF9FB2" stroke="none" opacity="0.45"/>
-        <path d="M73 31 L70.5 17 L61 25 Z" fill="#FF9FB2" stroke="none" opacity="0.45"/>
-        <circle cx="50" cy="56" r="34" fill="#D5C8F0"/>
-        <path d="M50 21 L50 7 M45 13 L50 7 L55 13" fill="none"/>
-        <path d="M11 55 L21 53 M11 63 L21 61 M89 55 L79 53 M89 63 L79 61" fill="none" stroke-width="1.8"/>
-        <ellipse cx="16" cy="74" rx="6" ry="11" transform="rotate(-22 16 74)" fill="#D5C8F0"/>
-        <ellipse cx="84" cy="74" rx="6" ry="11" transform="rotate(22 84 74)" fill="#D5C8F0"/>
-        <ellipse cx="36" cy="49" rx="5.5" ry="6.5" fill="#4A4A4A" stroke="none"/>
-        <ellipse cx="64" cy="49" rx="5.5" ry="6.5" fill="#4A4A4A" stroke="none"/>
-        <rect x="29.5" y="41" width="13" height="4" fill="#D5C8F0" stroke="none"/>
-        <rect x="57.5" y="41" width="13" height="4" fill="#D5C8F0" stroke="none"/>
-        <path d="M30 45 L42.5 45 M57.5 45 L70 45" fill="none" stroke-width="2.2"/>
-        <path d="M42.5 45 L45.5 42.5 M57.5 45 L54.5 42.5" fill="none" stroke-width="2"/>
-        <circle cx="38" cy="47.5" r="1.8" fill="#FFFFFF" stroke="none"/>
-        <circle cx="66" cy="47.5" r="1.8" fill="#FFFFFF" stroke="none"/>
-        <path d="M46 63 Q51 65.5 56 61.5" fill="none" stroke-width="2.2"/>
-        <ellipse cx="27" cy="60" rx="6" ry="4" fill="#FF9FB2" stroke="none" opacity="0.4"/>
-        <ellipse cx="73" cy="60" rx="6" ry="4" fill="#FF9FB2" stroke="none" opacity="0.4"/>
+        <path d="M16 48 Q8 74 12 95 L26 95 Q29 72 25 50 Z" fill="#D5C8F0"/>
+        <path d="M84 48 Q92 74 88 95 L74 95 Q71 72 75 50 Z" fill="#D5C8F0"/>
+        <ellipse cx="50" cy="52" rx="36" ry="36" fill="#D5C8F0"/>
+        <ellipse cx="50" cy="60" rx="29" ry="27" fill="#FFE8C2"/>
+        <path d="M22 54 Q19 22 50 20 Q81 22 78 54 L72 47 Q66 55 60 47 Q55 55 50 47 Q45 55 40 47 Q34 55 28 47 Z" fill="#D5C8F0"/>
+        <path d="M50 20 L50 6 M45 12 L50 6 L55 12" fill="none" stroke-width="2.2"/>
+        <path d="M28 51 Q36 48 44 52" stroke-width="2" fill="none" opacity="0.7"/>
+        <path d="M56 52 Q64 48 72 51" stroke-width="2" fill="none" opacity="0.7"/>
+        <ellipse cx="36" cy="61" rx="5.8" ry="6.5" fill="#FFD66E" stroke="none"/>
+        <ellipse cx="64" cy="61" rx="5.8" ry="6.5" fill="#FFD66E" stroke="none"/>
+        <ellipse cx="36" cy="61" rx="2.6" ry="3.4" fill="#4A4A4A" stroke="none"/>
+        <ellipse cx="64" cy="61" rx="2.6" ry="3.4" fill="#4A4A4A" stroke="none"/>
+        <rect x="28" y="52" width="16" height="5" fill="#FFE8C2" stroke="none"/>
+        <rect x="56" y="52" width="16" height="5" fill="#FFE8C2" stroke="none"/>
+        <path d="M28 57 L44 57" stroke-width="3.2" fill="none"/>
+        <path d="M56 57 L72 57" stroke-width="3.2" fill="none"/>
+        <path d="M44 57 L47 54.5 M56 57 L53 54.5" stroke-width="2" fill="none"/>
+        <circle cx="38" cy="60" r="1.8" fill="#FFFFFF" stroke="none"/>
+        <circle cx="66" cy="60" r="1.8" fill="#FFFFFF" stroke="none"/>
+        <path d="M46 75 Q51 77 55 73" fill="none" stroke-width="2.2"/>
+        <ellipse cx="26" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.4"/>
+        <ellipse cx="74" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.4"/>
       </g>`,
   },
   {
     id: "chankun",
     name: "ちゃんくん",
     persona:
-      "のんびりした豆腐のマスコット「ちゃんくん」。ゆるくて天然、ほんわか癒し系。ひらがな多め。",
+      "ゆるふわ天然な女の子「ちゃんくん」。のんびり、ほんわか癒し系。ひらがな多めの一人称ボク。",
     fallbackQuips: [
       "ぼくは今日もこまぎれに読むよ",
       "あさごはんは情報のかたまりだね",
@@ -94,17 +97,24 @@ export const COMIC_CAST: ComicCharacter[] = [
     ],
     svg: `
       <g ${LINE}>
-        <rect x="16" y="24" width="68" height="64" rx="12" fill="#C8EFDF"/>
-        <path d="M46 24 Q48 15 53 20 Q57 14 58 23" fill="none" stroke-width="2.2"/>
-        <circle cx="36" cy="50" r="5.5" fill="#4A4A4A" stroke="none"/>
-        <circle cx="64" cy="50" r="5.5" fill="#4A4A4A" stroke="none"/>
-        <circle cx="37.8" cy="47.8" r="2.1" fill="#FFFFFF" stroke="none"/>
-        <circle cx="65.8" cy="47.8" r="2.1" fill="#FFFFFF" stroke="none"/>
-        <circle cx="33.8" cy="52.3" r="1" fill="#FFFFFF" stroke="none"/>
-        <circle cx="61.8" cy="52.3" r="1" fill="#FFFFFF" stroke="none"/>
-        <path d="M45 60 Q50 68 55 60 Z" fill="#FF9FB2" stroke-width="2.2"/>
-        <ellipse cx="26" cy="62" rx="6" ry="4" fill="#FF9FB2" stroke="none" opacity="0.55"/>
-        <ellipse cx="74" cy="62" rx="6" ry="4" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+        <circle cx="15" cy="34" r="8" fill="#C8EFDF"/>
+        <circle cx="85" cy="34" r="8" fill="#C8EFDF"/>
+        <ellipse cx="50" cy="52" rx="36" ry="34" fill="#C8EFDF"/>
+        <ellipse cx="50" cy="60" rx="29" ry="27" fill="#FFE8C2"/>
+        <path d="M22 56 Q19 22 50 20 Q81 22 78 56 Q71 46 65 55 Q59 44 51 54 Q45 44 37 55 Q31 46 27 56 Q24 50 22 56 Z" fill="#C8EFDF"/>
+        <path d="M29 57 Q36 53.5 43 58" stroke-width="3.2" fill="none"/>
+        <path d="M57 58 Q64 53.5 71 57" stroke-width="3.2" fill="none"/>
+        <ellipse cx="36" cy="63" rx="6" ry="7" fill="#FF9FB2" stroke="none"/>
+        <ellipse cx="64" cy="63" rx="6" ry="7" fill="#FF9FB2" stroke="none"/>
+        <ellipse cx="36" cy="63" rx="2.8" ry="3.6" fill="#4A4A4A" stroke="none"/>
+        <ellipse cx="64" cy="63" rx="2.8" ry="3.6" fill="#4A4A4A" stroke="none"/>
+        <circle cx="38.2" cy="60.4" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="66.2" cy="60.4" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="33.8" cy="66" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <circle cx="61.8" cy="66" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <path d="M45 74 Q47.5 77 50 74 Q52.5 77 55 74" fill="none" stroke-width="2.2"/>
+        <ellipse cx="25" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+        <ellipse cx="75" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
       </g>`,
   },
 ];
