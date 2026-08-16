@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-08-17 | Tech Daily Digest</title>
+<style>
+:root {
+  --paper: #f6f1e7;
+  --card: #fffdf7;
+  --ink: #211d18;
+  --muted: #75695a;
+  --accent: #c23a28;
+  --rule: #d9cfbd;
+  --rule-strong: #211d18;
+  --mincho: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  --gothic: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1a1712;
+    --card: #221f19;
+    --ink: #eae2d3;
+    --muted: #9c917d;
+    --accent: #e2593f;
+    --rule: #3b352a;
+    --rule-strong: #eae2d3;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--gothic);
+  font-size: 15px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+.sheet { max-width: 720px; margin: 0 auto; padding: 28px 20px 64px; }
+
+header.masthead { text-align: center; padding: 18px 0 14px; border-bottom: 4px double var(--rule-strong); }
+.masthead-date { font-family: var(--gothic); font-size: 12px; letter-spacing: .35em; color: var(--muted); text-transform: uppercase; }
+.masthead h1 {
+  margin: 6px 0 4px;
+  font-family: var(--mincho);
+  font-weight: 600;
+  font-size: clamp(28px, 7vw, 40px);
+  letter-spacing: .08em;
+}
+.masthead h1 .accent { color: var(--accent); }
+.masthead-sub { font-size: 12px; color: var(--muted); letter-spacing: .18em; }
+
+.comic { margin-top: 26px; }
+.comic svg { display: block; width: 100%; height: auto; }
+
+.overview {
+  font-family: var(--mincho);
+  font-size: 17px;
+  line-height: 2.1;
+  margin: 28px 2px 8px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-title {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  margin: 0 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule-strong);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-count { font-family: var(--gothic); font-size: 11px; color: var(--muted); letter-spacing: .05em; }
+
+section { margin-top: 40px; animation: rise .5s ease both; }
+section:nth-of-type(1) { animation-delay: .05s; }
+section:nth-of-type(2) { animation-delay: .12s; }
+section:nth-of-type(3) { animation-delay: .19s; }
+section:nth-of-type(4) { animation-delay: .26s; }
+section:nth-of-type(5) { animation-delay: .33s; }
+section:nth-of-type(6) { animation-delay: .40s; }
+section:nth-of-type(7) { animation-delay: .47s; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { section { animation: none; } }
+
+.picks { list-style: none; margin: 0; padding: 0; }
+.pick {
+  display: flex;
+  gap: 16px;
+  padding: 18px 16px;
+  margin-top: 14px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+}
+.pick-no {
+  font-family: var(--mincho);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.pick-title { font-family: var(--mincho); font-size: 17px; font-weight: 600; line-height: 1.7; }
+.pick-reason { margin: 6px 0 4px; color: var(--muted); font-size: 13.5px; }
+.pick-source { font-size: 11px; color: var(--accent); letter-spacing: .1em; }
+
+.articles { list-style: none; margin: 0; padding: 0; }
+.article { padding: 14px 2px; border-bottom: 1px dotted var(--rule); }
+.article-title { font-weight: 600; }
+.article-meta { margin-left: 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.article-excerpt { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+.article-translation { margin: 4px 0 0; font-size: 13.5px; line-height: 1.8; }
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  vertical-align: 2px;
+  border-radius: 2px;
+}
+.badge-ja { margin: 0 6px 0 0; vertical-align: 1px; }
+.badge-source { border-color: color-mix(in srgb, var(--muted) 55%, transparent); color: var(--muted); }
+.feed-error { color: var(--muted); font-size: 13px; }
+.feed-errors { margin-top: 36px; font-size: 12px; color: var(--muted); }
+
+.genre { --g-disp: var(--g); }
+@media (prefers-color-scheme: dark) {
+  .genre { --g-disp: color-mix(in srgb, var(--g) 55%, #f0e8d8); }
+}
+.genre .section-title { color: var(--g-disp); border-bottom-color: color-mix(in srgb, var(--g-disp) 60%, transparent); align-items: center; }
+.genre .section-count { color: var(--muted); }
+.genre-icon { width: 19px; height: 19px; flex-shrink: 0; }
+.stars { font-size: 11.5px; letter-spacing: 2px; margin-right: 8px; color: var(--accent); vertical-align: 1.5px; }
+.stars-1 { color: var(--muted); opacity: .55; }
+.pick-thumb {
+  width: 108px;
+  height: 76px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
+}
+@media (max-width: 480px) { .pick-thumb { width: 80px; height: 60px; } }
+
+footer {
+  margin-top: 56px;
+  padding-top: 14px;
+  border-top: 4px double var(--rule-strong);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <div class="masthead-date">2026年8月17日（月）</div>
+    <h1>Tech Daily <span class="accent">Digest</span></h1>
+    <div class="masthead-sub">毎朝の技術情報、一枚に。</div>
+  </header>
+  
+  <section class="comic">
+    <svg viewBox="0 0 680 170" role="img" aria-label="今日の一コマ: らぐ「Agent PluginsとKitesurf、AIエージェント時代が来たぞ！」">
+      <rect x="2" y="2" width="676" height="166" rx="6" fill="#FFFDF7" stroke="#4A4A4A" stroke-width="3"/>
+      <rect x="14" y="12" width="79" height="22" fill="#4A4A4A"/>
+      <text x="53.5" y="28" font-size="12" fill="#FFFFFF" text-anchor="middle">今日のらぐ</text>
+      <g transform="translate(30 38) scale(1.18)">
+      <g stroke="#4A4A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="50" cy="52" rx="36" ry="34" fill="#FFD66E"/>
+        <ellipse cx="50" cy="60" rx="29" ry="27" fill="#FFE8C2"/>
+        <path d="M21 58 Q18 22 50 20 Q82 22 79 58 Q73 44 68 55 Q62 42 55 53 Q50 41 44 53 Q38 42 32 55 Q27 44 21 58 Z" fill="#FFD66E"/>
+        <path d="M46 20 Q38 5 56 8 Q48 11 53 19" fill="#FFD66E" stroke-width="2.2"/>
+        <path d="M28 54 Q36 49 44 54" stroke-width="3.2" fill="none"/>
+        <path d="M56 54 Q64 49 72 54" stroke-width="3.2" fill="none"/>
+        <ellipse cx="36" cy="62" rx="6" ry="7.5" fill="#8EC9FF" stroke="none"/>
+        <ellipse cx="64" cy="62" rx="6" ry="7.5" fill="#8EC9FF" stroke="none"/>
+        <ellipse cx="36" cy="62" rx="2.8" ry="3.8" fill="#4A4A4A" stroke="none"/>
+        <ellipse cx="64" cy="62" rx="2.8" ry="3.8" fill="#4A4A4A" stroke="none"/>
+        <circle cx="38.2" cy="59.2" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="66.2" cy="59.2" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="33.8" cy="65" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <circle cx="61.8" cy="65" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <path d="M44 74 Q50 82 56 74 Z" fill="#FF9FB2" stroke-width="2.2"/>
+        <ellipse cx="25" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+        <ellipse cx="75" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+      </g></g>
+      <rect x="188" y="47" width="460" height="76" rx="16" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5"/>
+      <path d="M190 75 L156 89 L190 97" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5" stroke-linejoin="round"/>
+      <text font-size="16.5" fill="#4A4A4A" text-anchor="middle"><tspan x="418" y="79">Agent PluginsとKitesurf、</tspan><tspan x="418" y="103">AIエージェント時代が来たぞ！</tspan></text>
+    </svg>
+  </section>
+  <p class="overview">今日はAIエージェントを中心に、開発環境・ブラウザ・パッケージ管理などの新しい標準やツールが相次いで登場した話題が目立ちます。ローカルLLMやCloudflare、Claude Codeの実践例に加え、セキュリティ事故やAI生成物の著作権など、導入時の現実的な課題を扱う記事も充実しています。</p>
+  
+  <section class="top-picks">
+    <h2 class="section-title">今日の注目</h2>
+    <ol class="picks">
+      <li class="pick">
+        <span class="pick-no">01</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.publickey1.jp/blog/26/agent_plugins_100aimcpopenaiawsgoogle.html">「Agent Plugins 1.0.0」発表、異なるAIエージェント間でもスキルやMCPサーバ設定が共通化へ。マイクロソフト、OpenAI、AWS、Googleらがサポート</a>
+          <p class="pick-reason">AWS、Microsoft、OpenAI、Googleなどが支持するAgent Plugins 1.0.0は、AIエージェントのスキルやMCP設定を共通化する動きです。今後のエージェント開発基盤に影響しうる業界標準として注目です。</p>
+          <span class="pick-source">Publickey</span>
+        </div>
+        <img class="pick-thumb" src="https://www.publickey1.jp/2026/agentplugins-v100-01.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">02</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://qiita.com/claudecat/items/fd8f449f1dddcc9f31fe?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【インシデント報告】Defender が有効なのに、開発機で5日間マイニングされていた</a>
+          <p class="pick-reason">Defenderが有効な開発機でも5日間マイニングされたインシデント報告です。AIによるコード変更を疑う前に、端末・権限・監視をどう確認するかという実践的な教訓があります。</p>
+          <span class="pick-source">Qiita 人気記事</span>
+        </div>
+        <img class="pick-thumb" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-user-contents.imgix.net%2Fhttps%253A%252F%252Fcdn.qiita.com%252Fassets%252Fpublic%252Farticle-ogp-background-afbab5eb44e0b055cce1258705637a91.png%3Fixlib%3Drb-4.1.1%26w%3D1200%26blend64%3DaHR0cHM6Ly9xaWl0YS11c2VyLXByb2ZpbGUtaW1hZ2VzLmltZ2l4Lm5ldC9odHRwcyUzQSUyRiUyRnNlY3VyZS5ncmF2YXRhci5jb20lMkZhdmF0YXIlMkZiM2M5YjUzMzZmMDNjMzIxYmNiY2Q1NzJiZmFhYzA0Zj9peGxpYj1yYi00LjEuMSZhcj0xJTNBMSZmaXQ9Y3JvcCZtYXNrPWVsbGlwc2UmYmc9RkZGRkZGJmZtPXBuZzMyJnM9ZTdiNjM5NzZkYzMzMWUwYzEyZmNiNTJlOGNiNjcwMzU%26blend-x%3D120%26blend-y%3D467%26blend-w%3D82%26blend-h%3D82%26blend-mode%3Dnormal%26s%3D91187f9413bb02b12f818713d90f0060?ixlib=rb-4.1.1&amp;amp;w=1200&amp;amp;fm=jpg&amp;amp;mark64=aHR0cHM6Ly9xaWl0YS11c2VyLWNvbnRlbnRzLmltZ2l4Lm5ldC9-dGV4dD9peGxpYj1yYi00LjEuMSZ3PTk2MCZoPTMyNCZ0eHQ9JUUzJTgwJTkwJUUzJTgyJUE0JUUzJTgzJUIzJUUzJTgyJUI3JUUzJTgzJTg3JUUzJTgzJUIzJUUzJTgzJTg4JUU1JUEwJUIxJUU1JTkxJThBJUUzJTgwJTkxRGVmZW5kZXIlMjAlRTMlODElOEMlRTYlOUMlODklRTUlOEElQjklRTMlODElQUElRTMlODElQUUlRTMlODElQUIlRTMlODAlODElRTklOTYlOEIlRTclOTklQkElRTYlQTklOUYlRTMlODElQTc1JUU2JTk3JUE1JUU5JTk2JTkzJUUzJTgzJTlFJUUzJTgyJUE0JUUzJTgzJThCJUUzJTgzJUIzJUUzJTgyJUIwJUUzJTgxJTk1JUUzJTgyJThDJUUzJTgxJUE2JUUzJTgxJTg0JUUzJTgxJTlGJnR4dC1hbGlnbj1sZWZ0JTJDdG9wJnR4dC1jb2xvcj0lMjMxRTIxMjEmdHh0LWZvbnQ9SGlyYWdpbm8lMjBTYW5zJTIwVzYmdHh0LXNpemU9NTYmdHh0LXBhZD0wJnM9OGM0NzkxOWYyMTA1MGM2MTRmNDU3MGM0NzBkNzcwNDA&amp;amp;mark-x=120&amp;amp;mark-y=112&amp;amp;blend64=aHR0cHM6Ly9xaWl0YS11c2VyLWNvbnRlbnRzLmltZ2l4Lm5ldC9-dGV4dD9peGxpYj1yYi00LjEuMSZ3PTgzOCZoPTU4JnR4dD0lNDBjbGF1ZGVjYXQmdHh0LWNvbG9yPSUyMzFFMjEyMSZ0eHQtZm9udD1IaXJhZ2lubyUyMFNhbnMlMjBXNiZ0eHQtc2l6ZT0zNiZ0eHQtcGFkPTAmcz1kOGNlZThmNDBlZDI3ZmExYmYwNjA2OWZmZWY5YjgyMQ&amp;amp;blend-x=242&amp;amp;blend-y=480&amp;amp;blend-w=838&amp;amp;blend-h=46&amp;amp;blend-fit=crop&amp;amp;blend-crop=left%2Cbottom&amp;amp;blend-mode=normal&amp;amp;s=b938e434c7423ba38bb042ad7767dc0d" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">03</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.publickey1.jp/blog/26/aikitesurfcloudflare.html">タブもテーマも拡張機能もないAI専用の超軽量ヘッドレスブラウザ「Kitesurf」、Cloudflareが発表</a>
+          <p class="pick-reason">CloudflareのAI専用ヘッドレスブラウザKitesurfは、AIエージェントがWebを操作する前提で設計されています。RustやWebAssemblyを用いた軽量化も含め、Web自動化の方向性を示す新プロダクトです。</p>
+          <span class="pick-source">はてブ テクノロジー × Publickey</span>
+        </div>
+        <img class="pick-thumb" src="https://www.publickey1.jp/2026/sc72alsx.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li></ol>
+  </section>
+  
+  <section class="feed genre" style="--g: #c23a28">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M18.5 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>AI・LLM<span class="section-count">13</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/aikitesurfcloudflare.html">タブもテーマも拡張機能もないAI専用の超軽量ヘッドレスブラウザ「Kitesurf」、Cloudflareが発表</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Publickey</span>
+      
+      
+      <p class="article-excerpt">タブもテーマも拡張機能もないAI専用の超軽量ヘッドレスブラウザ「Kitesurf」、Cloudflareが発表 CloudflareはAIエージェントによる操作専用のヘッドレスなWebブラウザ「Kitesurf」を発表しました。 現在ベータ版として公開されています。 Kitesurfは主にRust言語で記述されWebAssemblyにコンパイルされた後、同社のアプ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/agent_plugins_100aimcpopenaiawsgoogle.html">「Agent Plugins 1.0.0」発表、異なるAIエージェント間でもスキルやMCPサーバ設定が共通化へ。マイクロソフト、OpenAI、AWS、Googleらがサポート</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">AWS、マイクロソフト、OpenAI、Anysphere、Vercelの各社は、AIエージェントのスキルやMCPサーバの設定を、AIエージェントが異なっていても共有できる業界標準の仕様「Agent Plugins 1.0.0」を発表しました。またGoogleもAgent Pluginsへの対応を発表しています。 スキルやMCPの設定を異なるAIエージェントでも共通化 AIエージェントはOpenAIやGoogle、マイクロソフト、Anthropicなどを始めとする多くのAI企業……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://voluntas.ghost.io/local-llm-2026-08/">ローカル LLM 雑感 (2026-08)</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">NVIDIA DGX Spark 互換機 (以下 Spark) を 2 台購入し、クラスター起動して ローカルで DeepSeek V4 Flash 0731 の運用を開始したので雑感を書いて行く。 前提悪いのでそもそもコスパを検討するなら API 利用をすべきなので、コスト面でのメリットはとても薄い。 速度まずローカル LLM の一番気になっていた「速度」だが...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://github.com/coji/natural-japanese">GitHub - coji/natural-japanese: 仕事の日本語文書を読みやすくわかりやすく書く・直す Agent Skill。議事録・調査レポート・社内ガイド・リサーチメモ・スライド構成に対応し、AI臭さの除去も工程に含む。sudachipy 形態素解析による機械検出付き。</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">仕事の日本語を、読みやすくわかりやすく書く・直すための Agent Skill です。議事録・調査レポート・社内ガイド・リサーチメモ・スライド構成といった仕事の文書から、note・ブログ・エッセイまで。AIと文書を作るとき毎回プロンプトに書いている指示——結論から書いて、論旨を明確に、見出しは端的に、専門用語は文中で...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/jksoft/items/65f7824679ddf171a93d">エラーを 3 秒で AI に丸投げする若手を見て、AI から答えを取り上げることにした - Qiita</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">Deleted articles cannot be recovered. Draft of this article would be also deleted. Are you sure you want to delete this article?</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/koki_n22/articles/986f61d16989cb">5ヶ月育てたClaude CodeのCLAUDE.md/skills/rulesをOpus 5向けにClaude自身に棚卸しさせた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">対象読者 Claude CodeでOpus 5を使っている人 以前のモデル向けにCLAUDE.md / skills / rulesを育ててきた人 Opus 5では既存設定を読み込ませない方がうまく動く気がするが、全部捨てるのも違うと思っている人 モチベーション 5ヶ月ほどかけて、Claude Code用のCLAUDE.md / skills / rulesを育てていた Opus 5では、それらを読み込ませない方が期待通り動くことが増え、一時的に読み込ませない運用にしていた 毎回それをやるのも面倒なので、Opus 5でも必要なものだけ残せないかと考えた 結論 既存の...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/nnakapa/articles/lab-35-claude-copilot-sonnet5-qcd">同じ Sonnet 5 でも Claude Code と GitHub Copilot では使い方が違った（オトナの自由研究 #35）</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">3つの発見 1. 今回の範囲では Claude Code × Sonnet 5 × xhigh の組み合わせが一番良い 2. 同じ Sonnet 5 を使っても Claude Code と GitHub Copilot では effort level の使い方が違う 3. OpenTelemetry の trace は effort level の使い方を詳しく紐解いてくれる はじめに 前回の #34 では、「定番の DB 処理であれば、Opus 5 よりも Sonnet 5 のコストは約 1/2（$0.33 対 $0.59、同時間換算で約 2倍差）——ただし effort l...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/hako_hako/books/nexus-product-new-development">AIエージェントと進めるソフトウェア開発</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">AIエージェントは、プロダクト開発のどこまでを担えるのか。社内向け案件管理アプリRADARを題材に、Claude CodeとNexus Architectとの壁打ちから、仮説検証、設計、Issue分解、実装、レビュー、実運用後の改善まで、人が判断しながら開発を前へ進める方法を実例で解説します。</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/minorun365/items/320b4230c0b0c169ba13?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">AIエージェントの作業結果、マークダウンで読むの辛くない？ →「HTML共有くん」を作りました</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">こんにちは、Grokです。Cursorというコーディングエージェントを使って、みのるんに指示をもらいながらこのブログを書いています。この記事は、普段みのるんの仕事を横で見ている私、Grokの視点からブログにまとめたものです。 みのるん、Claude Codeに雑務を任せるよ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/tomada/items/0bfbaffce6fae70be17f?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">『Claude Code実践入門』を発売日に一気読みしたので感想をつらつらと</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">『Claude Code実践入門［生成AI深掘りガイド］』が、日本時間の8月14日に発売されました。 前々から気になっていたので、発売日にそのまま最後まで一気に読み切りました。 読んでいる間はずっと音声入力のツールを立ち上げておいて、感想を喋りながらページをめくっていました...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/h-nabata/items/390b3558be49c30f85a7?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【ローカルLLM】Qwen3.8-27Bの推論性能をテストする（WSL2 + Ollama + RTX 5070 Ti）</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">Qwen3.8-27Bが公開されたのでローカルLinux環境で動かしてみる。 Hugging FaceからもQwen3.8-27B-GGUF:Q4_K_Mが出ているが、Ollama上で動作した際のThinkモードでの出力の切り分けに問題があったため、ここでは利用しな...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/zeddeltaai.html">Zed開発チームが「Delta」発表。人間とAIの全対話とコード変更履歴をコンテキストとして保存共有するコラボレーションツール</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">オープンソースとして開発されている高速なコードエディタ「Zed」の開発チームは、人間の開発チームとAIエージェントの議論や対話内容とコードの変更履歴をすべて共有し、コンテキストとして保存できる「Delta」を発表しました。 Today we’re introducing Delta. Delta is a multiplayer environment for coding with agents and reviewing what they build, powered ……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://anond.hatelabo.jp/20260816172202">小説文体におけるAI臭さ</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">最近唐突に、AIで書かれた小説を見分けられる能力を得た。 それらには共通の特徴があるように思われるので、皆のために共有しておく。 その前に AI小説が見分けられるというところに疑念を持つ向きもあるだろうから、先にそこを説明しておく。 自分は小説家になろうやその関連18禁サイトの小説をよく読む。 基本的に素人...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #6b5a9e">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg>言語・ツール<span class="section-count">7</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://zenn.dev/takeshi_teshima/articles/bae79b2f0f97be">概念設計が、その後のコードの命運を左右する</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">最近、ソフトウェア開発における概念設計の威力と重要さについて人に伝えたい機会が何度かあった。[1] しかし、概念の整理がなぜどのように重要なのか、という一点を取り上げて書かれたものは少ないようで、人に渡すのにちょうどよい文章や書籍が見つからなかったので、このたび私なりに咀嚼して書いてみたい。 そのアプリケーションの世界には、そもそも何が存在するのか。 何と何を同じものとして扱い、何と何を別のものとして扱うのか。 この判断が合っていると、その後の実装は驚くほど素直になる。逆にここを外すと、一つ一つの実装は正しくても、仕様が増えるたびに少しずつ帳尻合わせが必要になる。 まず、一つの小さなEC...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/mizugeeks/articles/1019cf2353d343">デスクトップUIフレームワーク15種のメモリ使用量計測</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに 現在(2026年8月)メモリ価格高騰によりアプリケーションのメモリ使用量に厳しい目が向けられています。 「Electronは重い」「Rust系は軽い」「TauriならElectronより省メモリ」など様々な声がありますが、それが本当なのか実際にどれぐらいの差があるのか分からなかったため、自分で15種のデスクトップUIフレームワークで「同じアプリ」を作り、メモリ使用量を比較しました。 作ったと言っても完全にAIコーディングです。できるだけ内部動作は公平にしたつもりですが最適なコーディングになっていないかもしれません。そのため大まかな傾向としてご覧ください。 何を測るか 指...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/npmvlt10npm.html">npm代替を目指すセキュリティファーストなパッケージマネージャ「vlt」バージョン1.0に到達。npmのミラーレジストリ、プライベートレジストリも提供開始</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">npmに代わる新しいJavaScriptのパッケージシステム「vlt」（vōlt：ボールト）を開発しているvlt technologyは、npm互換のパッケージマネージャ「vlt」がバージョン1.0に到達したことを発表しました。 あわせてnpmのミラーレジストリおよびプライベートレジストリソフトウェア「vsr」の有料ホスティングサービスも提供が開始されました。 下記はvltファウンダーのDarcy Clarke氏のポストです。 Excited to share vlt 1.0……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/tomokusaba/items/45b66545bb7ea88e8403?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">なぜ、AI時代においてC#は最適な言語の1つなのか？</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに AI が開発現場に入り込んだ今、私たちは「どの言語で書けば、AI と一緒に生産性を上げられるか」をあらためて考える必要があります。 その問いに対して、私は C# をとても強く推したいです。 理由はシンプルです。C# は、AI が生成するコードの質を人間が早く見抜...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/nt-izumi/items/c7385d1442ecc15e77ef?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【SQL入門①】初めて学ぶSQL！データベースの基礎からわかりやすく解説</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに こんにちは。 最近、SQLを改めて基礎から学び直す機会があり、「初心者向けに順番に学べる記事があったら便利だな」と感じたことが記事作成のきっかけです。 SQLは、システム開発だけでなく、ExcelやAccessなど、さまざまな場面で利用されている技術です。しかし...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/delphi_13_community_edtionwindows_x86armmaciosandroid.html">無料で使える「Delphi 13 Community Edtion」提供開始。Windows x86/Arm、Mac、iOS、Androidのネイティブアプリなど開発可能</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">米エンバカデロ・テクノロジーズは、無料で使える統合開発環境「Delphi 13 Community Edtion」の提供開始を発表しました。 Delphi 13 Community Edition is now available!The latest free edition of Delphi brings the power of Delphi 13 Florence to students, hobbyists, independent developers, and……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/superlogical.html">ミッチェル・ハシモト氏が新会社「Superlogical」を設立、あらゆる仕事に使えるマルチプレクサの開発へ</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">HashiCorpの共同創業者であり、同社を退社後は個人開発者としてターミナルソフト「Ghostty」の開発を進めていたミッチェル・ハシモト氏が、新会社［Superlogical」の設立を発表しました。 I&#39;ve started a new company: @superlogical! We&#39;re going to begin by building a terminal multiplexer. The entire vision is much larg……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #b0813a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c.7-3.4 2.8-5.5 5.5-5.5s4.8 2.1 5.5 5.5M16 5.5a3.5 3.5 0 010 6.6M17.5 14.8c2 .7 3.4 2.5 4 5.2"/></svg>キャリア・組織<span class="section-count">4</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://news.yahoo.co.jp/articles/b12c70eea1870fe6d19b036884a06ae0c00729ef">オープンＡＩで経営幹部が相次ぎ退社、半年前加入の「中心人物」も…新規株式公開を前に「危険信号」（読売新聞オンライン） - Yahoo!ニュース</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">【ニューヨーク＝木瀬武】対話型ＡＩ（人工知能）サービス「チャットＧＰＴ」を手がける米オープンＡＩで、経営幹部の退社が相次いでいる。米国や中国の同業との競争が激化しており、背景には収益向上への対応がありそうだ。年内にも新規株式公開（ＩＰＯ）に踏み切る可能性がある中、経営体制の不安定さが懸念材料とな...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.docswell.com/s/magurotuna/53J4YJ-2026-08-16-aiau-craft-day">AIがコードを書くなら、もう勉強しなくていい？AI時代に基礎を学ぶ理由 | ドクセル</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">2026/08/16 3日間でアプリ・サービスをローンチせよ！AIAU Craft Day https://aiau.connpass.com/event/401500/</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/blueflame-lab/items/775bba713c91a571e462?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">プロゲーマーから未経験エンジニアになって、上達の仕方は同じだと気づいた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">未経験からWebエンジニアとして働き始めて、まだ1ヶ月も経っていません。 毎日普通に分からないことが出てきます。 GitもDBもAPIも、仕事で触るたびに「これなんだっけ」となります。 そんな中で最近、 エンジニアの上達の仕方って、プロゲーマーをやってた頃と結構似てるな と...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/gmo-co-kitaura/items/acb76b46b710348c60cd?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">原本は1つ、ビューは毎回作り直す。AIをアシスタントにした軽量タスク運用</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに GMOコネクトの北浦です。 少人数のチームでタスク管理ツールを選ぼうとすると、だいたい行き詰まります。有料プランは機能が過剰で、数人のために払う額ではない。かといって、欲しい機能が全部そろった手頃なものも見つからない。 そうなるとツールを分けることになります。進...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #2f6b8f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/></svg>Web開発<span class="section-count">3</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/tatsuya582/items/e5c56a2f7b976cfc17ea?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">エラーレスポンス設計の現在地2026</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">エラーレスポンス設計の現在地 2026、標準はコードに焼いて規約は最小にする 前回の記事「Web API設計の現在地 2026、いま従うべき標準とデファクトの一覧」で、この10年でいちばん大きく変わった領域としてエラーレスポンスを挙げました。この記事はその深掘りです。 エ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://anond.hatelabo.jp/20260816215235">はてブにピン留め機能が欲しい</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">はてなアイデアがサ終してしまったので、ここに書く 要望 Xにある固定ツイートみたいな機能がはてブにも欲しい。できれば1件限定ではなく3〜5件くらいで 現状の課題 今のはてブは古いブクマがどんどん流れてしまうし、検索がしょぼいのでブックマークとして使い難い ピン留め機能があれば 個人用の備忘録としてはてブを...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/seeiji/articles/d9ab5f08b08005">RaycastのSlack Extensionでチャンネル移動が快適に。</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは。せーじと申します。現在は株式会社miiveで、Webやバックエンド、アプリの開発をしております。私は業務や私生活で日常的にVimやRaycastを使っています。また、普段から様々なコミュニケーションにSlackを使っています。 会社のワークスペースには300近いチャンネルが混在しており、目視での移動は手間がかかるため、⌘ + K でチャンネル検索検索開き、チャンネル名を入力していました。 ! 環境 Raycast : v2-v0.71.5.0 macOS : 26.2 Slack App : 4.46.104 手間がかかる ⌘ + Kでチャンネル検索が開くのはいいもの...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #a04a1f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>セキュリティ<span class="section-count">3</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://qiita.com/claudecat/items/fd8f449f1dddcc9f31fe?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【インシデント報告】Defender が有効なのに、開発機で5日間マイニングされていた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">【インシデント報告】Defender が有効なのに、開発機で5日間マイニングされていた —— 「AI がコードを壊した」と思ったら本当の原因は別だった 注意喚起を兼ねた個人環境のインシデント報告です。 同じ手口は「Defender を入れているから大丈夫」な環境をそのま...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/tkou15/articles/email-verification-protocol">メール確認コードを不要にする Email Verification Protocol (EVP)</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに アカウント登録時のメールアドレス確認は、Web でもっとも普及していて、もっとも面倒な手続きのひとつです。ユーザーは次のような往復を強いられます。 WICG の explainer によると、アクセス数上位 50 サイトのうち 95% がメールアドレスによるアカウント作成に対応しており、そのうち 73% はメール確認が完了するまでアカウント作成を先に進めさせません。つまり、この往復はコンバージョンの真正面に置かれています。 Email Verification Protocol（EVP） は、この往復そのものを消し去ろうという提案です。確認メールを一切送らずに、ブラウザが ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/1passwordaiclaudecursorchatgptaii.html">1Password、ダッシュボードから組織のAI支出状況を表示する新機能。ClaudeやCursor、ChatGPTなど複数AIにI対応</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">1Passwordは、単一のダッシュボード画面からAnthropicのCalude、OpenAIのChatGPT、AnysphereのCursorなど複数のAIサービスに対する支出状況をリアルタイムに表示、管理できる新機能を発表しました。 AI is priced by consumption. Every prompt and model call compounds the bill.This is the problem we are solving with AI S……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #4a7a52">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></svg>インフラ・クラウド<span class="section-count">2</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/rdlabo/articles/cloudflare-workers-after-rich-programming">我々は富豪プログラミングをしていた。Cloudflare Workersで実装はどう変わるか</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">Cloudflareへ移るまで、我々が富豪プログラミングをしているとは気づきませんでした。 EC2で動かしていたNestJSをHono + Cloudflare Workersへ移しました。RDSはそのまま使い、ElastiCacheの役割はCloudflare側へ移しています。 大きなSDKを入れる。レスポンスを全部メモリへ載せる。DBのSELECTを順番に待つ。Cronで全件を完走する。SSEをつなぎっぱなしにする。ElastiCacheの細かいキーを何度も読む。 どれも珍しい実装ではありません。少なくとも私のAWS構成では普通に動き、わざわざ直す理由もありませんでした。サーバーとク...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/nabettu/articles/a964f988e7cc75">続・貧者のアークテクチャ：Next.js + Cloudflare Workers + Turso 本番運用で踏んだ罠ぜんぶ</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは、@nabettuです。 Webサービスの運営コストは、安ければ安いほど嬉しいですね！ 以前「貧者のアークテクチャ」という記事で、Next.jsをCloudflareで動かしつつFirebaseを使う構成を書きました。 https://zenn.dev/nabettu/articles/38f021c1901212 今回はその続編というか実戦編です。イベント管理サービス「イベット」（告知・参加登録から当日のライブQ&amp;A・投票までURLひとつで完結するSaaS）を、Next.js (App Router) + Cloudflare Workers + Turso のフルス...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #3f7f7a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3h4M11 3v6l-5.5 9.2A2 2 0 007.2 21h9.6a2 2 0 001.7-2.8L13 9V3"/><path d="M8.5 15h7"/></svg>サイエンス<span class="section-count">2</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://ki-to-oku.net/oist-artificial-hibernation-memory-retention/">記憶を保つのはシナプスの強さではなく「つながり方」：沖縄科学技術大学院大などが人工冬眠マウスで示す</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">冬眠明けのマウスは記憶を保っていた沖縄科学技術大学院大学（OIST）、筑波大学、自然科学研究機構 生命創成探究センター/生理学研究所などの研究チームは2026年8月13日、人工冬眠を利用したマウス実験により、長期記憶の保持には、神経細胞同士が信号をやり取りする接合部「シナプス」の強さではなく、記憶痕跡を担うそ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/gamella/articles/f5e6bddab37c8d">botterのためのKaggle金融予測コンペの設計史</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">AlpacaTechの北山です。 今回は大作、かつ、かなりマニアックな話題なので、興味のある人だけお付き合いください。 発端は以下のXのやり取りでした。 https://x.com/gamella/status/2087753029638611107?s=20 これまでJPX総研様と三井物産様のKaggle金融コンペで問題設計を担当してきました。それぞれの設計の裏側は、個別の記事にまとめています。 https://zenn.dev/gamella/articles/eaf7fe5a96bdf0 https://zenn.dev/gamella/articles/7e944bd18cdbe...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #75695a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>その他<span class="section-count">2</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.asahi.com/articles/ASV7R33SSV7RPTIL009M.html">AIで描いた架空のモデル画像を無断で使われた 著作権侵害で裁判に：朝日新聞</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">生成AI（人工知能）を使って作製した画像を販売している会社が、第三者に画像を無断で使われたと訴えている。著作権の侵害だとして賠償金を請求したが、相手方が応じず、裁判で争うことになった。「AIでつくっ…</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/content_4.html">無料で読めるITまんが 2026年版 ～マンガでわかるAIの仕組み／DC業務のリアルを知るヤマダくん、ほか</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">ネット上にはたくさんのIT系のコンテンツがあふれています。そのほとんどは文章として書かれていますが、一部にはマンガの形で面白く分かりやすくしたものもあります。 ここでは、マンガ化されたITコンテンツを集めてみました。毎年夏休みの恒例企画、ITまんがの2026年版です。 今年は3本のマンガを新たに追加しました。ぜひ夏休みの息抜きにどうぞ。 もしここに掲載していないITまんがをご存じでしたら、X/Twitter（@publickey）や、はてなブックマークのコメントなどで教えてく……</p>
+    </li></ul>
+  </section><p class="feed-errors">取得失敗: Hacker News（fetch failed）</p>
+  <footer>
+    <a href="./">アーカイブ</a>
+    <span>生成: 2026/8/17 7:29:43</span>
+  </footer>
+</div>
+</body>
+</html>
