@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-09-09 | Tech Daily Digest</title>
+<style>
+:root {
+  --paper: #f6f1e7;
+  --card: #fffdf7;
+  --ink: #211d18;
+  --muted: #75695a;
+  --accent: #c23a28;
+  --rule: #d9cfbd;
+  --rule-strong: #211d18;
+  --mincho: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  --gothic: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1a1712;
+    --card: #221f19;
+    --ink: #eae2d3;
+    --muted: #9c917d;
+    --accent: #e2593f;
+    --rule: #3b352a;
+    --rule-strong: #eae2d3;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--gothic);
+  font-size: 15px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+.sheet { max-width: 720px; margin: 0 auto; padding: 28px 20px 64px; }
+
+header.masthead { text-align: center; padding: 18px 0 14px; border-bottom: 4px double var(--rule-strong); }
+.masthead-date { font-family: var(--gothic); font-size: 12px; letter-spacing: .35em; color: var(--muted); text-transform: uppercase; }
+.masthead h1 {
+  margin: 6px 0 4px;
+  font-family: var(--mincho);
+  font-weight: 600;
+  font-size: clamp(28px, 7vw, 40px);
+  letter-spacing: .08em;
+}
+.masthead h1 .accent { color: var(--accent); }
+.masthead-sub { font-size: 12px; color: var(--muted); letter-spacing: .18em; }
+
+.comic { margin-top: 26px; }
+.comic svg { display: block; width: 100%; height: auto; }
+
+.overview {
+  font-family: var(--mincho);
+  font-size: 17px;
+  line-height: 2.1;
+  margin: 28px 2px 8px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-title {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  margin: 0 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule-strong);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-count { font-family: var(--gothic); font-size: 11px; color: var(--muted); letter-spacing: .05em; }
+
+section { margin-top: 40px; animation: rise .5s ease both; }
+section:nth-of-type(1) { animation-delay: .05s; }
+section:nth-of-type(2) { animation-delay: .12s; }
+section:nth-of-type(3) { animation-delay: .19s; }
+section:nth-of-type(4) { animation-delay: .26s; }
+section:nth-of-type(5) { animation-delay: .33s; }
+section:nth-of-type(6) { animation-delay: .40s; }
+section:nth-of-type(7) { animation-delay: .47s; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { section { animation: none; } }
+
+.picks { list-style: none; margin: 0; padding: 0; }
+.pick {
+  display: flex;
+  gap: 16px;
+  padding: 18px 16px;
+  margin-top: 14px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+}
+.pick-no {
+  font-family: var(--mincho);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.pick-title { font-family: var(--mincho); font-size: 17px; font-weight: 600; line-height: 1.7; }
+.pick-reason { margin: 6px 0 4px; color: var(--muted); font-size: 13.5px; }
+.pick-source { font-size: 11px; color: var(--accent); letter-spacing: .1em; }
+
+.articles { list-style: none; margin: 0; padding: 0; }
+.article { padding: 14px 2px; border-bottom: 1px dotted var(--rule); }
+.article-title { font-weight: 600; }
+.article-meta { margin-left: 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.article-excerpt { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+.article-translation { margin: 4px 0 0; font-size: 13.5px; line-height: 1.8; }
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  vertical-align: 2px;
+  border-radius: 2px;
+}
+.badge-ja { margin: 0 6px 0 0; vertical-align: 1px; }
+.badge-source { border-color: color-mix(in srgb, var(--muted) 55%, transparent); color: var(--muted); }
+.feed-error { color: var(--muted); font-size: 13px; }
+.feed-errors { margin-top: 36px; font-size: 12px; color: var(--muted); }
+
+.genre { --g-disp: var(--g); }
+@media (prefers-color-scheme: dark) {
+  .genre { --g-disp: color-mix(in srgb, var(--g) 55%, #f0e8d8); }
+}
+.genre .section-title { color: var(--g-disp); border-bottom-color: color-mix(in srgb, var(--g-disp) 60%, transparent); align-items: center; }
+.genre .section-count { color: var(--muted); }
+.genre-icon { width: 19px; height: 19px; flex-shrink: 0; }
+.stars { font-size: 11.5px; letter-spacing: 2px; margin-right: 8px; color: var(--accent); vertical-align: 1.5px; }
+.stars-1 { color: var(--muted); opacity: .55; }
+.pick-thumb {
+  width: 108px;
+  height: 76px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
+}
+@media (max-width: 480px) { .pick-thumb { width: 80px; height: 60px; } }
+
+footer {
+  margin-top: 56px;
+  padding-top: 14px;
+  border-top: 4px double var(--rule-strong);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <div class="masthead-date">2026年9月9日（水）</div>
+    <h1>Tech Daily <span class="accent">Digest</span></h1>
+    <div class="masthead-sub">毎朝の技術情報、一枚に。</div>
+  </header>
+  
+  <section class="comic">
+    <svg viewBox="0 0 680 170" role="img" aria-label="今日の一コマ: ちゃんくん「きょうはAIエージェントの安全対策とReact19のふしぎだねぇ」">
+      <rect x="2" y="2" width="676" height="166" rx="6" fill="#FFFDF7" stroke="#4A4A4A" stroke-width="3"/>
+      <rect x="14" y="12" width="118" height="22" fill="#4A4A4A"/>
+      <text x="73" y="28" font-size="12" fill="#FFFFFF" text-anchor="middle">今日のちゃんくん</text>
+      <g transform="translate(30 38) scale(1.18)">
+      <g stroke="#4A4A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="15" cy="34" r="8" fill="#C8EFDF"/>
+        <circle cx="85" cy="34" r="8" fill="#C8EFDF"/>
+        <ellipse cx="50" cy="52" rx="36" ry="34" fill="#C8EFDF"/>
+        <ellipse cx="50" cy="60" rx="29" ry="27" fill="#FFE8C2"/>
+        <path d="M22 56 Q19 22 50 20 Q81 22 78 56 Q71 46 65 55 Q59 44 51 54 Q45 44 37 55 Q31 46 27 56 Q24 50 22 56 Z" fill="#C8EFDF"/>
+        <path d="M29 57 Q36 53.5 43 58" stroke-width="3.2" fill="none"/>
+        <path d="M57 58 Q64 53.5 71 57" stroke-width="3.2" fill="none"/>
+        <ellipse cx="36" cy="63" rx="6" ry="7" fill="#FF9FB2" stroke="none"/>
+        <ellipse cx="64" cy="63" rx="6" ry="7" fill="#FF9FB2" stroke="none"/>
+        <ellipse cx="36" cy="63" rx="2.8" ry="3.6" fill="#4A4A4A" stroke="none"/>
+        <ellipse cx="64" cy="63" rx="2.8" ry="3.6" fill="#4A4A4A" stroke="none"/>
+        <circle cx="38.2" cy="60.4" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="66.2" cy="60.4" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="33.8" cy="66" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <circle cx="61.8" cy="66" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <path d="M45 74 Q47.5 77 50 74 Q52.5 77 55 74" fill="none" stroke-width="2.2"/>
+        <ellipse cx="25" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+        <ellipse cx="75" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+      </g></g>
+      <rect x="188" y="47" width="460" height="76" rx="16" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5"/>
+      <path d="M190 75 L156 89 L190 97" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5" stroke-linejoin="round"/>
+      <text font-size="16.5" fill="#4A4A4A" text-anchor="middle"><tspan x="418" y="79">きょうはAIエージェントの安全対策とReac</tspan><tspan x="418" y="103">t19のふしぎだねぇ</tspan></text>
+    </svg>
+  </section>
+  <p class="overview">生成AI・AIエージェントの実用化と安全性をめぐる記事が目立ち、Claude CodeやMCP、社内QAエージェントなど開発現場への導入事例が広がっています。インフラではAmazon Linux 2027やAWSの海底ケーブル、Docker軽量化が注目される一方、React・HTMX・Python 3移行など既存技術のアップデートも続いています。</p>
+  
+  <section class="top-picks">
+    <h2 class="section-title">今日の注目</h2>
+    <ol class="picks">
+      <li class="pick">
+        <span class="pick-no">01</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://zenn.dev/mkj/articles/fad8adf0586665">Kaggleコンペ紹介：AI Agent Security - Multi-Step Tool Attacks</a>
+          <p class="pick-reason">AIエージェントのツール攻撃を題材に、実運用で避けるべき脅威と防御の考え方を学べます。AI活用が進む今、セキュリティ面で特に重要な内容です。</p>
+          <span class="pick-source">Zenn トレンド</span>
+        </div>
+        <img class="pick-thumb" src="https://res.cloudinary.com/zenn/image/upload/s--bxVAOzQQ--/c_fit%2Cg_north_west%2Cl_text:notosansjp-medium.otf_55:Kaggle%25E3%2582%25B3%25E3%2583%25B3%25E3%2583%259A%25E7%25B4%25B9%25E4%25BB%258B%25EF%25BC%259AAI%2520Agent%2520Security%2520-%2520Multi-Step%2520Tool%2520Attacks%2Cw_1010%2Cx_90%2Cy_100/g_south_west%2Cl_text:notosansjp-medium.otf_34:Rick%2Cx_220%2Cy_108/bo_3px_solid_rgb:d6e3ed%2Cg_south_west%2Ch_90%2Cl_fetch:aHR0cHM6Ly9zdGF0aWMuemVubi5zdHVkaW8vdXNlci11cGxvYWQvYXZhdGFyL2U2NGM3ZTBkMzIuanBlZw==%2Cr_20%2Cw_90%2Cx_92%2Cy_102/g_south_west%2Ch_34%2Cl_default:og-publication-pro-mark-xcosax%2Cw_34%2Cx_217%2Cy_158/co_rgb:6e7b85%2Cg_south_west%2Cl_text:notosansjp-medium.otf_30:%25E6%259D%25BE%25E5%25B0%25BE%25E7%25A0%2594%25E7%25A9%25B6%25E6%2589%2580%25E3%2583%2586%25E3%2583%2583%25E3%2582%25AF%25E3%2583%2596%25E3%2583%25AD%25E3%2582%25B0%2Cx_255%2Cy_160/bo_4px_solid_white%2Cg_south_west%2Ch_50%2Cl_fetch:aHR0cHM6Ly9zdGF0aWMuemVubi5zdHVkaW8vdXNlci11cGxvYWQvYXZhdGFyLzZkMTQ1MDUyZWMuanBlZw==%2Cr_max%2Cw_50%2Cx_139%2Cy_84/v1627283836/default/og-base-w1200-v2.png?_a=BACMTiAE" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">02</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://zenn.dev/yamatechi/articles/vite-monorepo-react-dedupe">React 19移行で学んだpnpmの依存関係解決の仕組み</a>
+          <p class="pick-reason">React 19とReact 18が共存するpnpmモノレポで起きる依存関係問題を、Viteを含む実例から理解できます。フロントエンド開発者には再発防止に役立つ実践的な記事です。</p>
+          <span class="pick-source">はてブ テクノロジー × Zenn トレンド</span>
+        </div>
+        <img class="pick-thumb" src="https://res.cloudinary.com/zenn/image/upload/s--n9RoBF2T--/c_fit%2Cg_north_west%2Cl_text:notosansjp-medium.otf_55:React%252019%25E7%25A7%25BB%25E8%25A1%258C%25E3%2581%25A7%25E5%25AD%25A6%25E3%2582%2593%25E3%2581%25A0pnpm%25E3%2581%25AE%25E4%25BE%259D%25E5%25AD%2598%25E9%2596%25A2%25E4%25BF%2582%25E8%25A7%25A3%25E6%25B1%25BA%25E3%2581%25AE%25E4%25BB%2595%25E7%25B5%2584%25E3%2581%25BF%2Cw_1010%2Cx_90%2Cy_100/g_south_west%2Cl_text:notosansjp-medium.otf_37:%25E5%25B1%25B1%25E7%2594%25B0%2520%25E5%2593%25B2%25E4%25B9%259F%2520%252F%2520Tetsuya%2520Ya...%2Cx_203%2Cy_121/g_south_west%2Ch_90%2Cl_fetch:aHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jS0JsYS1xc3RYUmVGempkMnl5c05vQ2lDaklmUXFPOHhBU2wyYWZ2c2JNbUx6ZUp3PXMyNTAtYw==%2Cr_max%2Cw_90%2Cx_87%2Cy_95/v1627283836/default/og-base-w1200-v2.png?_a=BACMTiAE" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">03</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://qiita.com/kuma_3838/items/1fc232b42c344260021d?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">マジックリンクでログインできない原因はメールのURLスキャンだった</a>
+          <p class="pick-reason">マジックリンクがメールセキュリティ製品のURLスキャンで先に消費されるという、見落としやすい本番障害の原因を扱っています。認証機能を運用するチームは一度確認しておきたい事例です。</p>
+          <span class="pick-source">Qiita 人気記事</span>
+        </div>
+        <img class="pick-thumb" src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-user-contents.imgix.net%2Fhttps%253A%252F%252Fcdn.qiita.com%252Fassets%252Fpublic%252Farticle-ogp-background-afbab5eb44e0b055cce1258705637a91.png%3Fixlib%3Drb-4.1.1%26w%3D1200%26blend64%3DaHR0cHM6Ly9xaWl0YS11c2VyLXByb2ZpbGUtaW1hZ2VzLmltZ2l4Lm5ldC9odHRwcyUzQSUyRiUyRnMzLWFwLW5vcnRoZWFzdC0xLmFtYXpvbmF3cy5jb20lMkZxaWl0YS1pbWFnZS1zdG9yZSUyRjAlMkYzNTc5MDQxJTJGYzc1OThmNzMwMmQ1YzZmZmRmNmY2ZTM0ZjUyNTFlYzhlNDZjMDczZiUyRmxhcmdlLnBuZyUzRjE3NDIwNDYxNzI_aXhsaWI9cmItNC4xLjEmYXI9MSUzQTEmZml0PWNyb3AmbWFzaz1lbGxpcHNlJmJnPUZGRkZGRiZmbT1wbmczMiZzPWI5M2ExOWM2Mjk1NzQyYmJlOTU0MGZkZWQxNmM4Mjcy%26blend-x%3D120%26blend-y%3D462%26blend-w%3D90%26blend-h%3D90%26blend-mode%3Dnormal%26mark64%3DaHR0cHM6Ly9xaWl0YS1vcmdhbml6YXRpb24taW1hZ2VzLmltZ2l4Lm5ldC9odHRwcyUzQSUyRiUyRnMzLWFwLW5vcnRoZWFzdC0xLmFtYXpvbmF3cy5jb20lMkZxaWl0YS1vcmdhbml6YXRpb24taW1hZ2UlMkZhZmM0ZGJhZjAzNThlOGQwYjM0NmM4ZDc1ZWIwMzdiMjVmNjc4MDY5JTJGb3JpZ2luYWwuanBnJTNGMTYwNzc1NjU4OD9peGxpYj1yYi00LjEuMSZ3PTQ0Jmg9NDQmZml0PWNyb3AmbWFzaz1jb3JuZXJzJmNvcm5lci1yYWRpdXM9OCZiZz1GRkZGRkYmYm9yZGVyPTIlMkNGRkZGRkYmZm09cG5nMzImcz03NjRmYjE2ODMxYjQ2ZDU0NTgwMmI1MGMzYWMxODM2MQ%26mark-x%3D186%26mark-y%3D515%26mark-w%3D40%26mark-h%3D40%26s%3D629b5eadc6112769e3f5b2414ddda0c5?ixlib=rb-4.1.1&amp;amp;w=1200&amp;amp;fm=jpg&amp;amp;mark64=aHR0cHM6Ly9xaWl0YS11c2VyLWNvbnRlbnRzLmltZ2l4Lm5ldC9-dGV4dD9peGxpYj1yYi00LjEuMSZ3PTk2MCZoPTMyNCZ0eHQ9JUUzJTgzJTlFJUUzJTgyJUI4JUUzJTgzJTgzJUUzJTgyJUFGJUUzJTgzJUFBJUUzJTgzJUIzJUUzJTgyJUFGJUUzJTgxJUE3JUUzJTgzJUFEJUUzJTgyJUIwJUUzJTgyJUE0JUUzJTgzJUIzJUUzJTgxJUE3JUUzJTgxJThEJUUzJTgxJUFBJUUzJTgxJTg0JUU1JThFJTlGJUU1JTlCJUEwJUUzJTgxJUFGJUUzJTgzJUExJUUzJTgzJUJDJUUzJTgzJUFCJUUzJTgxJUFFVVJMJUUzJTgyJUI5JUUzJTgyJUFEJUUzJTgzJUEzJUUzJTgzJUIzJUUzJTgxJUEwJUUzJTgxJUEzJUUzJTgxJTlGJnR4dC1hbGlnbj1sZWZ0JTJDdG9wJnR4dC1jb2xvcj0lMjMxRTIxMjEmdHh0LWZvbnQ9SGlyYWdpbm8lMjBTYW5zJTIwVzYmdHh0LXNpemU9NTYmdHh0LXBhZD0wJnM9YzY1YzFiNWI3Nzk3OTcxMzY5OTYxMmY0MTIzMzdjNjM&amp;amp;mark-x=120&amp;amp;mark-y=112&amp;amp;blend64=aHR0cHM6Ly9xaWl0YS11c2VyLWNvbnRlbnRzLmltZ2l4Lm5ldC9-dGV4dD9peGxpYj1yYi00LjEuMSZ3PTgzOCZoPTU4JnR4dD0lNDBrdW1hXzM4MzgmdHh0LWNvbG9yPSUyMzFFMjEyMSZ0eHQtZm9udD1IaXJhZ2lubyUyMFNhbnMlMjBXNiZ0eHQtc2l6ZT0zNiZ0eHQtcGFkPTAmcz1mZDg2NmEwMjYzNzQ2N2RlOGUzM2NmNjFmOWQ0ZmUzYQ&amp;amp;blend-x=242&amp;amp;blend-y=454&amp;amp;blend-w=838&amp;amp;blend-h=46&amp;amp;blend-fit=crop&amp;amp;blend-crop=left%2Cbottom&amp;amp;blend-mode=normal&amp;amp;txt64=5qCq5byP5Lya56S-44K344Oz44K344Ki&amp;amp;txt-x=242&amp;amp;txt-y=539&amp;amp;txt-width=838&amp;amp;txt-clip=end%2Cellipsis&amp;amp;txt-color=%231E2121&amp;amp;txt-font=Hiragino%20Sans%20W6&amp;amp;txt-size=28&amp;amp;s=3d82cc36813c8e61c675ac184257ff89" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li></ol>
+  </section>
+  
+  <section class="feed genre" style="--g: #c23a28">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M18.5 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>AI・LLM<span class="section-count">10</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/maeda-niku18/items/b633dda178c505461080">AIっぽくない画像を作る画風プロンプト38種類＋テンプレート - Qiita</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">AI画像生成の「AIっぽさ」を消すための画風プロンプト集（38スタイル＋テンプレート） ChatGPT（GPT Image）で資料やWebサイト用のイラストを作っていると、毎回同じところで引っかかります。 線が均一すぎる、グラデーションが滑らかすぎる、顔が整いすぎている、背景に意味のない小物が増える。要するに、AIが生成した...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.sankei.com/article/20260908-R74BJGPGTVLPHKYJM27AZPAAY4/">ヘアモデル画像酷似で無断使用と提訴 「AI生成画像」に著作権あるのか、司法判断に注目</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">原告企業が生成AIで制作し販売しているヘアカットモデルの画像（左）と、被告が無断で広告サイトに掲載したと原告側が主張している画像（いずれも原告側提供）生成AI（人工知能）を利用して作ったヘアカットモデルの画像と酷似した画像を無断で広告に使われ、著作権を侵害されたとして、大阪市のコンテンツ制作会社が千...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://gigazine.net/news/20260908-instagram-ai-detection/">InstagramのAI検出ラベルが誤作動しまくっていると話題に</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">Metaは2024年5月から、AIで作成されたコンテンツに対して「AI Info(Made with AI)」というラベルを付ける施策を導入しています。その後も検出機能の強化などを実施していますが、2026年8月末頃から、明らかにAI生成画像なのにラベルがついていなかったり、人間が撮影した写真なのにラベルをつけたりといった誤検出が多数...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/lovegraph/articles/ce6cb80756e3ca">1,500人のカメラマンに社内NotionのQAエージェントを提供した話</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは、ラブグラフで業務効率化を担当しているmoriiです。普段は内科医をしています🩺 ラブグラフでは1500人以上のカメラマンが活躍しています。近年の課題として、業務の多様化により発注内容をまとめた社内Notionが肥大化し、カメラマンの負担になっていました。 本記事では、Notion内のナレッジを上手く構造化し、高速・高精度なQAエージェントを作るうえで学びになった点をご紹介します。 TL;DR 約1600件/月の質問に、5秒程度で回答し、8割以上の質問に回答できるQAエージェントを作った。 毎日Notionと同期し続ける仕組みを構築し、画像内の要素も検索対象にできるよ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/gemcook/articles/herdr-worktree-parallel">Herdr × git worktree × Claude Codeの相性がいい話</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは、村中（@wage790）です。関西でバックエンド・クラウドインフラのエンジニアをしています。 普段の開発でClaude Codeを1つだけ動かしていると、その応答をただ待つ時間ができてしまいます。そこで、Claude Codeを複数並べて動かすことにしました。ただそれだと、同じ作業ディレクトリで2つ動かした場合に、片方がgit switchするともう片方が読んでいるファイルまで入れ替わってしまいます。それを避けるため、git worktreeで作業ディレクトリを分けました。 ただ、worktreeを作るたびにgit worktree addを打ってディレクトリを移動するのが今...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/tellernovel_inc/articles/57b223dd4b8f5d">モバイルアプリ開発でもエージェントループを回したい！React Nativeで計画から検証・PRまで任せる</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは！テラーノベルでiOS/Android/Webとフロントエンド周りを担当している @kazutoyo です！ Opus 4.5が出たあたりから、自分でコードを書くことがほとんどなくなりました。 最近はループエンジニアリングという言葉も出てきて、エージェントに任せる流れがさらに加速している感じがあります。 ただ、モバイルアプリで同じことをやろうとすると、Webアプリと比べて検証がしづらく、そこだけ人の手が残っていました。 そこで使っているのが、以前紹介した agent-device です。 エージェント自身がiOS Simulator / Android Emulatorを操作し...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/koher/articles/code-first-3d-modeling">Astra時代のコードファースト3Dモデリング</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">GPT-6 Astraがリリースされ、XはAstraが作ったハイクオリティ3Dシーンの動画であふれています。それらの多くは、MCP経由でAstraにBlenderなどの3Dモデリングソフトを使わせ実現されたものです。アプリの中で直接コードによって3Dシーンを作らせればより手軽ですが、やはりBlenderなどを使った場合よりクオリティが落ちてしまいがちです。 そこで、週末の2日間、Astraにコードだけで3Dモデリングさせる「コードファースト3Dモデリング」の可能性を探ってみました。その結果、ある程度の成果が得られたので、知見を共有します。 GPT-6 AstraがSwiftのコードだ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/kuma_3838/items/00cb0b8d61ca76769c88?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">最近取り入れたClaude Codeの個人的tips 4選</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに ここ最近取り入れた Claude Code の tips を4つ紹介します。1つだけツールの話です。 どれも大がかりな仕組みではないので、気になったものだけ拾ってもらえればと思います。 この記事をざっくり図解 1. セッション名を自動で付ける 知っている方...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/songchong/items/8b48962aa6d5408abe86?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">AIエージェントの波に乗るべきか？MCPとAPIに関する8つの問いを調べてみた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">「うちのシステムも MCP に対応すべきか」 「これからは API ではなく MCP なのか」 ——こうした声を聞くことが増えました。しかし、流行しているからといって安易に飛びつくのは危険です。 そこで編集部では、両側の一次仕様書の突き合わせと、IT連携マップ で公開して...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/shirok/items/3cb311b037a975739948?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">Select AIが Metadataから SQLを生成する仕組みと AI Ready Dataを整理してみてみた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">Select AIを使用すると、例えば次のように業務用語でDatabaseへ問い合わせできます。 SELECT AI RUNSQL 関東の有効顧客について、確定済み売上金額を顧客別に表示してください; ここで気になるのは、LLMが「有効顧客」や「確定済み売上」を、どの情...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #6b5a9e">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg>言語・ツール<span class="section-count">6</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://techracho.bpsinc.jp/hachi8833/2026_09_08/159597">2026年版: Mac開発環境の最新セットアップとインストールスクリプト（翻訳）｜TechRacho by BPS株式会社</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">概要 元サイトの許諾を得て翻訳・公開いたします。 英語記事: My Development Setup in 2026 | baweaver 原文公開日: 2026年08月04日 原著者: Brandon Weaver 日本語タイトルは内容に即したものにしました。 ツールや拡張などへのリンクを適宜追加しています。 本記事は主にRails開発用の環境構築について解説されていま...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/tellernovel_inc/articles/0193eb68cabb6e">ドメインモデル貧血症はなぜ生まれるのか — Decision パターンで DDD トリレンマを解く</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">テラーノベルで Go を書いている typer です。 この記事は次のような方向けです。 Go でコードを書いていて、domain 層にロジックが集まらないと感じている方 DDD の戦術的パターンを入れてみたが、結局 domain の外側にロジックが溜まっている方 リポジトリを呼ぶために domain に context と error を持ち込むかどうかで迷ったことがある方 先に結論を書いておきます。 ドメインモデル貧血症は、怠慢ではなく構造的なトリレンマの結果として生まれやすい 「判断するために何が要るか」を型で返せば、型の制約を保ちながらトリレンマは解ける 「戦術的 D...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/eve_online240python_27python_3.html">巨大オンラインゲーム「EVE Online」。ゲームを支える240万行のPython 2.7のコードをPython 3へ移行すると発表</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">宇宙を舞台にした世界最大級の大規模オンラインゲーム「EVE Online」が、ゲームを支える240万行のPythonコードをPython 3に移行すると発表しました。 We have officially started our codebase migration over to Python 3There’s quite a lot involved in this process, and you&#39;ve already helped us tremendousl……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/javascriptcporfforwasm.html">JavaScriptをC言語にコンパイルする「porffor」がアルファ版に到達。ネイティブやWASMを生成可能</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">JavaScriptを事前コンパイルしてC言語に変換するコンパイラ「porffor」（発音はpoor-for）がアルファ版に到達したことが発表されました（公式サイト、GitHubリポジトリ）。 作者のOliver Medhurst氏が明らかにしました。 Porffor alpha is out! It represents a new phase of the project where real-world dependencies are beginning to wor……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/vs_codethe_story_of_vs_codeyoutubeibmmsvs_code.html">VS Code誕生から現在までの物語「The Story of VS Code」YouTubeで公開。作者のエリック・ガンマ氏はなぜIBMからMSへ移籍してVS Codeを作ることになったか</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Visual Studio Code（以下、VS Code）はいまやITエンジニアのあいだで最も人気のあるコードエディタの地位を確立しています。 VS Codeはオープンソースであり、そしてWindows、Mac、Linuxのマルチプラットフォームに対応しています。 しかしVS Codeの開発が始まった2011年当時、マイクロソフトのCEOはオープンソースを敵視していたスティーブ・バルマー氏であり、同社はVisual StudioというWindowsだけに対応した強力なソフト……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/javathe_java_storyyoutube.html">Java誕生から現代に至る歴史をゴスリン氏ら関係者が語る公式ドキュメンタリー「The Java Story」、YouTubeで公開中</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Java言語が誕生してから30年以上の年月が経過しています。 Javaはもともと家庭用デバイスのための言語として作られたものの、結局は採用されずに失敗プロジェクトとして始まったことは多くの方がご存知でしょう。 そこから新たな展開としてWebブラウザのHotJavaが注目され始め、マイクロソフトとの対立、サーブレットによるサーバサイドでの発展、サン・マイクロシステムズのオラクルによる買収など、現在のJavaの姿に至るまでには多くの紆余曲折がありました。 こうしたJavaの誕生か……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #b0813a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c.7-3.4 2.8-5.5 5.5-5.5s4.8 2.1 5.5 5.5M16 5.5a3.5 3.5 0 010 6.6M17.5 14.8c2 .7 3.4 2.5 4 5.2"/></svg>キャリア・組織<span class="section-count">6</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/nexta_/articles/51fdb6f774d1ca">【XP祭り2026】エンジニアにコミュ力を求めるな、と言われて頷いた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは！QAエンジニアのAyakaです。 2026年9月5日の XP祭り2026 にプロポーザル採択いただいたので、参加してきました。私はオンラインDの13:00枠で「社内ナレッジをAIに読ませて、QAのテスト設計を任せてみた話」を話しました。 午前の基調講演、自分の登壇とその直後の1枠までしか聞けていないので、その範囲で刺さった論点を3つに絞って書きます。 その前に：XPを、私は言葉でしか知らなかった 午前のオープニングで、XPそのものの入門説明がありました。正直、これがなかったらそのあとの90分は置いていかれてました。私はXPを「ペアプロとかTDDとかをやるやつ」くらいの抽象...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/im_yoneda/items/f27e52d2f852ba017a7e?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">ジュニアの「AIが書いたコードが理解できない」問題の対応策</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに 私は新卒でエンジニアになって1年が経ちました。 生成AIに実装を依頼すると、コードを書く時間そのものは大きく短縮できることを実感しています。 一方、私のようなジュニアエンジニアの場合、生成されたコードを理解するまでに時間がかかるため、 期待したほど開発全体は速く...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/trustdock/articles/f57af053bdbed4">立ち上げ期の技術広報が見たDroidKaigi 2026 ブースフロア</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは！ 株式会社TRUSTDOCK Verification事業開発部Core eKYCチームにてモバイルアプリ向けSDKの開発をしている古川（a.k.a. ふるしん）です。 （社名は「とらすとどっく」と読みます） 基本的にAndroidエンジニアとして仕事をしていますが、技術広報っぽい仕事もちょっとだけしています。 https://zenn.dev/trustdock/articles/4102da51cc9f41 先日公開したスポンサー就任記事でもお伝えした通り、TRUSTDOCKは今年も「DroidKaigi 2026」にサポータースポンサーとして協賛させていただきました！...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/myuron/articles/3c09e7e697d9de">Techはすぐに追ったほうがいい</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに このブログはTechに関する思想です。 興味があれば続きを覗いてみてください。 Techって面白い 私はターミナルが好きだ。テキストエディタも好きだ。特にNeovimが好きだ。 私はインフラエンジニアなので、Vimは日常的に使っていたが、普通に使いづらいと思っていたし、矢印キーを多用していたのでVimmerなんて名乗っていい者ではなかった。 だが、ハッカーはVimやEmacsを愛用してるため、Vimには何回か本当の意味で挑戦したが挫折していた。 そもそもVimPluginという概念を知らず、これでどうやってVSCodeみたいに開発するんやと思ってた。 私が本格的にのめり...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/m__ikeda/items/5323a12a6af0d8351b49?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【未経験からITへ】「将来がなんとなく不安…」なあなたへ。キャリアの答えは、走りながら一緒に探せば大丈夫です</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">自己紹介 こんにちは。株式会社PRUMで採用広報を担当している池田です。 未経験からIT業界を目指している方と話していると、かなりよく聞く共通した悩みがあります。そういった内容を皆さんにシェアしていくので、役立てていただけたらと思います😊 もしIT業界に興味があるけど、...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/webgitclivimwebterm_learn.html">Webブラウザ上でターミナルのシミュレータを実行、GitやCLI、Vimなどを無料で学べる「WebTerm Learn」が公開</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Webブラウザ上でまるで本物のように振る舞うターミナルのシミュレータを実行し、そこでGitやLinuxのコマンドライン、Vimなどの操作を無料で学べる学習プラットフォーム「WebTerm Learn」を、株式会社initが公開しました。 WebTerm Learnの入口は上記画面のようにゲーム仕立てになっており、進路によってGitやターミナルからのコマンドライン、Vimなどを学べるコースが用意されています。 コースの中は細かいレッスンに分かれており、必要な知識を順序立てて学べ……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #4a7a52">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></svg>インフラ・クラウド<span class="section-count">5</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/nolanlover0527/items/24ee07122dd4d0523069">Docker環境をガチで軽量化するための鉄板設定まとめ - Qiita</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに Docker環境が重すぎて頭を抱えている人は多いのではないでしょうか。 私自身も激重なDocker環境を触っていて、原因を一つずつ潰していった経験が何度かあります。 今回は、ローカルのDocker環境（Windows）を軽量化するための方法について、実際に行った手順と一緒に紹介します。 ただし、リソース削除やnamed ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/amazon_linux4amazon_linux_2027selinux.html">Amazon Linuxが4年ぶりにメジャーバージョンアップ、「Amazon Linux 2027」パブリックプレビュー。SELinuxがデフォルトで強制モードに</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Publickey</span>
+      
+      
+      <p class="article-excerpt">Amazon Web Services（AWS）は、AWSに最適化されたLinux OSの4年ぶりとなるメジャーバージョンアップ「Amazon Linux 2027」をパブリックプレビューとしてリリースしました。 現時点の正式版はAmazon Linux 2023 Amazon LinuxはAWSによって無料で提供されているLinux OSのディストリビューションです。Amazon EC2などのAW...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://pages.awscloud.com/rs/112-TZM-766/images/R14_0625_6_CDN227_v1.pdf">[PDF] TBSテレビ「ラヴィット！」大規模配信の裏側と AWS サーバーレス設計</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">CDN227 TBSテレビ「ラヴィット！」大規模配信の 裏側と AWS サーバーレス設計 亀田 遼 株式会社TBSテレビ メディアテクノロジー局未来技術革新事業部 テクニカルプロダクトリード （株）TBSテレビ メディアテクノロジー局 未来技術革新事業部 テクニカルプロダクトリード 亀田 遼 TBSテレビ「ラヴィット！」 大規模配信...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/awsstaonuk420tbps2029.html">AWS、新たな太平洋海底ケーブル「Sta&#39;O&#39;Nuk」発表。420Tbps、2029年に稼働へ。集中リスク排除のため新たな陸揚げ拠点を採用</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Amazon Web Services（AWS）は、日本と米国を結ぶ新たな海底ケーブル「Sta&#39;O&#39;Nuk」を発表しました。2029年に稼働開始予定です。 海底ケーブルは20ペアの光ファイバーで構成され、420Tbpsの帯域を提供します。 通信内容はレイヤー1で量子暗号化、レイヤー2でMACsec暗号化、レイヤー4でTLS/SSLまたはQUICプロトコルが利用されるなど、多層的な暗号化により保護されます。 集中リスク排除により新たな陸揚げ拠点を採用 Sta&#39;O&#39;Nukの大きな……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/Nao52/items/35441e4b0009aa128610?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【AWS初心者向け】インフラ構成を図解で理解しよう！ALB・ECS・RDS・Lambda・NAT Gateway・VPCエンドポイントを一気に学ぶ</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">■ この記事はこんな人におすすめ AWSを勉強し始めたけど、サービスが多すぎて何から学べばいいか分からない人 AWSの個々のサービスは知っているけど、全体の構成のイメージがつかめない人 ECS・Lambda・RDSなどの言葉を聞いたことはあるが、なぜそれを使うのか説明で...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #2f6b8f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/></svg>Web開発<span class="section-count">3</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://zenn.dev/yamatechi/articles/vite-monorepo-react-dedupe">React 19移行で学んだpnpmの依存関係解決の仕組み</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">React19移行で見つかった謎の不具合 pnpm workspaceとViteを使うモノレポで、複数あるReactアプリケーションの一つをReact19に更新しました。他のアプリはReact18のままだったため、両方のバージョンが共存している状態です。 変更後、検証していると謎の不具合に遭遇しました。 React19へ移行したアプリに古いReactが紛...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/Sicut_study/items/8fa7302bbb5bc1c897bf?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【歴史】Next.jsが覇権を握り、そして直面した試練の物語【動画解説あり】</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに こんにちは、Watanabe Jin(@Sicut_study)です。 今日、私たちが当たり前のように使っているReactフレームワーク「Next.js」。 Netflix、Uber、OpenAIなど、世界中の巨大企業が採用し、日常的に利用するサービスの多くが...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/htmx_40xhrfetchstreaming_html.html">HTMX 4.0正式リリース。内部実装がXHRからfetchに移行しStreaming HTMLが可能に、属性はデフォルトで子要素に継承されないように変更など</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">HTMLに属性を追加するだけで、Webページにサーバと連動した動的なアプリケーションの機能を追加できるJavaScriptライブラリ「HTMX」の最新バージョンとなる「HTMX 4.0」正式版のリリースが発表されました。 very happy to announce the release of htmx 4! pic.twitter.com/Jo2i6v9piA— htmx.org / CEO of htmx 4 (same thing) (@htmx_org)……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #a04a1f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>セキュリティ<span class="section-count">2</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://zenn.dev/mkj/articles/fad8adf0586665">Kaggleコンペ紹介：AI Agent Security - Multi-Step Tool Attacks</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに こんにちは、松尾研究所 データサイエンティストの力岡です。 今回は、Kaggleで開催された「AI Agent Security - Multi-Step Tool Attacks」コンペに参加し、4,187チーム中4位（金メダル） を獲得することができました。本記事では、コンペの概要や攻略の考え方、私たちの取り組み、上位解法について紹介します。 本コンペは、「AIエージェントのセキュリティ」を題材にしたレッドチーミングコンペです。PublicリーダーボードとPrivateリーダーボードで順位がほとんど入れ替わる激しいシェイクアップが起き、2,802チームがPrivateで...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://qiita.com/kuma_3838/items/1fc232b42c344260021d?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">マジックリンクでログインできない原因はメールのURLスキャンだった</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに 本番環境で、マジックリンクでログインできないことがあるという報告を受けました。 メールに届いたリンクを押すと「この認証リンクは使用済みまたは期限切れです」と表示され、ログインできないという内容です。 利用者からは「メールのリンクを押すと一瞬 Cisco のリンク...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #75695a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>その他<span class="section-count">2</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://fujipon.hatenablog.com/entry/2026/09/08/170251">「離婚してから自分が性格悪いことに気づいた」の人が誤解していること - いつか電池がきれるまで</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">anond.hatelabo.jp いまネット界隈でかなり話題のこの『はてな匿名ダイアリー』のエントリについて。 読みながら、これAI？が半分、こういう「理由責め」しないと気が済まない人っているよな、が半分。 僕もけっこう「理由にこだわってしまう人間」だったので、「ちゃんと確認したい」「可能であれば自分でも改善したい...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.haaretz.com/israel-news/israel-security/2026-09-08/ty-article-magazine/.highlight/netanyahu-got-an-explicit-warning-before-oct-7-he-didnt-brief-security-chiefs/000001a0-7a3b-d7d5-a9fc-7eff3d0f0000">Netanyahu got an explicit warning before Oct. 7. He didn&#39;t brief security chiefs</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">Revealed: Netanyahu Received an Explicit Warning Days Before Oct. 7. He Didn&#39;t Brief Israel&#39;s Security Chiefs</p>
+    </li></ul>
+  </section><p class="feed-errors">取得失敗: Hacker News（fetch failed）</p>
+  <footer>
+    <a href="./">アーカイブ</a>
+    <span>生成: 2026/9/9 9:00:38</span>
+  </footer>
+</div>
+</body>
+</html>
