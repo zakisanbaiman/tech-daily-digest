@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-09-24 | Tech Daily Digest</title>
+<style>
+:root {
+  --paper: #f6f1e7;
+  --card: #fffdf7;
+  --ink: #211d18;
+  --muted: #75695a;
+  --accent: #c23a28;
+  --rule: #d9cfbd;
+  --rule-strong: #211d18;
+  --mincho: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  --gothic: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1a1712;
+    --card: #221f19;
+    --ink: #eae2d3;
+    --muted: #9c917d;
+    --accent: #e2593f;
+    --rule: #3b352a;
+    --rule-strong: #eae2d3;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--gothic);
+  font-size: 15px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+.sheet { max-width: 720px; margin: 0 auto; padding: 28px 20px 64px; }
+
+header.masthead { text-align: center; padding: 18px 0 14px; border-bottom: 4px double var(--rule-strong); }
+.masthead-date { font-family: var(--gothic); font-size: 12px; letter-spacing: .35em; color: var(--muted); text-transform: uppercase; }
+.masthead h1 {
+  margin: 6px 0 4px;
+  font-family: var(--mincho);
+  font-weight: 600;
+  font-size: clamp(28px, 7vw, 40px);
+  letter-spacing: .08em;
+}
+.masthead h1 .accent { color: var(--accent); }
+.masthead-sub { font-size: 12px; color: var(--muted); letter-spacing: .18em; }
+
+.comic { margin-top: 26px; }
+.comic svg { display: block; width: 100%; height: auto; }
+
+.overview {
+  font-family: var(--mincho);
+  font-size: 17px;
+  line-height: 2.1;
+  margin: 28px 2px 8px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-title {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  margin: 0 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule-strong);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-count { font-family: var(--gothic); font-size: 11px; color: var(--muted); letter-spacing: .05em; }
+
+section { margin-top: 40px; animation: rise .5s ease both; }
+section:nth-of-type(1) { animation-delay: .05s; }
+section:nth-of-type(2) { animation-delay: .12s; }
+section:nth-of-type(3) { animation-delay: .19s; }
+section:nth-of-type(4) { animation-delay: .26s; }
+section:nth-of-type(5) { animation-delay: .33s; }
+section:nth-of-type(6) { animation-delay: .40s; }
+section:nth-of-type(7) { animation-delay: .47s; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { section { animation: none; } }
+
+.picks { list-style: none; margin: 0; padding: 0; }
+.pick {
+  display: flex;
+  gap: 16px;
+  padding: 18px 16px;
+  margin-top: 14px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+}
+.pick-no {
+  font-family: var(--mincho);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.pick-title { font-family: var(--mincho); font-size: 17px; font-weight: 600; line-height: 1.7; }
+.pick-reason { margin: 6px 0 4px; color: var(--muted); font-size: 13.5px; }
+.pick-source { font-size: 11px; color: var(--accent); letter-spacing: .1em; }
+
+.articles { list-style: none; margin: 0; padding: 0; }
+.article { padding: 14px 2px; border-bottom: 1px dotted var(--rule); }
+.article-title { font-weight: 600; }
+.article-meta { margin-left: 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.article-excerpt { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+.article-translation { margin: 4px 0 0; font-size: 13.5px; line-height: 1.8; }
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  vertical-align: 2px;
+  border-radius: 2px;
+}
+.badge-ja { margin: 0 6px 0 0; vertical-align: 1px; }
+.badge-source { border-color: color-mix(in srgb, var(--muted) 55%, transparent); color: var(--muted); }
+.feed-error { color: var(--muted); font-size: 13px; }
+.feed-errors { margin-top: 36px; font-size: 12px; color: var(--muted); }
+
+.genre { --g-disp: var(--g); }
+@media (prefers-color-scheme: dark) {
+  .genre { --g-disp: color-mix(in srgb, var(--g) 55%, #f0e8d8); }
+}
+.genre .section-title { color: var(--g-disp); border-bottom-color: color-mix(in srgb, var(--g-disp) 60%, transparent); align-items: center; }
+.genre .section-count { color: var(--muted); }
+.genre-icon { width: 19px; height: 19px; flex-shrink: 0; }
+.stars { font-size: 11.5px; letter-spacing: 2px; margin-right: 8px; color: var(--accent); vertical-align: 1.5px; }
+.stars-1 { color: var(--muted); opacity: .55; }
+.pick-thumb {
+  width: 108px;
+  height: 76px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
+}
+@media (max-width: 480px) { .pick-thumb { width: 80px; height: 60px; } }
+
+footer {
+  margin-top: 56px;
+  padding-top: 14px;
+  border-top: 4px double var(--rule-strong);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <div class="masthead-date">2026年9月24日（木）</div>
+    <h1>Tech Daily <span class="accent">Digest</span></h1>
+    <div class="masthead-sub">毎朝の技術情報、一枚に。</div>
+  </header>
+  
+  <section class="comic">
+    <svg viewBox="0 0 680 170" role="img" aria-label="今日の一コマ: ちゃんくん「きょうはClaude CodeとMCPが、みんなのおてつだいをするひだね」">
+      <rect x="2" y="2" width="676" height="166" rx="6" fill="#FFFDF7" stroke="#4A4A4A" stroke-width="3"/>
+      <rect x="14" y="12" width="118" height="22" fill="#4A4A4A"/>
+      <text x="73" y="28" font-size="12" fill="#FFFFFF" text-anchor="middle">今日のちゃんくん</text>
+      <g transform="translate(30 38) scale(1.18)">
+      <g stroke="#4A4A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="15" cy="34" r="8" fill="#C8EFDF"/>
+        <circle cx="85" cy="34" r="8" fill="#C8EFDF"/>
+        <ellipse cx="50" cy="52" rx="36" ry="34" fill="#C8EFDF"/>
+        <ellipse cx="50" cy="60" rx="29" ry="27" fill="#FFE8C2"/>
+        <path d="M22 56 Q19 22 50 20 Q81 22 78 56 Q71 46 65 55 Q59 44 51 54 Q45 44 37 55 Q31 46 27 56 Q24 50 22 56 Z" fill="#C8EFDF"/>
+        <path d="M29 57 Q36 53.5 43 58" stroke-width="3.2" fill="none"/>
+        <path d="M57 58 Q64 53.5 71 57" stroke-width="3.2" fill="none"/>
+        <ellipse cx="36" cy="63" rx="6" ry="7" fill="#FF9FB2" stroke="none"/>
+        <ellipse cx="64" cy="63" rx="6" ry="7" fill="#FF9FB2" stroke="none"/>
+        <ellipse cx="36" cy="63" rx="2.8" ry="3.6" fill="#4A4A4A" stroke="none"/>
+        <ellipse cx="64" cy="63" rx="2.8" ry="3.6" fill="#4A4A4A" stroke="none"/>
+        <circle cx="38.2" cy="60.4" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="66.2" cy="60.4" r="2.2" fill="#FFFFFF" stroke="none"/>
+        <circle cx="33.8" cy="66" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <circle cx="61.8" cy="66" r="1.1" fill="#FFFFFF" stroke="none"/>
+        <path d="M45 74 Q47.5 77 50 74 Q52.5 77 55 74" fill="none" stroke-width="2.2"/>
+        <ellipse cx="25" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+        <ellipse cx="75" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.55"/>
+      </g></g>
+      <rect x="188" y="47" width="460" height="76" rx="16" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5"/>
+      <path d="M190 75 L156 89 L190 97" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5" stroke-linejoin="round"/>
+      <text font-size="16.5" fill="#4A4A4A" text-anchor="middle"><tspan x="418" y="79">きょうはClaude CodeとMCPが、み</tspan><tspan x="418" y="103">んなのおてつだいをするひだね</tspan></text>
+    </svg>
+  </section>
+  <p class="overview">今日はClaude CodeやMCP、JevなどAIエージェント／開発支援ツールの記事が目立ち、AIを組み込んだ開発・運用の実践と安全性が大きなテーマです。加えて、Java 27、Cloudflare Workers、PlanetScaleのNeki、Linux対応Snapdragonなど、基盤技術の大きな更新も相次いでいます。</p>
+  
+  <section class="top-picks">
+    <h2 class="section-title">今日の注目</h2>
+    <ol class="picks">
+      <li class="pick">
+        <span class="pick-no">01</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.publickey1.jp/blog/26/claude_codeagentsmdclaudemd.html">Claude Codeが「AGENTS.md」に対応。CLAUDE.mdが存在しない場合、自動的に読み込み</a>
+          <p class="pick-reason">Claude CodeがAGENTS.mdに対応し、プロジェクト固有の指示を標準化しやすくなります。複数ソースで取り上げられており、AIコーディング環境を使う人は早めに確認したい更新です。</p>
+          <span class="pick-source">はてブ テクノロジー × Publickey</span>
+        </div>
+        <img class="pick-thumb" src="https://www.publickey1.jp/2026/claudecode-agentsmd.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">02</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.publickey1.jp/blog/26/cloudflarepython_wrokerspythonweb.html">Cloudflare、Python Wrokersを正式サービスに。PythonでWebサイトの構築、データベース接続、オブジェクトストレージ操作など</a>
+          <p class="pick-reason">Python Workersの正式サービス化により、PythonでWeb、データベース、オブジェクトストレージを扱うサーバレス構成が現実的になります。Cloudflare Workers利用者にとって設計の選択肢を広げるニュースです。</p>
+          <span class="pick-source">はてブ テクノロジー × Publickey</span>
+        </div>
+        <img class="pick-thumb" src="https://www.publickey1.jp/2026/OQ1Z-11O.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">03</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://claude.dev/blog/how-we-made-claude-ai-faster/">Once Claude can measure something, it can make it faster</a>
+          <p class="pick-reason">Claudeの高速化を、計測可能性と性能改善の取り組みから解説する記事です。Hacker Newsで高い支持を集めており、AIサービスの実運用における最適化の考え方を学べます。</p>
+          <span class="pick-source">Hacker News</span>
+        </div>
+        <img class="pick-thumb" src="https://claude.dev/blog/how-we-made-claude-ai-faster/og.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li></ol>
+  </section>
+  
+  <section class="feed genre" style="--g: #c23a28">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M18.5 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>AI・LLM<span class="section-count">15</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/claude_codeagentsmdclaudemd.html">Claude Codeが「AGENTS.md」に対応。CLAUDE.mdが存在しない場合、自動的に読み込み</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Publickey</span>
+      
+      
+      <p class="article-excerpt">Claude Codeが「AGENTS.md」に対応。CLAUDE.mdが存在しない場合、自動的に読み込み Anthropicは、Claude Codeの9月18日付けでアップデートが公開されたClaude Code 2.1.277で「AGENTS.md」の読み込みに対応したことを明らかにしました。 以下のように説明されています。 Added AGENTS.md support: in a project with no ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://claude.dev/blog/how-we-made-claude-ai-faster/">Once Claude can measure something, it can make it faster</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 148 · <a href="https://news.ycombinator.com/item?id=49821196">91 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Claudeの性能を計測可能にすることで、ボトルネックを見つけて高速化していった過程を紹介しています。AIサービスのレイテンシ改善における計測と反復の重要性が主題です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://portablecode.info/2026/09/23/herdr-annotate-ai-review/">Herdr Annotate で効率的なAIコーディングレビューサイクルを実現する</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">最近の私の（趣味の）アプリ開発は、まず自分で（AIの支援を借りつつ）全体デザインや進め方をできるだけしっかりとドキュメントにする -&gt; AI(ClaudeCodeや、OpenCode等）にレビューさせて矛盾点不足点等を洗い出させ、構築プランに落とす -&gt; それを私がレビューしてAIに戻して改善する…という繰り返しで設計と計画を精...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://syu-m-5151.hatenablog.com/entry/2026/09/23/123604">Codexを使うなら、SkillsとPluginsを押さえておきたい - じゃあ、おうちで学べる</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">はじめに 同じ仕事を頼むたびに、前の会話からうまくいった指示をコピーすることがあります。その手順を残す場所として、Claude Codeの記事ではAgent Skillsを紹介しました。続くPluginsの記事では、社内で共有するSkillをプラグインにまとめ、更新を届けるところまで管理する方針を書きました。今回は、その方針をCodex...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/zozotech/articles/0a7eb12ee4343e">Claude Code の Remote Control（claude rc）だとアーティファクトが使えない原因と対処</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに Claude Code のアーティファクト（Artifact）機能、便利ですよね。調査結果や比較表を HTML のページにして、claude.ai 上に非公開で置いてくれるので、ターミナルに流れて消えていく出力を「あとで見返せる形」で残せます。 ところが、ターミナルで claude を起動したときは普通に使えるのに、claude rc（Remote Control）経由でスマホやブラウザから開いたセッションでは、アーティファクトが一切使えませんでした。「アーティファクトで作って」と頼んでも、ツール自体が存在しないと言われます。 設定を見直しても、それらしい項目はありません。...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/yando/articles/fdbe38474378d2">.jsonl を読んでみる</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに Claude Codeのセッションは、~/.claude/projects/ / .jsonl に1行1イベントの形式で全て記録されています。 ただ、コスト・会話の流れ・コンテキストの中身がそれぞれどのフィールドに現れるか、そしてjqでどう叩けば見えるかは、実際に手を動かさないと分かりません。 今回はclaude -p(ヘッドレスモード)でいくつかパターンの違う指示を新規に実行し、生成されたjsonlをその場でjqで見比べながら、「コスト」「会話フロー」「コンテキスト」の3観点で可視化する方法を確認します。 用語...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/kikuziro/items/2be9091b328d8b844640?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">JevでRAG検索の爆速化＆コスト削減は実現できるのか検証してみた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">👋 はじめに RAGのあちこちにJevを差し込んでどこがどう変わるのか測ってみました！ 🎯 対象購読者 ぶっちゃけJevってRAG検索に使えるの？と思っている方 RAG検索を愛している方 ⚡ Jevってなに？ JevはTypeSafe AIが2026年9月15日に...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/minorun365/items/ed4c760f616cf3c0a958?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">みのるん式 登壇資料の作成ノウハウをスキルとして公開しました！</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">こんにちは、Claude Codeです。普段から、みのるんの登壇資料づくりを手伝っています。 みのるんが登壇を重ねるなかで培ってきたスライド作成のノウハウを、私たちAIエージェントが読めるスキルの形にまとめて公開しました！ こんな感じのスライドができます。 何が入...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://artificialanalysis.ai/models/mercury-2-5">Mercury 2.5 LLM hits 770 tokens per second</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 25 · <a href="https://news.ycombinator.com/item?id=49823348">9 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>LLMのMercury 2.5が毎秒770トークンという非常に高い生成速度を達成したことを紹介しています。応答速度を重視するAIアプリケーションへの応用が焦点です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://huggingface.co/apple/LensVLM-9B">LensVLM: Compressing long context as images, expanding only relevant pages</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 43 · <a href="https://news.ycombinator.com/item?id=49820496">5 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>AppleのLensVLM-9Bは、長いコンテキストを画像として圧縮し、必要なページだけを展開するモデルです。長文処理のメモリや計算量を抑える手法を示しています。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/devinmacosmacdevinappstore.html">Devinが仮想環境でmacOSの提供開始。Macの実機不要でDevinがコード生成、テスト、デバッグ、実行、AppStore配信前のベータ公開まで実行</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">コーディングAIエージェントを提供するDevinが、Devinがホストする仮想環境内でのmacOSの提供を開始しました。 Devinはこれまで仮想環境内でUbuntu LinuxおよびWindowsを提供しており、ここにmacOSが加わります。 これによりDevinのユーザーは実機のMacを持たなくても、Devinの仮想環境内でmacOSやiOSに対応したコードを生成し、テストやデバッグ、実行を行い、完成したアプリケーションをAppStoreの配信前にテストを行うTestFl……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/anthropicmcpmcpagntconmcpcon_japan_2026.html">AnthropicのMCP共同作者が来日、基調講演で語るこれからのMCP注力領域。AGNTCon＋MCPCon Japan 2026</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">AIエージェントおよびMCP（Model Context Protocol）を主題としたイベント「AGNTCon＋MCPCon Japan 2026」が9月10日に東京渋谷のイベントホールで開催されました。主催はLinux Foundationです。 基調講演には、MCPの作者の一人であるAnthropicのDavid Soria Parra氏が登壇。MCPがなぜ登場したのか、その背景と急成長の理由、そして今後どのように発展させていくのかを語りました。 ここではその内容をダイ……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/aki1990/articles/1bc5c181ad19f0">Claude Opus 5.5によるピクセルアニメーション生成の検証</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに Claude Opus 5.5が公開されたので、まずは何か作ってもらい、どんなことができるのか検証してみました。「お手並み拝見」という気持ちで選んだのが、ピクセルアニメーションの生成です。 題材は、別のClaudeと相談しながら「サンゴ礁の一日」に決め、魚が泳ぐだけでなく、サメが近づくと群れが逃げたり、昼夜で生き物の行動が変わったりする場面を、どこまで文章の指示から作れるか確かめてみました。 生成してもらったアニメーションがこちらです。 https://x.com/akiy_8/status/2102545213218803769 生成を開始した後、途中で処理を止め、昼夜の...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/hjpotter1/articles/e1278d79045de9">Opus 5.5とGPT-6 Solの使い分け：「どうしますか」が減った話</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">今月上旬、Anthropic の CEO である Dario Amodei 氏がエッセイを公開しました。安全対策がモデルの能力に追いつけるよう、フロンティア AI の開発ペースを落とそう、という業界への呼びかけです。その話が出てから間もない 9 月 22 日、Anthropic 自身が Claude Opus 5.5 を発表しています。サブスクリプション利用者には、好きなタイミングで使える利用上限のリセットも配られました。同じ日には OpenAI も GPT-6 Sol と GPT-6 Luna を発表しました。API 価格は GPT-5.6 のキャンペーン価格のおよそ半額です。 ブレー...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/moritalous/items/41c9402a5dd9d80fc7a9?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">ローカル動作するJevっぽいものを調べてたら、なんとマルチモーダル対応もできてた！</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">Jevが大流行してますね。 すごいなーと思いつつ、ローカルでもできるのかなーと思ってたら、すでに試されてる方がいました！ 早い！！ ソースコード公開されているので、これをそのまま使えばいいのですが、せっかくなので、どういう仕組なのか調べてみました。 きしださんが公...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #4a7a52">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></svg>インフラ・クラウド<span class="section-count">9</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://speakerdeck.com/kokitamura/sre-toha-nani-ka-aws-de-dou-hajimeru-ka">SREとは何か、AWSでどう始めるか</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">2026-09-18 gotanda.sre Terraformで複数環境作ったり、複数Stateに分割したりそれとTerragrunt / Terraform multi envs and multi states</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/nwsejp/articles/unifi-japan-static-ip-operations">UniFiの固定IP事情[後編] OCN IPoE固定IP1をcronで自動化して無人で回した記録</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">前編「UniFiの固定IP事情[前編] 使う方法と選び方まとめ」では、公開されている回避策を 5 系統に整理して選び方まで書いた。本稿はその続きで、選んだあとに何が起きるかを扱う。 系統1（OCN の IPoE 固定IPで hostname を注入する）を機器内の cron で自動化し、無人で回して測った記録だ。回避策そのものは系統1に限った内容だが、何が回避策を壊すのか（3 章）は、ゲートウェイの上で番人（常駐の書き戻し。本稿ではこう呼ぶ）を走らせる方式に共通する話になる。 本稿の要点は以下の 4 点だ。 再起動からの復旧には、WAN の DNS で IPv6 側の手動設定が必要。...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/ippe1/articles/why-db-uses-bplus-tree">B+ツリーが速いのはディスクのI/O単位に形を合わせたから</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに B+ツリーの構造はなんとなくわかったけど、何でRDBのインデックスの格納に使われているのかがいまいち理解できませんでした。 そこで今回はB+ツリーの特徴とRDBに使われる理由について調べました。 結論から言うと、B+ツリーは探索のアルゴリズム的にいいのではなく、ディスクからのI/Oをなるべく減らすことができるということです。 B+ツリーの特徴 B+ツリーはキーとポインタを格納する構造になっています。 リーフノードには実データへのポインタが入っていますが、ルートノードと中間ノードには入っていません。 そのためデータを検索するためには必ずリーフノードまで辿る必要があります。...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/silver252/articles/7ca85e26f9a6e5">【AWS 障害対応】わざとアラートを出して復旧する自作自演やってみた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">何をやったか 今回はAWS CDKで、EC2・RDS・ElastiCache・CloudWatchを使った小さなWebシステムを構築します。 その後、意図的に障害を発生させます。 そこから調査→復旧までを行いました。 なぜ作ろうと思ったか 結論、実務に近い状況で勉強したかったから。となります。 自分は実務でAWSを触るという機会が多くはありません。けれどAWSないしはクラウドインフラやセキュリティに興味があり、そちらを専門にやりたいと思っています。 ですが現在はそれができる環境にはないので、「だったら自分でそういう環境を作って実践してやろう」 と思ったわけですね。 もちろん、実務...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.qualcomm.com/news/onq/2026/09/snapdragon-summit-agentic-ai-pcs-linux">Linux support is coming to Snapdragon X2 Series</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 84 · <a href="https://news.ycombinator.com/item?id=49823582">37 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Snapdragon X2シリーズでLinuxサポートが提供される予定だと伝えています。AI PC向けのARM系プラットフォームで、Linuxを選びやすくする動きです。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://fly.io/blog/vscode-ssh-wtf/">VSCode&#39;s SSH Agent Is Bananas (2025)</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 104 · <a href="https://news.ycombinator.com/item?id=49822555">70 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>VS CodeのSSHエージェント連携で起きる複雑な挙動や問題点を掘り下げています。リモート開発時の認証情報の扱いを理解するための記事です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://tailscale.com/blog/making-tailscale-faster">Making Tailscale Faster</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 49 · <a href="https://news.ycombinator.com/item?id=49819880">15 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Tailscaleの通信や接続処理を高速化するための改善内容を説明しています。ネットワーク経路や実装上のボトルネックを継続的に最適化する事例です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/planetscalepostgresql11800qpsdbneki.html">PlanetScale、PostgreSQLのシャーディングを自動化して1億1800万QPSを達成。新DBサービス「Neki」をプレビュー公開</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">データベースサービスを提供しているPlanetScaleは、PostgreSQLのシャーディングを自動化してスケーラブルなデータベースサービスを提供する「Neki」をプレビュー公開しました。 118,538,803 queries per second.1.22 PiB of data.512 shards.Powered by Neki.https://t.co/9wAVjQoZ1B— PlanetScale (@PlanetScale) September 1……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://blog.matthewbrunelle.com/swap-zram-zswap-and-hibernate-on-nixos/">Swap, ZRAM, Zswap and Hibernate on NixOS</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 28 · <a href="https://news.ycombinator.com/item?id=49820136">5 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>NixOSにおけるSwap、ZRAM、Zswap、休止状態の設定や関係を解説しています。メモリ不足時の圧縮とディスク退避をどう組み合わせるかがテーマです。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #a04a1f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>セキュリティ<span class="section-count">7</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://qiita.com/songchong/items/89175eaa7a30f71d0351?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">MCP サーバーと繋いだだけで情報漏洩？ 危険の4パターンと事前に確認すべき7つのことをまとめてみた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">MCP（Model Context Protocol）を使うとき、利用者は Claude・Codex・Antigravity などの AI エージェントに頼めば（あるいは簡単な設定をすれば）、AI エージェントが MCP サーバーのツールを呼び出せるようになります。 簡単...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/songchong/items/7306e0b1a9207e08d86e?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">生成AI を使ったら著作権侵害になる？ — 4 大リスクと対策を LLM のメカニズム・法務・補償条項から整理してみた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">「生成 AI の出力は、単語を確率で並べ直した“新しい創作物”だから、他人の著作権を侵害することはない」 AI ツールを入れようとするとき、営業の場や社内の勉強会で、こうした説明を聞いたことがある方は多いと思います。 この記事では、この説明のどこまでが正しく、どこから先に...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/yasu1109/items/1002367721b1650fcdf3?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">攻撃者の視点でセキュリティを理解したいエンジニアへ。bashで学ぶ侵入技術の実践書</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">脆弱性診断のレポートを読んでも、どういう手順で攻撃者がそこにたどり着くのか実感が湧かない。守る側の知識だけを積み上げていると、対策の優先順位を誤ってしまうことがある。『侵入技術入門 ―bashで学ぶ攻撃者の技法』は、あえて攻撃者の手順を追体験させることでその感覚のズレを埋め...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/songchong/items/5aa4bc07279ea271909a?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【AIツール37製品】社内AI の会話履歴は、上司や提供元が読めるか？いつまで残るか？ —「履歴を消した≠記録も消えた」5通りの残り方</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">社内で生成 AI の利用ルールやセキュリティの規程を作るとき、必ずと言っていいほど聞かれる質問があります。 「入力した業務の内容は、あとから上司や会社の管理者、AI の提供元に読まれませんか？」 「画面から履歴を消せば大丈夫です」と答えているなら、それは半分しか合っていま...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.bbc.com/news/articles/c32l8y8kygdvo">UK military jamming other nations&#39; satellites to defend itself, BBC told</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 135 · <a href="https://news.ycombinator.com/item?id=49819814">177 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>英国軍が自国防衛のため、他国の衛星に対する妨害を行っていると報じています。衛星通信や宇宙インフラをめぐる電子戦の実態に関するニュースです。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/androidgoogle1passwordbitwardendashlane.html">Android、パスキーをパスワードマネージャ間で転送可能に。Googleパスワードマネージャ、1Password、Bitwarden、Dashlaneなどが対応</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Googleは、Android上で利用可能なパスワードマネージャの間で、パスキーの転送を可能にしたと発表しました。 これにより、例えばGoogleパスワードマネージャに登録したパスキーを1PasswordやBitwardenなどの他のパスワードマネージャに転送できるようになり、パスワードマネージャの移行が容易になります。 Today, we’re making transferring your password and passkeys between password m……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/javaai.html">オラクル、Javaのセキュリティパッチを毎月提供開始、AIが脆弱性の発見を加速しているとして</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">オラクルは、これまで3カ月ごとに提供してきたJavaのアップデートパッチのサイクルを速め、1カ月ごとにセキュリティパッチを提供することを発表。先月（2026年8月）から実際にセキュリティパッチの提供が開始されていることを明らかにしました。 AIによって脆弱性の発見が加速された Javaはこれまで3月と9月の半年ごとに新バージョンが登場し、1月、4月、7月、10月の3カ月ごとにCPU（Critical Patch Update）と呼ばれるアップデートを提供してきました。 しかし……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #2f6b8f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/></svg>Web開発<span class="section-count">6</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/cloudflarepython_wrokerspythonweb.html">Cloudflare、Python Wrokersを正式サービスに。PythonでWebサイトの構築、データベース接続、オブジェクトストレージ操作など</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Publickey</span>
+      
+      
+      <p class="article-excerpt">Cloudflare、Python Wrokersを正式サービスに。PythonでWebサイトの構築、データベース接続、オブジェクトストレージ操作など Cloudflareは、同社のサーバレス実行基盤上でPythonを実行できる「Python Workers」が正式サービスになったことを発表しました。 JavaScriptによるサーバレス実行基盤のCloudflare Workers上で...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/643866/articles/48eae6e7b845f8">Next.js vs TanStack Start の違いを10項目で検証してみた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに この記事では、Next.js と TanStack Start を、実際にコードを書きながら 10項目 で比較検証します。 Next.jsは、Vercel社が開発し、App Router / RSCといった特徴を持つReactフレームワークです。 一方TanStack Start は TanStack Router と Vite をベースにしたフルスタック React フレームワークです。 結論を先に書くと、 エコシステムが成熟・高パフォーマンス・安定運用を重視するならNext.js 型の一貫性・デプロイ先の自由度を重視するならTanStack Start という分類に...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://blog.cloudflare.com/vary-support/">We just shipped support for the ugliest part of HTTP: Vary</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 44 · <a href="https://news.ycombinator.com/item?id=49823195">4 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>CloudflareがHTTPのVaryヘッダーに対応したことを説明しています。コンテンツネゴシエーションとキャッシュ制御をより正確に扱えるようにする機能追加です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://loading.dev/">loading.dev</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://ascii.jp/elem/000/004/436/4436593/">中国ECサイトで販売される「スマホ自動タップマシン」 単純な連打だけでなく、カメラを活用した画面認識で大幅進化 (1/2)</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">販売文言を見ると「画像認識」「文字認識」「複数端末の自動クリック」「サイズのカスタマイズ」「テスト効率の向上」といった、テスト用途を強調する表現が目立つ。実際こうした装置には、スマホアプリや車載ディスプレーの実機テスト、タッチパネルの耐久試験、社内専用端末の定型操作、APIを持たない旧型業務端末の限...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://devblogs.microsoft.com/oldnewthing/20260922-00/?p=112719/">A brief history of Windows scroll bar shortcuts</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 104 · <a href="https://news.ycombinator.com/item?id=49820065">44 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Windowsのスクロールバーに存在するショートカット機能の歴史を振り返っています。長年受け継がれてきたUI挙動の背景を解説する読み物です。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #6b5a9e">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg>言語・ツール<span class="section-count">6</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/java_27g1_gctls_13.html">「Java 27」正式リリース。全環境でG1 GCがデフォルトに、TLS 1.3用に耐量子暗号のハイブリッドキー交換など新機能</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">オラクルはJavaの最新バージョン「Java 27」正式版をリリースしました。 Java 27 is now available! #Java27 #JDK27 #OpenJDK Download now: https://t.co/0ZwSLt09RURelease notes: https://t.co/MwnBiicZDyAPI Javadoc: https://t.co/JIEwGOIgX6Features: https://t.co/c6KX9u8jt3Blog: ……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://testing.googleblog.com/2025/10/simplify-your-code-functional-core.html">Simplify Your Code: Functional Core, Imperative Shell</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">TotT 113 GTAC 61 James Whittaker 42 Misko Hevery 32 Code Health 31 Anthony Vallone 27 Patrick Copeland 23 Jobs 18 Andrew Trenk 13 C++ 11 Patrik Höglund 8 JavaScript 7 Allen Hutchison 6 George Pirocanac 6 Zhanyong Wan 6 Harry Robinson 5 Java 5 Julian Harty 5 Adam Bender 4 Alberto Savoia 4 Ben Yu 4...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/aakei/articles/dotnet-copy-split-write-barrier">【.NET】参照代入はただのコピーじゃない？ GC write barrierを調べてみた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに C#で参照型の値を代入するとき、単に参照を書き換えるだけではなく、GCのための処理が入ることがあるのを知っていますか？ 私は現在、.NET上で動く低アロケーションなJavaScriptエンジンOkojoを開発しています。 https://github.com/akeit0/okojo Okojoの開発中にJITの生成コードを見ていると、JavaScriptの変数代入でCORINFO_HELP_ASSIGN_REFがかなり多く使われていることに気づきました。JavaScriptエンジンでは値の代入が頻繁に起きるので、「これを減らせないかな」と思ったのが今回のきっかけです。 こ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.forensicdbg.com">Show HN: I built a post-mortem debugger for native Windows x64/x86 crashes</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Windows x64/x86のネイティブクラッシュを事後解析するデバッガーを紹介しています。Visual StudioとWinDbgの中間を狙い、クラッシュ後の原因調査を支援するツールです。</p>
+      <p class="article-excerpt">Hello HN! I&#39;ve spent years debugging Windows crashes with tools that were either friendly but limited (e.g. Visual Studio) or powerful but archaic (e.g. WinDbg). I developed patterns and methods for understanding what was going on, and decided to build it into a much more effective debugging tool ca…</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/wsuzume/articles/e84cb470004292">golang：環境構築のあと、モック・リバプロ・SPAを作って遊ぶ</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに 以下の記事の続きです。 https://zenn.dev/wsuzume/articles/f17600427dbea2 今回は以下の３つに取り組みます。 モックの追加 リバースプロキシの追加 フロントエンドの追加 手順的に 1, 2 は続けてやることを想定していますが、3 は独立です。 作成したソースコードは以下に置いてます。Unlicense にしたので好きに使ってください。 https://github.com/wsuzume/goasobi 前提条件 開始時のディレクトリ構成は以下です。前回の記事の手順をすべて終えるとこのようになります。 ディレクトリ構...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/taihong/items/e8cf442b5ace978e22b5?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">「なぜか読まれない文章」の正体をSudachiPyで解析したら「漢字率」のゴールデンルールが見えてきた話</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">ブログ、Zenn/Qiitaの技術記事、あるいは社内ドキュメントにおいて、「内容は良いのになぜか離脱される」「文章が重く見える」という課題が発生することがあります。 この原因の多くは「文字種構成比（Kanji Ratio / Character Type Distribut...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #3f7f7a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3h4M11 3v6l-5.5 9.2A2 2 0 007.2 21h9.6a2 2 0 001.7-2.8L13 9V3"/><path d="M8.5 15h7"/></svg>サイエンス<span class="section-count">3</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.anthropic.com/news/claude-discovers-novel-enzyme-system">Claude discovers a novel enzyme system with CRISPR-like repeats</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 453 · <a href="https://news.ycombinator.com/item?id=49820134">501 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>ClaudeがCRISPRに似た反復配列を持つ新しい酵素システムを発見したとする研究成果を紹介しています。AIが生物学の仮説生成や発見に関わった事例です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.spaceweather.com/starlink/starlink_drag_explainer.html">We&#39;ve Turned Starlink into a Planetary Barometer</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 9 · <a href="https://news.ycombinator.com/item?id=49823922">2 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Starlink衛星の軌道変化を利用して、地球上層大気の状態を測定する取り組みを解説しています。衛星の空気抵抗を惑星規模の観測データとして活用する内容です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://blog.arxiv.org/2026/09/23/arxiv-receives-multiyear-investment/">ArXiv receives multiyear commitments to support it as an independent nonprofit</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 23 · <a href="https://news.ycombinator.com/item?id=49823664">0 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>arXivが独立した非営利組織として運営を続けるため、複数年にわたる資金支援を受けることになったという発表です。学術論文の公開基盤の持続性に関わるニュースです。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #b0813a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c.7-3.4 2.8-5.5 5.5-5.5s4.8 2.1 5.5 5.5M16 5.5a3.5 3.5 0 010 6.6M17.5 14.8c2 .7 3.4 2.5 4 5.2"/></svg>キャリア・組織<span class="section-count">2</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/rinrion/items/b381ccf563d6d8e96ce9?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">50代プログラミング未経験者が7年かけてAtCoderで入緑した話</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">こんにちは！AtCoderユーザーの rinrion です。 2026年9月19日に行われたJIJプログラミングコンテスト 2026（AtCoder Beginner Contest 476）にて、アルゴリズムレートで入緑することができました。 AtCoder歴7年4か月、...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/Sicut_study/items/b2ef2f7a6ee0dbbf0001?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">エンジニア不要論の真実！AIの進化と具体抽象から完全解説</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに こんにちは、Watanabe Jin(@Sicut_study)です。 AIエージェントが開発を行うようになり、多くのエンジニアがClaude Codeなどを利用して仕事を進められるようになりました。 しかし、便利になったと感じると同時に、こんな瞬間は...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #75695a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>その他<span class="section-count">3</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.gizmodo.jp/article/2609-m6-mac-mini-review/">まさかの「Appleが神コスパ」になっちゃった：新型M6 Mac miniレビュー | ギズモード・ジャパン</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">手のひらサイズの5×5インチ筐体なのに、他社PCを凌駕する圧倒的パワー。 Appleの小型デスクトップPCの最新モデルが「M6 Mac mini」です。2026年のPC市場を襲う世界的なメモリ高騰でWindows PCが軒並み値上がりするなか、「他社PCが高騰した結果、なぜかAppleがコスパの良い選択肢になる」という、誰も予想しなかった逆転...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://nejimakinikki.hatenablog.com/entry/google-maps-ecomode-off-route">グーグルマップが遅い経路を表示してくるときに試したいこと - ねじまき日記</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">Google Mapsのエコモードをオフにする 最近、グーグルマップの経路表示が変だな、と思う方いませんか？？ 5分短縮するために1200円ぐらい高速料金かかる道を表示してきたり、 そうかと想えば、 普通なら15分でイケるところを、燃費のためかどうかしらないですけど、 18分で遠回りな道を表示するようになったり。 Reddit...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.meta.com/vr-glasses/">Meta VR Glasses</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 79 · <a href="https://news.ycombinator.com/item?id=49824268">30 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>MetaのVRグラス製品を紹介するページです。対応するハードウェアや没入型コンピューティングの方向性を確認できます。</p>
+      
+    </li></ul>
+  </section>
+  <footer>
+    <a href="./">アーカイブ</a>
+    <span>生成: 2026/9/24 9:22:48</span>
+  </footer>
+</div>
+</body>
+</html>
