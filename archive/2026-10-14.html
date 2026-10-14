@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-10-14 | Tech Daily Digest</title>
+<style>
+:root {
+  --paper: #f6f1e7;
+  --card: #fffdf7;
+  --ink: #211d18;
+  --muted: #75695a;
+  --accent: #c23a28;
+  --rule: #d9cfbd;
+  --rule-strong: #211d18;
+  --mincho: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", Georgia, serif;
+  --gothic: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1a1712;
+    --card: #221f19;
+    --ink: #eae2d3;
+    --muted: #9c917d;
+    --accent: #e2593f;
+    --rule: #3b352a;
+    --rule-strong: #eae2d3;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--gothic);
+  font-size: 15px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+.sheet { max-width: 720px; margin: 0 auto; padding: 28px 20px 64px; }
+
+header.masthead { text-align: center; padding: 18px 0 14px; border-bottom: 4px double var(--rule-strong); }
+.masthead-date { font-family: var(--gothic); font-size: 12px; letter-spacing: .35em; color: var(--muted); text-transform: uppercase; }
+.masthead h1 {
+  margin: 6px 0 4px;
+  font-family: var(--mincho);
+  font-weight: 600;
+  font-size: clamp(28px, 7vw, 40px);
+  letter-spacing: .08em;
+}
+.masthead h1 .accent { color: var(--accent); }
+.masthead-sub { font-size: 12px; color: var(--muted); letter-spacing: .18em; }
+
+.comic { margin-top: 26px; }
+.comic svg { display: block; width: 100%; height: auto; }
+
+.overview {
+  font-family: var(--mincho);
+  font-size: 17px;
+  line-height: 2.1;
+  margin: 28px 2px 8px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+}
+
+.section-title {
+  font-family: var(--mincho);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  margin: 0 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule-strong);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-count { font-family: var(--gothic); font-size: 11px; color: var(--muted); letter-spacing: .05em; }
+
+section { margin-top: 40px; animation: rise .5s ease both; }
+section:nth-of-type(1) { animation-delay: .05s; }
+section:nth-of-type(2) { animation-delay: .12s; }
+section:nth-of-type(3) { animation-delay: .19s; }
+section:nth-of-type(4) { animation-delay: .26s; }
+section:nth-of-type(5) { animation-delay: .33s; }
+section:nth-of-type(6) { animation-delay: .40s; }
+section:nth-of-type(7) { animation-delay: .47s; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { section { animation: none; } }
+
+.picks { list-style: none; margin: 0; padding: 0; }
+.pick {
+  display: flex;
+  gap: 16px;
+  padding: 18px 16px;
+  margin-top: 14px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+}
+.pick-no {
+  font-family: var(--mincho);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.pick-title { font-family: var(--mincho); font-size: 17px; font-weight: 600; line-height: 1.7; }
+.pick-reason { margin: 6px 0 4px; color: var(--muted); font-size: 13.5px; }
+.pick-source { font-size: 11px; color: var(--accent); letter-spacing: .1em; }
+
+.articles { list-style: none; margin: 0; padding: 0; }
+.article { padding: 14px 2px; border-bottom: 1px dotted var(--rule); }
+.article-title { font-weight: 600; }
+.article-meta { margin-left: 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.article-excerpt { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+.article-translation { margin: 4px 0 0; font-size: 13.5px; line-height: 1.8; }
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  vertical-align: 2px;
+  border-radius: 2px;
+}
+.badge-ja { margin: 0 6px 0 0; vertical-align: 1px; }
+.badge-source { border-color: color-mix(in srgb, var(--muted) 55%, transparent); color: var(--muted); }
+.feed-error { color: var(--muted); font-size: 13px; }
+.feed-errors { margin-top: 36px; font-size: 12px; color: var(--muted); }
+
+.genre { --g-disp: var(--g); }
+@media (prefers-color-scheme: dark) {
+  .genre { --g-disp: color-mix(in srgb, var(--g) 55%, #f0e8d8); }
+}
+.genre .section-title { color: var(--g-disp); border-bottom-color: color-mix(in srgb, var(--g-disp) 60%, transparent); align-items: center; }
+.genre .section-count { color: var(--muted); }
+.genre-icon { width: 19px; height: 19px; flex-shrink: 0; }
+.stars { font-size: 11.5px; letter-spacing: 2px; margin-right: 8px; color: var(--accent); vertical-align: 1.5px; }
+.stars-1 { color: var(--muted); opacity: .55; }
+.pick-thumb {
+  width: 108px;
+  height: 76px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
+}
+@media (max-width: 480px) { .pick-thumb { width: 80px; height: 60px; } }
+
+footer {
+  margin-top: 56px;
+  padding-top: 14px;
+  border-top: 4px double var(--rule-strong);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="masthead">
+    <div class="masthead-date">2026年10月14日（水）</div>
+    <h1>Tech Daily <span class="accent">Digest</span></h1>
+    <div class="masthead-sub">毎朝の技術情報、一枚に。</div>
+  </header>
+  
+  <section class="comic">
+    <svg viewBox="0 0 680 170" role="img" aria-label="今日の一コマ: べくとら「Gemini 4 ArgonにDeno終了、今日はAIと買収で基盤が揺れる日だ」">
+      <rect x="2" y="2" width="676" height="166" rx="6" fill="#FFFDF7" stroke="#4A4A4A" stroke-width="3"/>
+      <rect x="14" y="12" width="105" height="22" fill="#4A4A4A"/>
+      <text x="66.5" y="28" font-size="12" fill="#FFFFFF" text-anchor="middle">今日のべくとら</text>
+      <g transform="translate(30 38) scale(1.18)">
+      <g stroke="#4A4A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 48 Q8 74 12 95 L26 95 Q29 72 25 50 Z" fill="#D5C8F0"/>
+        <path d="M84 48 Q92 74 88 95 L74 95 Q71 72 75 50 Z" fill="#D5C8F0"/>
+        <ellipse cx="50" cy="52" rx="36" ry="36" fill="#D5C8F0"/>
+        <ellipse cx="50" cy="60" rx="29" ry="27" fill="#FFE8C2"/>
+        <path d="M22 54 Q19 22 50 20 Q81 22 78 54 L72 47 Q66 55 60 47 Q55 55 50 47 Q45 55 40 47 Q34 55 28 47 Z" fill="#D5C8F0"/>
+        <path d="M50 20 L50 6 M45 12 L50 6 L55 12" fill="none" stroke-width="2.2"/>
+        <path d="M28 51 Q36 48 44 52" stroke-width="2" fill="none" opacity="0.7"/>
+        <path d="M56 52 Q64 48 72 51" stroke-width="2" fill="none" opacity="0.7"/>
+        <ellipse cx="36" cy="61" rx="5.8" ry="6.5" fill="#FFD66E" stroke="none"/>
+        <ellipse cx="64" cy="61" rx="5.8" ry="6.5" fill="#FFD66E" stroke="none"/>
+        <ellipse cx="36" cy="61" rx="2.6" ry="3.4" fill="#4A4A4A" stroke="none"/>
+        <ellipse cx="64" cy="61" rx="2.6" ry="3.4" fill="#4A4A4A" stroke="none"/>
+        <rect x="28" y="52" width="16" height="5" fill="#FFE8C2" stroke="none"/>
+        <rect x="56" y="52" width="16" height="5" fill="#FFE8C2" stroke="none"/>
+        <path d="M28 57 L44 57" stroke-width="3.2" fill="none"/>
+        <path d="M56 57 L72 57" stroke-width="3.2" fill="none"/>
+        <path d="M44 57 L47 54.5 M56 57 L53 54.5" stroke-width="2" fill="none"/>
+        <circle cx="38" cy="60" r="1.8" fill="#FFFFFF" stroke="none"/>
+        <circle cx="66" cy="60" r="1.8" fill="#FFFFFF" stroke="none"/>
+        <path d="M46 75 Q51 77 55 73" fill="none" stroke-width="2.2"/>
+        <ellipse cx="26" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.4"/>
+        <ellipse cx="74" cy="70" rx="5.5" ry="3.5" fill="#FF9FB2" stroke="none" opacity="0.4"/>
+      </g></g>
+      <rect x="188" y="47" width="460" height="76" rx="16" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5"/>
+      <path d="M190 75 L156 89 L190 97" fill="#FFFFFF" stroke="#4A4A4A" stroke-width="2.5" stroke-linejoin="round"/>
+      <text font-size="16.5" fill="#4A4A4A" text-anchor="middle"><tspan x="418" y="79">Gemini 4 ArgonにDeno終了、</tspan><tspan x="418" y="103">今日はAIと買収で基盤が揺れる日だ</tspan></text>
+    </svg>
+  </section>
+  <p class="overview">AIエージェントや基盤モデルの実運用が進む一方、Anthropicの自社VCSやDenoのCloudflare合流など、開発基盤そのものを見直す動きも目立ちます。セキュリティ、データ基盤、AI生成物の品質・コスト・安全性を現場で検証する記事も多い一日です。</p>
+  
+  <section class="top-picks">
+    <h2 class="section-title">今日の注目</h2>
+    <ol class="picks">
+      <li class="pick">
+        <span class="pick-no">01</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.anthropic.com/engineering/redesigning-source-control">Redesigning source control at Anthropic</a>
+          <p class="pick-reason">マージ数の急増を受けてAnthropicが自社VCSへ移行した事例で、HNでも高い注目を集めています。大規模開発のボトルネックとツール設計を考える材料になります。</p>
+          <span class="pick-source">はてブ テクノロジー × Hacker News</span>
+        </div>
+        <img class="pick-thumb" src="https://www-cdn.anthropic.com/images/4zrzovbb/website/d344b849251502fade67ad16f09bb86fa6f42363-500x263.png" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li>
+      <li class="pick">
+        <span class="pick-no">02</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://deepmind.google/models/gemini/">Gemini 4 Argon</a>
+          <p class="pick-reason">Gemini 4 Argonの正式発表で、HNでは非常に大きな議論になり、日本語記事やロボティクス向け発表とも関連しています。モデル性能だけでなく提供形態の変化も確認したい話題です。</p>
+          <span class="pick-source">Hacker News</span>
+        </div>
+        
+      </li>
+      <li class="pick">
+        <span class="pick-no">03</span>
+        <div class="pick-body">
+          <a class="pick-title" href="https://www.publickey1.jp/blog/26/denocloudflaredenocloudflare_workersdurable_objects.html">Deno開発元がCloudflareに合流。Denoの開発は終了へ、今後はCloudflare WorkersとDurable Objectsのオープンソース実装に注力</a>
+          <p class="pick-reason">Deno開発元のCloudflare合流と今後のオープンソース実装への注力は、JavaScriptランタイムとエッジ基盤の勢力図に関わる大きなニュースです。</p>
+          <span class="pick-source">Publickey</span>
+        </div>
+        <img class="pick-thumb" src="https://www.publickey1.jp/2026/4vyL_sib.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+      </li></ol>
+  </section>
+  
+  <section class="feed genre" style="--g: #c23a28">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M18.5 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>AI・LLM<span class="section-count">14</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://forest.watch.impress.co.jp/docs/news/2147842.html">「Gemini 4 Argon」が一般提供開始 ～満を持して登場した最強の「Gemini」モデル／「Gemini」アプリでは「Google AI Pro/Ultra」の契約者が利用可能</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://rea.tools/ja/blog/touhou-reconstruction/">リバースエンジニアリングの産業革命-REA</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">ホーム / ブログ /東方復興 エッセイ·東方復興 リバースエンジニアリングにおける産業革命。 によってN0zoM1z0•10 10月2026 要点 エージェントに調査の自律性を与えます。 明確な目標と合格基準を設定し、次に何を試すかをエージェントに決定させます。 リポジトリとGitを作業メモリとして使用します。 推論をコードで維...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://deepmind.google/models/gemini/">Gemini 4 Argon</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Google DeepMindの新モデルGemini 4 Argonの概要紹介ページです。基盤モデルとしての能力や利用可能な製品・用途を説明しています。</p>
+      <p class="article-excerpt">See also: Gemini 4 Argon for Robotics - https://news.ycombinator.com/item?id=50074869 Comments URL: https://news.ycombinator.com/item?id=50073879 Points: 960 # Comments: 737</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/lube8163/articles/594bea1c0f8397">画像は「言葉だけ」でどこまで送れるか――中間特徴とプロンプト再生成を比較した小規模検証</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">2026年10月14日 · lube8163-lab · 探索的なローカル実験 画像生成モデルの中間表現を送れば、画像を小さなデータに圧縮しつつ意味を伝えられるのではないか。これを出発点として、中間特徴を量子化して送る方式と、画像を文章にして受信側で描き直す方式を検証した。 今回の写真11枚では、数百バイトの文章でも「何の画像か」という近さは保てた。ただし、元の人物・個体・配置・形状を復元する用途には限界があった。中間特徴を凍結された出力ヘッドへ渡す今回の方式では、通信効率の優位を確認できなかった。 これは中間表現一般の否定ではない。特徴から復元する専用の復号器を学習する実験は行っていな...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/take-yoda/items/136d1f5a4deea203c718?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">Jev vs Gemini Flash Lite — DeepEvalでLLM-as-a-Judgeを比較してみた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">株式会社ブレインパッドプロダクト開発部でRtoaster GenAIの開発をしている依田です。今回は公式イベントに乗っかって、Jevで遊んでみました。 はじめに Jevは判断に特化したAIということで、「LLM as a Judgeに最適なのでは？」と閃いたので、実際にD...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://pulseos.finance">Show HN: Pulse Local, a Mac budgeting app whose AI models run on your machine</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Mac上でAIモデルをローカル実行し、支出について質問できる予算管理アプリ。アカウント不要のローカルモードも特徴です。</p>
+      <p class="article-excerpt">Hi HN, I&#39;m Niz. Pulse Local is a budgeting app for Mac (Apple Silicon, beta) that answers questions about your spending with models that run on your machine. Local mode needs no account. The ledger and your questions stay on the machine, and the app sends no analytics or crash logs. I felt there are…</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.pi.website/blog/api-beta">Physical Intelligence API Beta: Frontier Models for Every Robot</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 22 · <a href="https://news.ycombinator.com/item?id=50079437">0 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Physical Intelligenceが、さまざまなロボットで利用できる基盤モデルAPIのベータ版を公開したという告知です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://parsimony.lasu.dev/">Show HN: Parsimony – an open-source benchmark for how much code AI models add</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>AIモデルが必要以上にコードを追加して保守性を損なう問題に着目した、オープンソースのベンチマークです。解答率やトークン数だけでなくコード量の適切さを評価します。</p>
+      <p class="article-excerpt">Existing benchmarks measure solve rate and token output/cost, but don&#39;t punish excess code, which makes a codebase harder to work with in the long term. I wanted to measure this since it matters most for long-term projects. Method: it takes the patches that benchmarks already publish (DeepSWE, SWE-b…</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://developers.googleblog.com/gemini-4-argon-for-robotics/">Gemini 4 Argon for Robotics</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Gemini 4 Argonをロボット制御やロボティクス用途に活用するための発表です。汎用モデルを現実世界の機械操作へ展開する内容とみられます。</p>
+      <p class="article-excerpt">Main thread: Gemini 4 Argon - https://news.ycombinator.com/item?id=50073879 Comments URL: https://news.ycombinator.com/item?id=50074869 Points: 189 # Comments: 45</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/gpuai_engine.html">さくらインターネット、GPU専有によりトークン消費量を気にせず定額で利用できる「さくらのAI Engineプライベートエディション」提供開始を発表</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">さくらインターネットは、GPUサーバ上で基盤モデルを展開しマネージドサービスとして提供する「さくらのAI Engine」を、企業がGPUを専有して使える「さくらのAI Engine プライベートエディション」の提供開始を発表しました。 お知らせ 「さくらのAI Engine プライベートエディション」 が登場！ 従量課金型の「さくらのAI Engine」とは異なり、 定額制・専有型で生成AIを利用できるサービスです！ 大規模なAPI利用も、コストが予測しやすい 機密情報を扱う……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/vs_codeaiaihydrafusion.html">マイクロソフト、VS CodeにAIモデルのオーケストレーションで高品質低コストなAIを実現する「HydraFusion」をプレビュー実装</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">マイクロソフトは9月30日付けでリリースされたVisual Studio Code 1.140（以下、VS Code）で、複数のAIベンダから提供されているAIモデルをオーケストレーションすることでより高品質で低コストを実現するという「HydraFusion」機能をリサーチプレビューとして実装したことを明らかにしました（VS Codeのリリースノート、GitHubブログ）。 HydraFusion is now available in @code as a Researc……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/fdeai7fde.html">FDE（フォワードデプロイドエンジニアリング）によって開発されたAIエージェントの7割は使われず、FDEの名前で単なるコンサルティングが販売されるようになる危険が高まるとガートナーが予測</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">米調査会社のガートナーは、ベンダーのFDE（フォワードデプロイドエンジニアあるいはフォワードデプロイドエンジニアリング）によって開発されたAIエージェントの70％が2028年までに企業に使われずに放棄されるだろう（Gartner Predicts 70% of Enterprises Will Abandon Agentic AI Built by Vendor Forward-Deployed Engineering by 2028）」という予測を明らかにしました。 Gar……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://zenn.dev/nuance/articles/ai-dlc-toyama-camp-2026">AI-DLC富山合宿に参加してみた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに 2026年10月10日・11日に開催された「JAWS-UG 富山#7 AI-DLC富山合宿」に参加しました。講師はAWSの福井厚さんです。[1] 座学でAI-DLCの考え方を学び、その後はチームに分かれてシステム開発に取り組みました。 参加のきっかけ 最近、業務担当者とエンジニアの距離が、AIによって少しずつ縮まっていると感じています。 業務担当者は、プログラミング言語に詳しくなくても、AIと話しながら画面や操作のモックを作れるようになってきました。「こんなものがほしい」というイメージを、言葉だけでなく形にして伝えやすくなったと感じます。 エンジニアも、なじみのない業務...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/kentawata/items/c78381bfe83e93e75893?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">AIで作ったらオリジナルじゃないらしい。んなわけあるか。</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">AIをあまり使ってない友人と話した 最近AIで音楽とかゲームとか作ってるんだよね、と友人に話した。 そしたら「でもそれってオリジナルなの？」「学習元があるんだから、コピーとか模倣を作ってるだけなんじゃないの」と言われた。 あー、なるほど。そう見えてるのか。 僕はAIをめち...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #a04a1f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>セキュリティ<span class="section-count">11</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.nikkei.com/article/DGXZQOGN140170U6A011C2000000/">AI、家電乗っ取り増殖の恐れ アンソロピック「デジタル粘菌」と警告 - 日本経済新聞</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">【シリコンバレー=山田遼太郎】米アンソロピックは12日、人工知能（AI）がインターネット接続するテレビなどのスマート家電を乗っ取り、自ら増殖する能力を持つ可能性があると警告した。無数の機器に「粘菌」のようにAIが広がれば、セキュリティーリスクを生むと指摘した。同社でAIの安全対策などに取り組む研究者らがブ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.itmedia.co.jp/news/article/2610/14/2000002236/">OpenAI従業員、役員会議室に録音装置を仕掛けた疑いでFBIが逮捕</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">社内の監視カメラの映像には、装置の発見前に同容疑者が複数回にわたって役員会議室の付近に現れる様子が映っていた。同容疑者には、この会議室への立ち入りや会議への参加の権限はなかった。訴状によると、この会議室では独自の研究や製品計画、事業開発の機会に加え、技術的な進捗や戦略上の判断、政府との関わり、商...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/keigoly/articles/8738d8d241b5a1">話題の逆解析 MCP「REA」を Claude Code に隔離してつないだ——静的解析の A/B 試験と安全設計</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに 2026 年 10 月 13 日、話題の逆解析ツール「REA」を、AI エージェントである Claude Code に接続して試験導入を行いました。逆解析の道具をそのままエージェントに渡す運用には安全上の懸念があるため、専用の隔離環境を整えた上で実務課題を用いた評価を実施しています。 静的な JavaScript や Web の解析において、標準の道具と REA で回答の正確さは同等でした REA を導入した条件では試行錯誤が増え、所要時間は最大 2.00 倍、API 換算の費用は最大 1.67 倍に増加しました REA は呼び出しごとの承認を求めない設計のため、安全のた...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/otinpan/articles/8557e9c3930540">【Crackmes.one】x64dbgでパスワード解析</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに Crackmes.oneとは Crackmeとは、リバースエンジニアリングの技術を練習するために作られたプログラムのことです。一般的なCrackmeには、パスワードやシリアルキーの入力を求める認証処理が組み込まれています。例えば、実行すると次のように表示されます。 Enter password: ******** Wrong password! 解析者はソースコードを見ずに、実行ファイルを解析して正しいパスワードや認証アルゴリズムを特定します。 Crackmes.oneとは、CrackmeをダウンロードできるWebサイトです。 問題 今回はパスワード解析の問題を解い...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/n_tong/articles/5ea0a290d8923d">EmDash を pnpm の 7 日ルールで入れ直したら、つまずいたところ</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに 前回、Astro 製の CMS「EmDash」を初期設定のまま試してみた。 https://zenn.dev/n_tong/articles/d764cb1e13d25c EmDash が生成する pnpm-workspace.yaml のデフォルト設定は、「公開から 1 日未満の版は入れない」になっている。 今回は、これを自分の方針（Mini Shai-Huludなどの対策）に合わせて 7 日に延ばして入れ直してみた。 何か所かつまずいたので、記録しておく。 作成 pnpm create emdash@latest 前回と同じく、こう答えた。 Project nam...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/leolui2004/items/226062f17e55202e8c47?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">サイバーセキュリティを勉強するなら今？おすすめリソース紹介</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">概要 インシデントが毎日のように発生する時代になり、政府機関や銀行、クラウドプロバイダーですら避けられない状況になっています。「AIのせいで仕事がなくなる」と心配するより、このタイミングでサイバーセキュリティを勉強しておけば、絶対に仕事に困らないのではないでしょうか？ と...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/suwa_nobu/items/365d2561809fe1da8541?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">Shift-JIS のファイルを Claude Code で1か所直したら、日本語が全部壊れて戻せなくなった</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">Claude Code 2.1.296（2026-10-09）の changelog に、こう書かれています。 Fixed Edit and NotebookEdit replacing every non-ASCII character in files that ar...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/shioccii/items/cf18356730534053de95?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">どのようなサイトが狙われているか？Cloudflareセキュリティログから見る攻撃の傾向と対策</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">どのようなサイトが狙われているか？Cloudflareセキュリティログから見る攻撃の傾向と対策 Cloudflare無料プランで運用している静的サイトのセキュリティ画面を確認したところ、直近7日間でブロックされたリクエストは543件ありました。その中には、WordPres...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://sfstandard.com/2026/10/13/openai-engineer-arrested-alleged-bugging-executive-conference-room/">OpenAI engineer arrested in bugging of executive conference room</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>OpenAIのエンジニアが、幹部会議室への盗聴装置設置疑惑で逮捕された事件を報じています。企業内の機密情報管理や内部統制にも関わる話題です。</p>
+      <p class="article-excerpt">https://x.com/OpenAINewsroom/status/2110095403198849132 Comments URL: https://news.ycombinator.com/item?id=50078141 Points: 382 # Comments: 343</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.sammystraus.com/#i-posted-to-hn-and-then-my-website-was-flooded-with-ai-bot-traffic">I posted to HN, and then my website was flooded with AI bot traffic</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 236 · <a href="https://news.ycombinator.com/item?id=50073221">145 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Hacker Newsに投稿した後、AIボットによる大量アクセスで個人サイトが埋め尽くされた体験談です。AIクローラーのトラフィック対策が焦点です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://note.com/ichi_twnovel/n/nc23602343127">Yandexデータセンター攻撃の前後でXの日本語親ロ投稿を数えてみた｜一田和樹のメモ帳</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">2026年10月、ウクライナは無人機で、「ロシアのグーグル」と呼ばれることが多いIT大手Yandex（ヤンデックス）のデータセンター3か所を攻撃した。BBCによればサソボ（リャザン州）が7日から8日にかけての夜、カルーガが9日朝、ニュースサイトのMezhaによればウラジーミル州が11日である（いずれも現地時間）。攻撃の後、...</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #2f6b8f">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9s1.3-6.4 3.8-9z"/></svg>Web開発<span class="section-count">6</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/denocloudflaredenocloudflare_workersdurable_objects.html">Deno開発元がCloudflareに合流。Denoの開発は終了へ、今後はCloudflare WorkersとDurable Objectsのオープンソース実装に注力</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">JavaScriptランタイム「Deno」の開発元であるDeno LandとCloudflareは、Deno LandがCloudflareに合流すると発表しました。CloudflareによるDeno Landの買収と見られます（Deno Landの発表、Cloudflareの発表）。 We are excited to announce that Deno is joining Cloudflare! https://t.co/hC5HOUb8t4— Deno……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.apple.com/jp/newsroom/2026/10/meet-apple-homeview-a-new-way-to-enjoy-entertainment-and-manage-the-home/">エンターテインメントを楽しみ、家を管理する新しい方法、Apple HomeViewが登場</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">エンターテインメントを楽しみ、つながりを保ち、家を管理する新しい方法、Apple HomeViewが登場 Apple HomeViewは、Apple IntelligenceとSiri AIを活用し、プライバシーとセキュリティを中核に据えて設計されています カリフォルニア州クパティーノ Appleは本日、家の中心となり、家の中の一人ひとりに合わせてパーソナ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/socialplus/articles/f363cdf24340cf">Next.js（Pages Router）+ react-i18next で多言語化を実装する</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは、koyablueです。 ソーシャルPLUSでは、Shopify ストアなどのサービスと連携して使うログイン/会員登録画面（以下、ログイン画面）を、エンドユーザー向けのNext.js製アプリとして提供しています。 今回このログイン画面を多言語化するにあたってフロントエンドで行った内容を紹介します。 技術スタック: Next.js v16.3.8（Pages Router） i18next v21.9.2 react-i18next v11.18.6 実装方針を決める 全く多言語化されていないアプリなので、locale情報の取り扱いやライブラリ選定などを事前に決める必要が...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://blog.thunderbird.net/2026/10/thunderbird-for-ios-a-first-look-at-the-native-iphone-email-app-in-development/">Thunderbird for iOS</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 328 · <a href="https://news.ycombinator.com/item?id=50072913">141 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>Thunderbirdが開発中のiPhone向けネイティブメールアプリを初めて紹介しています。iOS向け公式アプリの機能や開発方針を概観する記事です。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/websveltekit_3vite.html">Webアプリフレームワークの「SvelteKit 3」正式リリース。設定をViteに集約、型安全やエラー処理の改善など</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Webアプリケーションフレームワーク「SvelteKit 3」正式版がリリースされました。 SvelteKitは、Web UIフレームワークの「Svelte」とビルドツールの「Vite」を基盤とし、ルーティング、サーバサイドレンダリング（SSR）、データベースやAPIとの接続、フォーム処理、エラー処理、デプロイ機能などを統合したものです。WebサイトやWebアプリケーションの構築、展開などを可能にします。 下記はSvelteおよびSvelteKitの開発者の一人であるSimo……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://guitoro.com/">Show HN: Guitoro, a virtual guitar you strum with your keyboard</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>キーボードやマウス、タッチ操作で演奏できるブラウザー上の仮想ギターです。実楽器の録音を使い、アコースティックからベースまで選べます。</p>
+      <p class="article-excerpt">Guitoro is a free browser guitar using recordings of real instruments. You can strum with your keyboard, mouse, or touchscreen, choose acoustic, classical, electric guitar or bass, and see chord fingering and each stroke. Song practice can be slowed to 20%, and there are free chord tools and tuners.…</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #6b5a9e">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"/></svg>言語・ツール<span class="section-count">6</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.anthropic.com/engineering/redesigning-source-control">Redesigning source control at Anthropic</a>
+      <span class="badge badge-multi">はてブ テクノロジー × Hacker News</span>
+      <span class="article-meta">▲ 509 · <a href="https://news.ycombinator.com/item?id=50073633">508 comments</a></span>
+      
+      <p class="article-excerpt">Published Oct 13, 2026 As our merges per day grew more than tenfold, source control became our biggest development bottleneck. Here, we share how we migrated to an in-house version control system in five months. At Anthropic, coding is no longer the bottleneck to building systems or doing researc...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://blog.shibayu36.org/entry/2026/10/13/173000">私物Macと仕事Macのdotfilesとアプリ管理をmise bootstrapで管理しやすくした - $shibayu36-&gt;blog;</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">自分の設定ファイルやインストールするアプリは、https://github.com/shibayu36/config-file のリポジトリで管理している。これまでは私物Macと仕事Macが全く同じになるように、雑にsymlinkを張るスクリプトで運用していた。新しい仕事用のMacをもらったのをきっかけに、私物だけ・仕事だけに入れるものをちゃんと分けつ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/kzq/articles/swiftdata-rollback-ios27">SwiftDataのrollback()、iOS 27で黙って挙動が変わっていた</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">個人開発しているゲームアプリのテストを、iOS 27 のシミュレータで回してみた。いつもは iOS 26.5 で回していて、そこでは通っているテストだ。 落ちたのは、ミッション報酬の受け取りで save に失敗したときに Gold が元に戻るかを見るテストだった。期待値は「受け取る前の Gold」なのに、実際はそれより少ない。報酬を足して、save に失敗して、戻したら、足した分より多く引かれていた。 最初はこっちのバグを疑った。でもコードもビルドも同じで、変えたのはシミュレータの OS だけ。調べていくと、SwiftData の ModelContext.rollback() の挙動が...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/nexta_/articles/unit-testing-principles-essence">良いテストを書き、良いテストを見分ける ─『単体テストの考え方/使い方』のエッセンス</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">はじめに 株式会社ネクスタの tetsu.k です。 生産管理SaaS「スマートF」の開発に携わっており、受注・発注・出荷・見積などのドメインを担当するチームに所属しています。 ネクスタでは、事業の拡大とともにアプリケーションが複雑になっていくなかで、より速く、より良い価値を届け続けるために、「品質」に力を入れています。 品質を支える手段の一つが、単体テストです。 いまはAIに頼めば、テストを数秒で何十本も書いてくれます。 では、テストを増やせば品質は上がるのでしょうか。 結論から言うと、大切なのはテストの数を増やすことではなく、次の2つです。 良いテストを書くこと 目の前のテスト...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/koxrtx/items/184e06cd9744f94d4f3e?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">JS初心者が『非同期』を理解してみた</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">1. はじめに 非同期とはなんか裏で重たい処理をいい感じにしてくれてるくらいで非同期が何をしているかあまり理解できてませんでした。 「なんで非同期で書かないといけないの？」と聞かれても、「非同期じゃないと処理が終わるまで画面が表示されなくて、重くなるから」くらいしか答えら...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.cphiri.dev/presentations/recreational-programming">Recreational Programming</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 35 · <a href="https://news.ycombinator.com/item?id=50079865">8 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>純粋な楽しみとしてプログラミングを行う「Recreational Programming」についての発表資料とみられます。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #4a7a52">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></svg>インフラ・クラウド<span class="section-count">5</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-3">★★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/awsduckdbaurora_postgresqletl.html">AWS、DuckDBをAurora PostgreSQLに統合。ETL不要で直接データレイクを読み取り可能にしたと発表</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Amazon Web Services（AWS）は、Amazon Aurora PostgreSQLにDuckDBを統合し、Apache Icebergなどで構築したデータレイクのデータを直接読み取って処理できるようになったことを発表しました。 これまでPostgreSQLにデータレイクのデータを読み込ませるにはETLによる変換処理などが必要でしたが、DuckDBとの統合によりETLが不要となりました。 この発表について、AWSの前CEOで現在Amazon.com CEOであ……</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/maaya8585/articles/b1160260c86805">Azure SRE Agent から Azure SRE Agent を呼ぶときに認証エラーになる件</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">こんにちは。まーやです。最近Azure SRE Agentで遊んでます。元々アプリとその周りのクラウドPaaSの運用エンジニアをしていた私としてはかなりポテンシャルを(勝手に)感じているサービス。ちょっと使う分にはそんなにはまることもないですが、それなりに使い倒そうとするとまだまだアラも出てくる新サービス。しかもAI系。今回出会ったエラーとその解決の内容を備忘録しておきます。 はじめに Azure SRE Agent の概要やドキュメントはこちら https://learn.microsoft.com/ja-jp/azure/sre-agent/overview 最近のAzureポー...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/yushibats/items/bab0634ef6e52f1de33f?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【Oracle × Snowflake】ADB の Iceberg テーブルを AICAT経由で Snowflake から参照する</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">Oracle Database にあるデータを、Snowflake のような別の分析基盤からも読みたい場面があります。 Autonomous AI Database には Oracle AI Data Catalog という Iceberg REST カタログが用意されて...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://qiita.com/nyasuhiro/items/8b156ed55873096c1fcf?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">ZDM+リフレッシュ可能クローンを使ってBaseDB OCPU環境からExaDB-XSへ移行してみた。</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">1. はじめに 以前、以下の記事でOCI Base Database Service（以下、BaseDB）のOCPU環境からECPU環境への移行を、PDBのリフレッシュ可能クローンを利用して試してみました。 OCI Base Database Service のリフレッシ...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/cloudflare_containersai6.html">Cloudflare ContainersがAIエージェント向けに刷新。起動が6倍速、ファイルシステムのスナップショット機能など</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">Cloudflareは、同社のエッジロケーションでコンテナ型仮想マシンを実行可能にする「Cloudflare Containers」をAIエージェント向けに刷新したことを発表しました。 これまでよりも起動速度が6倍となり、環境構築が容易になるようにファイルのスナップショット機能などが追加されました。 Cloudflare Containers now start 6x faster, let your agent choose each sandbox&#39;s image and……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #b0813a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20c.7-3.4 2.8-5.5 5.5-5.5s4.8 2.1 5.5 5.5M16 5.5a3.5 3.5 0 010 6.6M17.5 14.8c2 .7 3.4 2.5 4 5.2"/></svg>キャリア・組織<span class="section-count">5</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://www.itmedia.co.jp/news/article/2610/13/2000002234/">米Getty Imagesが破産申請へ AI画像の台頭で経営悪化、「報道写真」軸に年内の再建目指す</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      <p class="article-excerpt">再建後は、創業家のゲッティ家と米投資会社Koch Equity Developmentの関連会社が株式を100％保有する。両者は最大5億3300万ドルを新たに出資するほか、債権者も金利負担の軽減や返済期限の延長などに応じた。 Getty Imagesを巡っては、競合の米Shutterstockとの合併が破談になったばかりだった。2025年1月に約37億ドル規...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/J-T_ky2g/items/36aaf36d9eef97672c3d?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">抽象的なことを考える時、無意識に具体化しないためのメモ</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">はじめに Whyを問うているつもりでいつの間にか、具体的なことを考えている時があるので気をつけることをメモする 芯をくっていると楽 抽象度高いところがずれていないと楽 キャリアハック、ブラックハットSEO、グレーゾーンを攻めるなどは本質的な価値をあげず、具体を緻密...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://qiita.com/Shinn_Matsumoto/items/4c8b0e2d0482c5aeb002?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items">【合格体験記】AWSクラウドプラクティショナー798点、教科書読むだけで10時間浪費</a>
+      <span class="badge badge-source">Qiita 人気記事</span>
+      
+      
+      <p class="article-excerpt">初級資格だからと思って舐めていましたが、想像より大分難しかったです。 10月の3連休を使って、AWS Certified Cloud Practitioner（CLF-C02）にようやく合格しました。点数は798点（1000点満点）、勉強時間は合わせて15時間くらいです。...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://jobs.lever.co/postera/c7d50a36-db0a-4574-bfe4-8700b74a22c0">PostEra (YC W20) Is Hiring AI Researchers for Drug Discovery</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 0 · <a href="https://news.ycombinator.com/item?id=50078686">0 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>創薬を専門とするPostEraが、AI研究者を採用している求人情報です。薬物探索向けAIモデルの研究開発職と考えられます。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://www.publickey1.jp/blog/26/openid_foundationbtconjp2026.html">「情シスって楽しい」がテーマ。チームみらい安野党首、ひろゆき氏、OpenID Foundation崎村氏らが登壇。BTCONJP 2026［PR］</a>
+      <span class="badge badge-source">Publickey</span>
+      
+      
+      <p class="article-excerpt">進化し続けるITを企業において最適な形で取り入れ続け、ビジネスと統合していく情報システム部門の役割は、AIの登場でビジネスそのものが大きな変革の波を受けざるを得ない現在、ますます重要さを増しています。 その情報システム部門に在籍している有志によって運営され、今年で4回目を迎える「Business Technology Conference Japan 2026 〜情シスカンファレンス〜」（以下、BTCONJP 2026）は、ITをビジネステクノロジーの領域に昇華し、日本のあら……</p>
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #3f7f7a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3h4M11 3v6l-5.5 9.2A2 2 0 007.2 21h9.6a2 2 0 001.7-2.8L13 9V3"/><path d="M8.5 15h7"/></svg>サイエンス<span class="section-count">4</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://zenn.dev/takyas/articles/dd6bef15d2d5f0">見えない原因に、統計学は何を言えるようになったか：交絡の歴史</a>
+      <span class="badge badge-source">Zenn トレンド</span>
+      
+      
+      <p class="article-excerpt">交絡という概念はわかりにくく、誤解も多いように思う。この記事では、統計学が「見えない交絡」という問題にどう向き合ってきたかを、その歴史をたどりながら整理し、Rの実装がどう対応するのかをまとめてみた。 はじめに 1958年8月、Ronald FisherはNatureに短い論考（レター）を寄せた[1]。Richard DollとAustin Bradford Hillが1950年から積み上げてきた「喫煙者は非喫煙者より肺がんになりやすい」という証拠に対し、Fisherは別の説明を用意していた。喫煙習慣と肺がんへのかかりやすさの双方を左右する、共通の遺伝的体質が存在するのではないか、とい...</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-2">★★</span><a class="article-title" href="https://newsletter.pessimistsarchive.org/p/the-1st-time-machines-mogged-mathematicians">The Four Colour Theorem: The first time machines mogged mathematicians</a>
+      <span class="badge badge-source">Hacker News</span>
+      
+      <p class="article-translation"><span class="badge badge-ja">訳</span>四色定理の証明でコンピューターが数学者に先行した歴史を振り返り、人間と機械の関係を紹介する記事です。</p>
+      <p class="article-excerpt">https://celebratio.org/Appel_KI/article/796/#sender Comments URL: https://news.ycombinator.com/item?id=50077096 Points: 34 # Comments: 25</p>
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://alpha-nist.github.io/">AlphaNIST</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 32 · <a href="https://news.ycombinator.com/item?id=50079464">9 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>NISTに関連するAlphaNISTというプロジェクトの紹介ページです。タイトルだけでは具体的な機能や対象分野は判断できません。</p>
+      
+    </li>
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://ourworldindata.org/data-insights/electricity-generation-per-person-in-the-united-kingdom-has-fallen-by-a-third-from-its-early-2000s-peak">The United Kingdom generates less electricity per person than in the 1970s</a>
+      <span class="badge badge-source">Hacker News</span>
+      <span class="article-meta">▲ 194 · <a href="https://news.ycombinator.com/item?id=50072994">277 comments</a></span>
+      <p class="article-translation"><span class="badge badge-ja">訳</span>英国の1人当たり発電量が、1970年代よりも少なくなっているというデータ分析です。2000年代初頭のピークからの減少を長期統計で示します。</p>
+      
+    </li></ul>
+  </section>
+  <section class="feed genre" style="--g: #75695a">
+    <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>その他<span class="section-count">1</span></h2>
+    <ul class="articles">
+    <li class="article">
+      <span class="stars stars-1">★</span><a class="article-title" href="https://forest.watch.impress.co.jp/docs/bookwatch/tabletrecom/2147295.html">あなたの『Amazon Kindle』は最新モデルへ買い替えるべき？ 歴代モデル徹底比較【山口真弘のおすすめ読書タブレット比較】</a>
+      <span class="badge badge-source">はてブ テクノロジー</span>
+      
+      
+      
+    </li></ul>
+  </section>
+  <footer>
+    <a href="./">アーカイブ</a>
+    <span>生成: 2026/10/14 10:04:16</span>
+  </footer>
+</div>
+</body>
+</html>
