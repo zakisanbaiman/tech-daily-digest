@@ -1,7 +1,9 @@
 import type Parser from "rss-parser";
 import type { Article, FeedConfig } from "./types.js";
+import { isSafeNavigationUrl } from "./urlSafety.js";
 
 const EXCERPT_MAX_LENGTH = 300;
+const TITLE_MAX_LENGTH = 500;
 
 export function stripHtml(html: string): string {
   return html
@@ -32,10 +34,12 @@ export function parseHnMeta(snippet: string): Article["meta"] | null {
   const points = snippet.match(/^Points:\s*(\d+)/m);
   const comments = snippet.match(/^#\s*Comments:\s*(\d+)/m);
   const commentsUrl = snippet.match(/^Comments URL:\s*(\S+)/m);
+  const commentsHref = commentsUrl?.[1];
   return {
     ...(points?.[1] !== undefined && { points: Number(points[1]) }),
     ...(comments?.[1] !== undefined && { comments: Number(comments[1]) }),
-    ...(commentsUrl?.[1] !== undefined && { commentsUrl: commentsUrl[1] }),
+    ...(commentsHref !== undefined &&
+      isSafeNavigationUrl(commentsHref) && { commentsUrl: commentsHref }),
   };
 }
 
@@ -43,9 +47,16 @@ export function normalizeItem(
   item: Parser.Item,
   feed: FeedConfig,
 ): Article | null {
-  const url = item.link?.trim();
-  const title = item.title ? stripHtml(item.title) : "";
-  if (!url || !title) return null;
+  const rawUrl = item.link?.trim();
+  const title = item.title ? truncate(stripHtml(item.title), TITLE_MAX_LENGTH) : "";
+  if (!rawUrl || !title) return null;
+  let url: string;
+  try {
+    url = new URL(rawUrl, feed.url).href;
+  } catch {
+    return null;
+  }
+  if (!isSafeNavigationUrl(url)) return null;
 
   const rawSnippet =
     item.contentSnippet ?? item.summary ?? item.content ?? "";

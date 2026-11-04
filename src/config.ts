@@ -1,11 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { z } from "zod";
 import type { FeedConfig } from "./types.js";
+import { isAllowedFeedUrl } from "./urlSafety.js";
 
 const feedConfigSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  url: z.string().url(),
+  url: z.string().refine(isAllowedFeedUrl, {
+    message: "feed URL must be a public https URL on port 443",
+  }),
   lang: z.enum(["ja", "en"]),
   maxItems: z.number().int().positive(),
 });

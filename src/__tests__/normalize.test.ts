@@ -54,6 +54,14 @@ describe("parseHnMeta", () => {
   it("通常の本文には反応しない", () => {
     expect(parseHnMeta("普通の記事の抜粋です。")).toBeNull();
   });
+
+  it("危険な Comments URL は捨て、点数は残す", () => {
+    expect(
+      parseHnMeta(
+        "Article URL: https://example.com/a\nComments URL: javascript:alert(1)\nPoints: 3\n# Comments: 1",
+      ),
+    ).toEqual({ points: 3, comments: 1 });
+  });
 });
 
 describe("normalizeItem", () => {
@@ -95,6 +103,18 @@ describe("normalizeItem", () => {
   it("タイトルやURLが欠けたアイテムは捨てる", () => {
     expect(normalizeItem({ title: "リンクなし" }, jaFeed)).toBeNull();
     expect(normalizeItem({ link: "https://example.com/x" }, jaFeed)).toBeNull();
+  });
+
+  it("javascript スキームや非公開アドレスは捨てる", () => {
+    expect(normalizeItem({ title: "x", link: "javascript:alert(1)" }, jaFeed)).toBeNull();
+    expect(normalizeItem({ title: "x", link: "data:text/html,hi" }, jaFeed)).toBeNull();
+    expect(normalizeItem({ title: "x", link: "https://127.0.0.1/secret" }, jaFeed)).toBeNull();
+    expect(normalizeItem({ title: "x", link: "https://2130706433/secret" }, jaFeed)).toBeNull();
+  });
+
+  it("相対 URL はフィード URL を基準に https へ解決する", () => {
+    const article = normalizeItem({ title: "相対", link: "/p/1" }, jaFeed);
+    expect(article?.url).toBe("https://example.com/p/1");
   });
 
   it("不正な日付は null にする", () => {

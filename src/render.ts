@@ -1,6 +1,40 @@
+import { createHash } from "node:crypto";
 import { fallbackQuip, pickCharacter, wrapQuip } from "./comic.js";
 import { groupByGenre, type GenreGroup } from "./genre.js";
 import type { AiSummary, Article, DigestData, FeedResult } from "./types.js";
+import { isSafeImageUrl, isSafeNavigationUrl } from "./urlSafety.js";
+
+/** 壊れたサムネイルを消す。CSP のハッシュと一致させるため、空白を変えない。 */
+const THUMB_ERROR_SCRIPT =
+  'document.addEventListener("error",function(e){var t=e.target;if(t&&t.classList&&t.classList.contains("pick-thumb"))t.remove();},true);';
+
+function contentSecurityPolicy(allowThumbScript: boolean): string {
+  const scriptSrc = allowThumbScript
+    ? `'sha256-${createHash("sha256").update(THUMB_ERROR_SCRIPT).digest("base64")}'`
+    : "'none'";
+  return [
+    "default-src 'none'",
+    "base-uri 'none'",
+    "object-src 'none'",
+    "form-action 'none'",
+    "frame-ancestors 'none'",
+    "img-src https:",
+    "style-src 'unsafe-inline'",
+    `script-src ${scriptSrc}`,
+  ].join("; ");
+}
+
+function securityMeta(allowThumbScript: boolean): string {
+  return `<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="${contentSecurityPolicy(allowThumbScript)}">`;
+}
+
+function renderAnchor(className: string, href: string, text: string): string {
+  if (!isSafeNavigationUrl(href)) {
+    return `<span class="${className}">${escapeHtml(text)}</span>`;
+  }
+  return `<a class="${className}" href="${escapeHtml(href)}">${escapeHtml(text)}</a>`;
+}
 
 export interface RenderOptions {
   /** アーカイブ一覧ページへの相対パス（index.html からは "archive/"、アーカイブ内コピーからは "./"） */
@@ -33,6 +67,7 @@ function renderComicStrip(data: DigestData): string {
   const character = pickCharacter(data.date);
   const quip = data.aiSummary?.comicQuip || fallbackQuip(character, data.date);
   const lines = wrapQuip(quip);
+  const visibleQuip = lines.join("");
   const lineHeight = 24;
   const bubbleH = lines.length * lineHeight + 28;
   const bubbleY = Math.round((170 - bubbleH) / 2);
@@ -47,7 +82,7 @@ function renderComicStrip(data: DigestData): string {
   const tagWidth = [...tag].length * 13 + 14;
   return `
   <section class="comic">
-    <svg viewBox="0 0 680 170" role="img" aria-label="${escapeHtml(`今日の一コマ: ${character.name}「${quip}」`)}">
+    <svg viewBox="0 0 680 170" role="img" aria-label="${escapeHtml(`今日の一コマ: ${character.name}「${visibleQuip}」`)}">
       <rect x="2" y="2" width="676" height="166" rx="6" fill="#FFFDF7" stroke="#4A4A4A" stroke-width="3"/>
       <rect x="14" y="12" width="${tagWidth}" height="22" fill="#4A4A4A"/>
       <text x="${14 + tagWidth / 2}" y="28" font-size="12" fill="#FFFFFF" text-anchor="middle">${escapeHtml(tag)}</text>
@@ -66,14 +101,15 @@ function renderTopPicks(summary: AiSummary, articles: Article[]): string {
     .map((pick, i) => {
       const article = byUrl.get(pick.url);
       if (!article) return "";
-      const thumb = pick.imageUrl
-        ? `<img class="pick-thumb" src="${escapeHtml(pick.imageUrl)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`
-        : "";
+      const thumb =
+        pick.imageUrl && isSafeImageUrl(pick.imageUrl)
+          ? `<img class="pick-thumb" src="${escapeHtml(pick.imageUrl)}" alt="" loading="lazy" referrerpolicy="no-referrer">`
+          : "";
       return `
       <li class="pick">
         <span class="pick-no">${String(i + 1).padStart(2, "0")}</span>
         <div class="pick-body">
-          <a class="pick-title" href="${escapeHtml(article.url)}">${escapeHtml(article.title)}</a>
+          ${renderAnchor("pick-title", article.url, article.title)}
           <p class="pick-reason">${escapeHtml(pick.reason)}</p>
           <span class="pick-source">${escapeHtml(article.sourceNames.join(" × "))}</span>
         </div>
@@ -117,7 +153,7 @@ function renderArticle(
   if (article.meta.comments !== undefined) {
     const label = `${article.meta.comments} comments`;
     metaBits.push(
-      article.meta.commentsUrl
+      article.meta.commentsUrl && isSafeNavigationUrl(article.meta.commentsUrl)
         ? `<a href="${escapeHtml(article.meta.commentsUrl)}">${label}</a>`
         : label,
     );
@@ -130,7 +166,7 @@ function renderArticle(
     : "";
   return `
     <li class="article">
-      ${stars}<a class="article-title" href="${escapeHtml(article.url)}">${escapeHtml(article.title)}</a>
+      ${stars}${renderAnchor("article-title", article.url, article.title)}
       ${badges.join("")}
       ${metaBits.length > 0 ? `<span class="article-meta">${metaBits.join(" · ")}</span>` : ""}
       ${translation}
@@ -241,6 +277,7 @@ export function renderDigest(data: DigestData, options: RenderOptions): string {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+${securityMeta(true)}
 <title>${escapeHtml(data.date)} | Tech Daily Digest</title>
 <style>
 :root {
@@ -419,6 +456,7 @@ footer {
     <span>生成: ${escapeHtml(generatedJst)}</span>
   </footer>
 </div>
+<script>${THUMB_ERROR_SCRIPT}</script>
 </body>
 </html>
 `;
@@ -439,6 +477,7 @@ export function renderArchiveIndex(dates: string[]): string {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+${securityMeta(false)}
 <title>アーカイブ | Tech Daily Digest</title>
 <style>
 :root { --paper: #f6f1e7; --ink: #211d18; --accent: #c23a28; --rule: #211d18; }

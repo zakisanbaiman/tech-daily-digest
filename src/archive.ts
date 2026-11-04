@@ -13,6 +13,9 @@ const SITE_DIR = "dist-site";
  * - dist-site/archive/      … 過去分のコピー + 一覧 index.html
  */
 export async function buildSite(data: DigestData): Promise<void> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.date)) {
+    throw new Error("invalid digest date");
+  }
   await mkdir(ARCHIVE_DIR, { recursive: true });
   await writeFile(
     join(ARCHIVE_DIR, `${data.date}.html`),

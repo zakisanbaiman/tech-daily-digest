@@ -1,7 +1,10 @@
+import { safeFetchText } from "./safeFetch.js";
 import type { AiSummary } from "./types.js";
+import { isSafeImageUrl } from "./urlSafety.js";
 
 const FETCH_TIMEOUT_MS = 10_000;
 const HTML_SCAN_LIMIT = 200_000;
+const HTML_MAX_BYTES = 512 * 1024;
 const USER_AGENT = "tech-daily-digest/0.1 (+https://github.com)";
 
 export function extractOgImage(html: string): string | null {
@@ -24,17 +27,21 @@ export async function attachThumbnails(summary: AiSummary): Promise<void> {
   await Promise.all(
     summary.topPicks.map(async (pick) => {
       try {
-        const response = await fetch(pick.url, {
-          signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-          headers: { "user-agent": USER_AGENT },
+        const html = await safeFetchText(pick.url, {
+          timeoutMs: FETCH_TIMEOUT_MS,
+          maxBytes: HTML_MAX_BYTES,
+          userAgent: USER_AGENT,
+          onOverflow: "truncate",
         });
-        if (!response.ok) return;
-        const image = extractOgImage(await response.text());
+        const image = extractOgImage(html);
         if (!image) return;
-        const resolved = new URL(image, pick.url).toString();
-        if (resolved.startsWith("https://")) pick.imageUrl = resolved;
+        const resolved = new URL(image, pick.url).href;
+        if (isSafeImageUrl(resolved)) pick.imageUrl = resolved;
       } catch (error) {
-        console.warn(`[ogp] thumbnail skipped for ${pick.url}:`, error);
+        const detail = error instanceof Error ? error.message : "unknown";
+        console.warn(
+          `[ogp] thumbnail skipped: ${detail.replace(/[\r\n]/g, " ").slice(0, 200)}`,
+        );
       }
     }),
   );
