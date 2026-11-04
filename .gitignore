@@ -1,4 +1,11 @@
 node_modules/
 dist-site/
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
 .claude/worktrees/
