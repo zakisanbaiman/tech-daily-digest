@@ -26,6 +26,12 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      # Pin @aikidosec/safe-chain. `safe-chain setup-ci` appends its shims to
+      # GITHUB_PATH, which applies on the next step, so `npm ci` is wrapped.
+      - name: Install Aikido Safe Chain
+        run: npm install -g @aikidosec/safe-chain@1.5.27
+      - name: Enable Aikido Safe Chain
+        run: safe-chain setup-ci
       - run: npm ci
       - run: npm run generate
         env:
