@@ -91,6 +91,79 @@ describe("renderDigest", () => {
     expect(html).not.toContain("<script>");
     expect(html).toContain('href="2026-08-13.html"');
   });
+
+  it("今日の注目に入った記事はジャンル欄に繰り返さない", () => {
+    const featured = article("https://example.com/featured", "注目記事");
+    const other = article("https://example.com/other", "通常記事");
+    const summary: AiSummary = {
+      dailyOverview: "概況",
+      topPicks: [{ url: featured.url, reason: "必読だから" }],
+      enSummaries: [],
+      classifications: [
+        { url: featured.url, genre: "security", stars: 3 },
+        { url: other.url, genre: "security", stars: 2 },
+      ],
+    };
+    const html = renderDigest(digest([featured, other], summary), {
+      archiveIndexHref: "archive/",
+    });
+    const topPicks = html.slice(
+      html.indexOf('class="top-picks"'),
+      html.indexOf('class="feed genre'),
+    );
+    const genres = html.slice(html.indexOf('class="feed genre'), html.indexOf("<footer>"));
+
+    expect(topPicks).toContain("注目記事");
+    expect(topPicks).toContain("必読だから");
+    expect(genres).toContain("通常記事");
+    expect(genres).toContain("セキュリティ");
+    expect(genres).not.toContain("注目記事");
+    expect(genres).not.toContain("https://example.com/featured");
+    expect(genres).toContain('<span class="section-count">1</span>');
+  });
+
+  it("注目記事だけになったジャンルは描画しない", () => {
+    const featured = article("https://example.com/featured", "注目記事");
+    const other = article("https://example.com/other", "通常記事");
+    const summary: AiSummary = {
+      dailyOverview: "概況",
+      topPicks: [{ url: featured.url, reason: "必読だから" }],
+      enSummaries: [],
+      classifications: [
+        { url: featured.url, genre: "security", stars: 3 },
+        { url: other.url, genre: "web", stars: 1 },
+      ],
+    };
+    const html = renderDigest(digest([featured, other], summary), {
+      archiveIndexHref: "archive/",
+    });
+    const genres = html.slice(html.indexOf('class="feed genre'), html.indexOf("<footer>"));
+
+    expect(html).toContain("今日の注目");
+    expect(html).toContain("注目記事");
+    expect(genres).toContain("通常記事");
+    expect(genres).toContain("Web開発");
+    expect(genres).not.toContain("セキュリティ");
+    expect(genres).toContain('<span class="section-count">1</span>');
+  });
+
+  it("注目 URL が記事 URL と完全一致しない記事はジャンルに残す", () => {
+    const item = article("https://example.com/story", "残す記事");
+    const summary: AiSummary = {
+      dailyOverview: "概況",
+      topPicks: [{ url: "https://example.com/story/", reason: "末尾スラッシュ違い" }],
+      enSummaries: [],
+      classifications: [{ url: item.url, genre: "career", stars: 2 }],
+    };
+    const html = renderDigest(digest([item], summary), {
+      archiveIndexHref: "archive/",
+    });
+    const genres = html.slice(html.indexOf('class="feed genre'), html.indexOf("<footer>"));
+
+    expect(genres).toContain("残す記事");
+    expect(genres).toContain("キャリア・組織");
+    expect(html).not.toContain("末尾スラッシュ違い");
+  });
 });
 
 describe("buildSite", () => {

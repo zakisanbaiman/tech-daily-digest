@@ -235,9 +235,17 @@ export function renderDigest(data: DigestData, options: RenderOptions): string {
   const classifications = data.aiSummary?.classifications ?? [];
   let sections: string;
   if (classifications.length > 0) {
-    // ジャンル別レイアウト（媒体横断）
+    // ジャンル別レイアウト（媒体横断）。
+    // 今日の注目に出した記事はここでは繰り返さない。
+    // URL は renderTopPicks と同じく文字列の完全一致で対応づける。
+    const featuredUrls = new Set(
+      (data.aiSummary?.topPicks ?? []).map((pick) => pick.url),
+    );
+    const genreArticles = data.articles.filter(
+      (article) => !featuredUrls.has(article.url),
+    );
     sections =
-      groupByGenre(data.articles, classifications)
+      groupByGenre(genreArticles, classifications)
         .map((group) => renderGenreSection(group, summaries))
         .join("") + renderFeedErrors(data.feedResults);
   } else {
