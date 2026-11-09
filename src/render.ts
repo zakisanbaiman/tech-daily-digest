@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { fallbackQuip, pickCharacter, wrapQuip } from "./comic.js";
 import { groupByGenre, type GenreGroup } from "./genre.js";
+import { hasSummarizableSource } from "./summarySource.js";
 import type { AiSummary, Article, DigestData, FeedResult } from "./types.js";
 import { isSafeImageUrl, isSafeNavigationUrl } from "./urlSafety.js";
 
@@ -129,6 +130,8 @@ interface ArticleRenderOptions {
   stars?: number;
   /** 媒体バッジを常に表示するか（ジャンル別レイアウトでは媒体がセクションから消えるため必須） */
   showSource?: boolean;
+  /** AI 要約を試みた日だけ、材料不足の英語記事に「本文情報なし」を出す */
+  noteMissingSource?: boolean;
 }
 
 function renderArticle(
@@ -161,9 +164,13 @@ function renderArticle(
   const excerpt = article.excerpt
     ? `<p class="article-excerpt">${escapeHtml(article.excerpt)}</p>`
     : "";
-  const translation = summaryJa
-    ? `<p class="article-translation"><span class="badge badge-ja">訳</span>${escapeHtml(summaryJa)}</p>`
-    : "";
+  const canSummarize = hasSummarizableSource(article.excerpt, article.title);
+  const translation =
+    summaryJa && canSummarize
+      ? `<p class="article-translation"><span class="badge badge-ja">訳</span>${escapeHtml(summaryJa)}</p>`
+      : options.noteMissingSource && article.lang === "en" && !canSummarize
+        ? `<p class="article-excerpt">本文情報なし</p>`
+        : "";
   return `
     <li class="article">
       ${stars}${renderAnchor("article-title", article.url, article.title)}
@@ -178,6 +185,7 @@ function renderFeedSection(
   result: FeedResult,
   dedupedUrls: Set<string>,
   summaries: Map<string, string>,
+  noteMissingSource: boolean,
 ): string {
   const { feed } = result;
   if (result.error) {
@@ -190,7 +198,7 @@ function renderFeedSection(
   const articles = result.articles.filter((a) => dedupedUrls.has(a.url));
   if (articles.length === 0) return "";
   const items = articles
-    .map((a) => renderArticle(a, summaries.get(a.url)))
+    .map((a) => renderArticle(a, summaries.get(a.url), { noteMissingSource }))
     .join("");
   return `
   <section class="feed">
@@ -202,12 +210,14 @@ function renderFeedSection(
 function renderGenreSection(
   group: GenreGroup,
   summaries: Map<string, string>,
+  noteMissingSource: boolean,
 ): string {
   const items = group.articles
     .map((article) =>
       renderArticle(article, summaries.get(article.url), {
         stars: article.stars,
         showSource: true,
+        noteMissingSource,
       }),
     )
     .join("");
@@ -232,6 +242,7 @@ export function renderDigest(data: DigestData, options: RenderOptions): string {
   const summaries = new Map(
     (data.aiSummary?.enSummaries ?? []).map((s) => [s.url, s.summaryJa]),
   );
+  const noteMissingSource = data.aiSummary !== null;
   const classifications = data.aiSummary?.classifications ?? [];
   let sections: string;
   if (classifications.length > 0) {
@@ -246,7 +257,7 @@ export function renderDigest(data: DigestData, options: RenderOptions): string {
     );
     sections =
       groupByGenre(genreArticles, classifications)
-        .map((group) => renderGenreSection(group, summaries))
+        .map((group) => renderGenreSection(group, summaries, noteMissingSource))
         .join("") + renderFeedErrors(data.feedResults);
   } else {
     // AI分類なしのフォールバック: 媒体別レイアウト。
@@ -264,6 +275,7 @@ export function renderDigest(data: DigestData, options: RenderOptions): string {
               .map((a) => a.url),
           ),
           summaries,
+          noteMissingSource,
         ),
       )
       .join("");
