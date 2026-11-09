@@ -3,6 +3,7 @@ import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import type { ComicCharacter } from "./comic.js";
 import { GENRES } from "./genre.js";
+import { hasSummarizableSource, selectGroundedSummaries } from "./summarySource.js";
 import type { AiSummary, Article, GenreId } from "./types.js";
 
 const GENRE_ID_SET = new Set<string>(GENRES.map((genre) => genre.id));
@@ -28,10 +29,12 @@ const aiSummarySchema = z.object({
     .array(
       z.object({
         url: z.string().describe("英語記事のURL（そのまま転記）"),
-        summaryJa: z.string().describe("記事内容の日本語要約1〜2文"),
+        summaryJa: z
+          .string()
+          .describe("excerpt に書かれている事実だけの日本語要約1〜2文。excerpt にないことは書かない"),
       }),
     )
-    .describe("lang=en の全記事の日本語要約"),
+    .describe("excerpt が十分な英語記事だけの日本語要約。材料が足りない記事は含めない"),
   classifications: z
     .array(
       z.object({
@@ -54,20 +57,25 @@ const aiSummarySchema = z.object({
 });
 
 function buildPrompt(articles: Article[], speaker: ComicCharacter): string {
-  const list = articles.map((a) => ({
-    url: a.url,
-    title: a.title,
-    source: a.sourceNames.join(" / "),
-    lang: a.lang,
-    ...(a.excerpt && { excerpt: a.excerpt.slice(0, MAX_EXCERPT_FOR_PROMPT) }),
-    ...(a.meta.points !== undefined && { hnPoints: a.meta.points }),
-  }));
+  const list = articles.map((a) => {
+    const excerpt = hasSummarizableSource(a.excerpt, a.title)
+      ? a.excerpt.slice(0, MAX_EXCERPT_FOR_PROMPT)
+      : "";
+    return {
+      url: a.url,
+      title: a.title,
+      source: a.sourceNames.join(" / "),
+      lang: a.lang,
+      ...(excerpt && { excerpt }),
+      ...(a.meta.points !== undefined && { hnPoints: a.meta.points }),
+    };
+  });
   return [
     "以下は今日の技術系フィードから収集した記事一覧です。",
     "",
     "1. dailyOverview: 全体の傾向を日本語2〜3文で",
     "2. topPicks: エンジニアが今日読むべき注目記事をちょうど3件選び、理由を添える（複数ソースに載っている記事や議論が盛り上がっている記事を優先）",
-    "3. enSummaries: lang が en の記事すべてについて、タイトルから推測できる内容の日本語要約を1〜2文で",
+    "3. enSummaries: lang が en で excerpt がある記事だけを、その excerpt に書かれている事実の範囲で日本語1〜2文に要約する。excerpt がない記事や、URL・点数・コメント数しかない記事は enSummaries に含めない。タイトルから内容を推測して補わない。",
     "4. classifications: 全記事にジャンルとおすすめ度を付ける。ジャンルは内容が最も近いもの1つ、迷ったら misc。おすすめ度は 3=必読（全体の1割程度）、2=読む価値あり、1=流し見",
     `5. comicQuip: 紙面冒頭の1コマ漫画のセリフ。今日の記事一覧を要約するひとことを、次のキャラクターとして書く: ${speaker.persona} 必ずその日の記事にある具体的な話題（技術名・プロダクト名・出来事）を1つ以上入れ、読者が「今日はこういう日か」と分かるようにする。一般論だけのセリフは禁止。45字以内・絵文字なし・キャラの口調を厳守`,
     "",
@@ -136,12 +144,10 @@ function sanitize(summary: AiSummary, articles: Article[]): AiSummary {
       .filter((pick) => known.has(pick.url))
       .slice(0, 3)
       .map((pick) => ({ url: pick.url, reason: boundPlainText(pick.reason, 400) })),
-    enSummaries: summary.enSummaries
-      .filter((summaryItem) => known.has(summaryItem.url))
-      .map((summaryItem) => ({
-        url: summaryItem.url,
-        summaryJa: boundPlainText(summaryItem.summaryJa, 400),
-      })),
+    enSummaries: selectGroundedSummaries(articles, summary.enSummaries).map((summaryItem) => ({
+      url: summaryItem.url,
+      summaryJa: boundPlainText(summaryItem.summaryJa, 400),
+    })),
     classifications: summary.classifications
       .filter(
         (classification) =>
