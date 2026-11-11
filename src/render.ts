@@ -207,24 +207,35 @@ function renderFeedSection(
   </section>`;
 }
 
+/** ジャンル欄で最初から見せる件数。これを超えた分は <details> に畳む。 */
+export const GENRE_VISIBLE_COUNT = 6;
+
 function renderGenreSection(
   group: GenreGroup,
   summaries: Map<string, string>,
   noteMissingSource: boolean,
 ): string {
-  const items = group.articles
-    .map((article) =>
-      renderArticle(article, summaries.get(article.url), {
-        stars: article.stars,
-        showSource: true,
-        noteMissingSource,
-      }),
-    )
-    .join("");
+  const rendered = group.articles.map((article) =>
+    renderArticle(article, summaries.get(article.url), {
+      stars: article.stars,
+      showSource: true,
+      noteMissingSource,
+    }),
+  );
+  const visible = rendered.slice(0, GENRE_VISIBLE_COUNT).join("");
+  const folded = rendered.slice(GENRE_VISIBLE_COUNT);
+  const more =
+    folded.length > 0
+      ? `
+    <details class="more-articles">
+      <summary>残り${folded.length}件を表示</summary>
+      <ul class="articles">${folded.join("")}</ul>
+    </details>`
+      : "";
   return `
   <section class="feed genre" style="--g: ${group.genre.color}">
     <h2 class="section-title"><svg class="genre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${group.genre.icon}</svg>${escapeHtml(group.genre.label)}<span class="section-count">${group.articles.length}</span></h2>
-    <ul class="articles">${items}</ul>
+    <ul class="articles">${visible}</ul>${more}
   </section>`;
 }
 
@@ -435,6 +446,21 @@ section:nth-of-type(7) { animation-delay: .47s; }
 .genre .section-title { color: var(--g-disp); border-bottom-color: color-mix(in srgb, var(--g-disp) 60%, transparent); align-items: center; }
 .genre .section-count { color: var(--muted); }
 .genre-icon { width: 19px; height: 19px; flex-shrink: 0; }
+.more-articles { margin: 0; }
+.more-articles summary {
+  display: list-item;
+  list-style-position: inside;
+  cursor: pointer;
+  padding: 14px 2px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: .06em;
+}
+.more-articles summary:hover { color: var(--accent); }
+.more-articles summary::-webkit-details-marker { color: currentColor; }
+.more-articles summary::marker { color: currentColor; }
+.more-articles[open] summary { border-bottom: 1px dotted var(--rule); }
 .stars { font-size: 11.5px; letter-spacing: 2px; margin-right: 8px; color: var(--accent); vertical-align: 1.5px; }
 .stars-1 { color: var(--muted); opacity: .55; }
 .pick-thumb {
