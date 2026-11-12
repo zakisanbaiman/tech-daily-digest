@@ -132,6 +132,19 @@ interface ArticleRenderOptions {
   showSource?: boolean;
   /** AI 要約を試みた日だけ、材料不足の英語記事に「本文情報なし」を出す */
   noteMissingSource?: boolean;
+  /**
+   * ジャンル欄の抜粋を CSS で数行に畳む。
+   * 文字列は切り詰めず DOM に残す。今日の注目と日次概況では使わない。
+   */
+  clampExcerpt?: boolean;
+}
+
+/** ★★★ は3行、★★ と ★ は2行。本文そのものは変えない。 */
+function excerptClass(options: ArticleRenderOptions): string {
+  if (!options.clampExcerpt) return "article-excerpt";
+  return options.stars === 3
+    ? "article-excerpt excerpt-clamp excerpt-clamp-3"
+    : "article-excerpt excerpt-clamp";
 }
 
 function renderArticle(
@@ -162,7 +175,7 @@ function renderArticle(
     );
   }
   const excerpt = article.excerpt
-    ? `<p class="article-excerpt">${escapeHtml(article.excerpt)}</p>`
+    ? `<p class="${excerptClass(options)}">${escapeHtml(article.excerpt)}</p>`
     : "";
   const canSummarize = hasSummarizableSource(article.excerpt, article.title);
   const translation =
@@ -220,6 +233,7 @@ function renderGenreSection(
       stars: article.stars,
       showSource: true,
       noteMissingSource,
+      clampExcerpt: true,
     }),
   );
   const visible = rendered.slice(0, GENRE_VISIBLE_COUNT).join("");
@@ -422,6 +436,19 @@ section:nth-of-type(7) { animation-delay: .47s; }
 .article-title { font-weight: 600; }
 .article-meta { margin-left: 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
 .article-excerpt { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+/* ジャンル欄の抜粋だけ。全文は DOM に残す。今日の注目（.pick-reason）と日次概況（.overview）は対象外。 */
+.excerpt-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.excerpt-clamp.excerpt-clamp-3 {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
 .article-translation { margin: 4px 0 0; font-size: 13.5px; line-height: 1.8; }
 .badge {
   display: inline-block;
