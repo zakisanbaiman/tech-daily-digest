@@ -139,6 +139,21 @@ describe("renderDigest の要約表示", () => {
     url: "https://mattlakeman.org/2021/07/27/shadow-of-the-sun/",
     title: "Shadow of the Sun (2021)",
     excerpt: "",
+    meta: {
+      points: 409,
+      comments: 391,
+      commentsUrl: "https://news.ycombinator.com/item?id=50458900",
+    },
+  });
+  const blank = article({
+    url: "https://example.com/blank",
+    title: "空白だけの抜粋",
+    excerpt: " \n\t ",
+  });
+  const placeholder = article({
+    url: "https://example.com/placeholder",
+    title: "定型文だけの抜粋",
+    excerpt: "  本文情報なし  ",
   });
   const titled = article({
     url: "https://github.blog/changelog/2026-11-05-new-pull-request-overview-page-in-public-preview/",
@@ -173,6 +188,8 @@ describe("renderDigest の要約表示", () => {
       ],
       classifications: [
         { url: thin.url, genre: "misc", stars: 1 },
+        { url: blank.url, genre: "misc", stars: 1 },
+        { url: placeholder.url, genre: "misc", stars: 1 },
         { url: titled.url, genre: "web", stars: 1 },
         { url: rich.url, genre: "security", stars: 2 },
         { url: japanese.url, genre: "web", stars: 1 },
@@ -180,37 +197,79 @@ describe("renderDigest の要約表示", () => {
     };
   }
 
-  it("材料不足の英語記事は推測要約を出さず、本文情報なしと表示する", () => {
-    const html = renderDigest(digest([thin, titled, rich, japanese], summary()), {
-      archiveIndexHref: "archive/",
-    });
-    const thinBlock = html.slice(html.indexOf(thin.title), html.indexOf("</li>", html.indexOf(thin.title)));
-    const titledBlock = html.slice(
-      html.indexOf(titled.title),
-      html.indexOf("</li>", html.indexOf(titled.title)),
-    );
-    const richBlock = html.slice(html.indexOf(rich.title), html.indexOf("</li>", html.indexOf(rich.title)));
-    const japaneseBlock = html.slice(
-      html.indexOf(japanese.title),
-      html.indexOf("</li>", html.indexOf(japanese.title)),
-    );
+  function articleBlock(html: string, title: string): string {
+    const start = html.indexOf(title);
+    return html.slice(start, html.indexOf("</li>", start));
+  }
 
-    expect(thinBlock).toContain("本文情報なし");
+  it("材料不足の英語記事は推測要約も本文情報なしも出さない", () => {
+    const html = renderDigest(
+      digest([thin, blank, placeholder, titled, rich, japanese], summary()),
+      { archiveIndexHref: "archive/" },
+    );
+    const thinBlock = articleBlock(html, thin.title);
+    const blankBlock = articleBlock(html, blank.title);
+    const placeholderBlock = articleBlock(html, placeholder.title);
+    const titledBlock = articleBlock(html, titled.title);
+    const richBlock = articleBlock(html, rich.title);
+    const japaneseBlock = articleBlock(html, japanese.title);
+
+    expect(thinBlock).toContain(thin.title);
+    expect(thinBlock).toContain("Hacker News");
+    expect(thinBlock).toContain("▲ 409");
+    expect(thinBlock).toContain(
+      '<a href="https://news.ycombinator.com/item?id=50458900">391 comments</a>',
+    );
+    expect(thinBlock).not.toContain("article-excerpt");
+    expect(thinBlock).not.toContain("本文情報なし");
     expect(thinBlock).not.toContain("訳");
     expect(thinBlock).not.toContain(speculated);
-    expect(titledBlock).toContain("本文情報なし");
+    expect(blankBlock).not.toContain("article-excerpt");
+    expect(placeholderBlock).not.toContain("article-excerpt");
+    expect(placeholderBlock).not.toContain("本文情報なし");
+    expect(titledBlock).toContain(
+      `<p class="article-excerpt excerpt-clamp">${titled.excerpt}</p>`,
+    );
+    expect(titledBlock).not.toContain("本文情報なし");
     expect(titledBlock).not.toContain("機能と考えられます");
-    expect(richBlock).toContain("訳");
-    expect(richBlock).toContain(grounded);
+    expect(richBlock).toContain(
+      `<p class="article-translation"><span class="badge badge-ja">訳</span>${grounded}</p>`,
+    );
+    expect(richBlock).toContain(`<p class="article-excerpt excerpt-clamp">${COLD_FRAME}</p>`);
     expect(richBlock).not.toContain("本文情報なし");
+    expect(japaneseBlock).not.toContain("article-excerpt");
     expect(japaneseBlock).not.toContain("本文情報なし");
+    expect(html).not.toContain("本文情報なし");
+    expect(html).not.toMatch(/<p class="article-excerpt[^"]*">\s*<\/p>/);
+    expect(html).toMatch(/\.article\s*\{[^}]*padding:\s*14px 2px/);
     expect(html).toContain("script-src 'sha256-");
+  });
+
+  it("今日の注目には本文情報なしの抜粋を足さない", () => {
+    const html = renderDigest(
+      digest([thin, rich], {
+        ...summary(),
+        topPicks: [{ url: thin.url, reason: "議論が盛り上がっているため" }],
+      }),
+      { archiveIndexHref: "archive/" },
+    );
+    const topPicks = html.slice(html.indexOf('class="top-picks"'), html.indexOf('class="feed genre'));
+    expect(topPicks).toContain(thin.title);
+    expect(topPicks).toContain("議論が盛り上がっているため");
+    expect(topPicks).toContain("Hacker News");
+    expect(topPicks).not.toContain("article-excerpt");
+    expect(topPicks).not.toContain("本文情報なし");
+    expect(html).toContain(grounded);
+    expect(html).not.toContain(speculated);
+    expect(html).not.toContain("本文情報なし");
   });
 
   it("AI 要約がない日は本文情報なしを足さない", () => {
     const html = renderDigest(digest([thin], null), { archiveIndexHref: "archive/" });
     expect(html).toContain(thin.title);
+    expect(html).toContain("▲ 409");
     expect(html).not.toContain("本文情報なし");
+    expect(html).not.toMatch(/<p class="article-excerpt/);
     expect(html).not.toContain("訳");
   });
 });

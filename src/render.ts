@@ -130,13 +130,24 @@ interface ArticleRenderOptions {
   stars?: number;
   /** 媒体バッジを常に表示するか（ジャンル別レイアウトでは媒体がセクションから消えるため必須） */
   showSource?: boolean;
-  /** AI 要約を試みた日だけ、材料不足の英語記事に「本文情報なし」を出す */
-  noteMissingSource?: boolean;
   /**
    * ジャンル欄の抜粋を CSS で数行に畳む。
    * 文字列は切り詰めず DOM に残す。今日の注目と日次概況では使わない。
    */
   clampExcerpt?: boolean;
+}
+
+/**
+ * 材料不足の英語記事に抜粋欄へ出していた文言。
+ * 要約プロンプトや本文取得では作らず、レンダラーだけがこの段落を足していた。
+ * 空の抜粋も、この文言だけの抜粋も、情報のない行になるので段落自体を出さない。
+ */
+const OMITTED_EXCERPT = "本文情報なし";
+
+function excerptHtml(article: Article, options: ArticleRenderOptions): string {
+  const text = article.excerpt.trim();
+  if (text.length === 0 || text === OMITTED_EXCERPT) return "";
+  return `<p class="${excerptClass(options)}">${escapeHtml(article.excerpt)}</p>`;
 }
 
 /** ★★★ は3行、★★ と ★ は2行。本文そのものは変えない。 */
@@ -174,16 +185,12 @@ function renderArticle(
         : label,
     );
   }
-  const excerpt = article.excerpt
-    ? `<p class="${excerptClass(options)}">${escapeHtml(article.excerpt)}</p>`
-    : "";
+  const excerpt = excerptHtml(article, options);
   const canSummarize = hasSummarizableSource(article.excerpt, article.title);
   const translation =
     summaryJa && canSummarize
       ? `<p class="article-translation"><span class="badge badge-ja">訳</span>${escapeHtml(summaryJa)}</p>`
-      : options.noteMissingSource && article.lang === "en" && !canSummarize
-        ? `<p class="article-excerpt">本文情報なし</p>`
-        : "";
+      : "";
   return `
     <li class="article">
       ${stars}${renderAnchor("article-title", article.url, article.title)}
@@ -198,7 +205,6 @@ function renderFeedSection(
   result: FeedResult,
   dedupedUrls: Set<string>,
   summaries: Map<string, string>,
-  noteMissingSource: boolean,
 ): string {
   const { feed } = result;
   if (result.error) {
@@ -211,7 +217,7 @@ function renderFeedSection(
   const articles = result.articles.filter((a) => dedupedUrls.has(a.url));
   if (articles.length === 0) return "";
   const items = articles
-    .map((a) => renderArticle(a, summaries.get(a.url), { noteMissingSource }))
+    .map((a) => renderArticle(a, summaries.get(a.url)))
     .join("");
   return `
   <section class="feed">
@@ -226,13 +232,11 @@ export const GENRE_VISIBLE_COUNT = 6;
 function renderGenreSection(
   group: GenreGroup,
   summaries: Map<string, string>,
-  noteMissingSource: boolean,
 ): string {
   const rendered = group.articles.map((article) =>
     renderArticle(article, summaries.get(article.url), {
       stars: article.stars,
       showSource: true,
-      noteMissingSource,
       clampExcerpt: true,
     }),
   );
@@ -267,7 +271,6 @@ export function renderDigest(data: DigestData, options: RenderOptions): string {
   const summaries = new Map(
     (data.aiSummary?.enSummaries ?? []).map((s) => [s.url, s.summaryJa]),
   );
-  const noteMissingSource = data.aiSummary !== null;
   const classifications = data.aiSummary?.classifications ?? [];
   let sections: string;
   if (classifications.length > 0) {
@@ -282,7 +285,7 @@ export function renderDigest(data: DigestData, options: RenderOptions): string {
     );
     sections =
       groupByGenre(genreArticles, classifications)
-        .map((group) => renderGenreSection(group, summaries, noteMissingSource))
+        .map((group) => renderGenreSection(group, summaries))
         .join("") + renderFeedErrors(data.feedResults);
   } else {
     // AI分類なしのフォールバック: 媒体別レイアウト。
@@ -300,7 +303,6 @@ export function renderDigest(data: DigestData, options: RenderOptions): string {
               .map((a) => a.url),
           ),
           summaries,
-          noteMissingSource,
         ),
       )
       .join("");
