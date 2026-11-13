@@ -143,13 +143,15 @@ describe("ジャンル欄の抜粋クランプ", () => {
   });
 
   it("折りたたんだジャンルの続きにも同じクランプが付き、details は増えない", () => {
-    const articles = Array.from({ length: GENRE_VISIBLE_COUNT + 2 }, (_, i) =>
-      article(
+    const articles = Array.from({ length: GENRE_VISIBLE_COUNT + 2 }, (_, i) => {
+      const emptyEnglish = i === GENRE_VISIBLE_COUNT;
+      return article(
         `https://example.com/folded/${i}`,
-        `記事${i}`,
-        i === GENRE_VISIBLE_COUNT + 1 ? `${LONG}-folded` : `短い抜粋${i}`,
-      ),
-    );
+        emptyEnglish ? "本文なしの英語記事" : `記事${i}`,
+        emptyEnglish ? "" : i === GENRE_VISIBLE_COUNT + 1 ? `${LONG}-folded` : `短い抜粋${i}`,
+        emptyEnglish ? "en" : "ja",
+      );
+    });
     const html = renderDigest(
       digest(articles, {
         dailyOverview: "概況",
@@ -173,16 +175,35 @@ describe("ジャンル欄の抜粋クランプ", () => {
     );
     expect(folded).toContain("EXCERPT_TAIL-folded");
     expect(folded).not.toContain("excerpt-clamp-3");
+    const emptyFolded = folded.slice(
+      folded.indexOf("本文なしの英語記事"),
+      folded.indexOf("</li>", folded.indexOf("本文なしの英語記事")),
+    );
+    expect(emptyFolded).toContain("本文なしの英語記事");
+    expect(emptyFolded).not.toContain("article-excerpt");
+    expect(emptyFolded).not.toContain("本文情報なし");
     expect(html).toContain(
       '<p class="article-excerpt excerpt-clamp excerpt-clamp-3">短い抜粋0</p>',
     );
     expect(html).toContain('<p class="article-excerpt excerpt-clamp">短い抜粋1</p>');
   });
 
-  it("媒体別フォールバックと英語要約、本文情報なしはクランプしない", () => {
+  it("媒体別フォールバックと英語要約はクランプせず、空の抜粋は出さない", () => {
     const feedItem = article("https://example.com/feed", "媒体記事", `${LONG}-feed`);
+    const emptyFeed = article("https://example.com/empty-feed", "空の媒体記事", "  \n", "en");
+    const placeholderFeed = article(
+      "https://example.com/placeholder-feed",
+      "定型文の媒体記事",
+      "本文情報なし",
+      "en",
+    );
+    emptyFeed.meta = {
+      points: 12,
+      comments: 3,
+      commentsUrl: "https://news.ycombinator.com/item?id=1",
+    };
     const fallback = renderDigest(
-      digest([feedItem], {
+      digest([feedItem, emptyFeed, placeholderFeed], {
         dailyOverview: "概況",
         topPicks: [],
         enSummaries: [],
@@ -192,6 +213,23 @@ describe("ジャンル欄の抜粋クランプ", () => {
     );
     expect(fallback).toContain(`<p class="article-excerpt">${LONG}-feed</p>`);
     expect(fallback).not.toMatch(/<p class="article-excerpt excerpt-clamp/);
+    const emptyBlock = fallback.slice(
+      fallback.indexOf("空の媒体記事"),
+      fallback.indexOf("</li>", fallback.indexOf("空の媒体記事")),
+    );
+    const placeholderBlock = fallback.slice(
+      fallback.indexOf("定型文の媒体記事"),
+      fallback.indexOf("</li>", fallback.indexOf("定型文の媒体記事")),
+    );
+    expect(emptyBlock).toContain("空の媒体記事");
+    expect(emptyBlock).toContain("▲ 12");
+    expect(emptyBlock).toContain(
+      '<a href="https://news.ycombinator.com/item?id=1">3 comments</a>',
+    );
+    expect(emptyBlock).not.toContain("article-excerpt");
+    expect(placeholderBlock).toContain("定型文の媒体記事");
+    expect(placeholderBlock).not.toContain("article-excerpt");
+    expect(fallback).not.toContain("本文情報なし");
 
     const english = article(
       "https://example.com/en",
@@ -215,8 +253,14 @@ describe("ジャンル欄の抜粋クランプ", () => {
     );
     expect(html).toContain(`<p class="article-translation"><span class="badge badge-ja">訳</span>${summaryJa}</p>`);
     expect(html).not.toMatch(/class="article-translation[^"]*excerpt-clamp/);
-    expect(html).toContain('<p class="article-excerpt">本文情報なし</p>');
-    expect(html).not.toMatch(/class="article-excerpt excerpt-clamp[^"]*">本文情報なし/);
+    const thinBlock = html.slice(html.indexOf("Thin post"), html.indexOf("</li>", html.indexOf("Thin post")));
+    expect(thinBlock).toContain("Thin post");
+    expect(thinBlock).not.toContain("article-excerpt");
+    expect(thinBlock).not.toContain("本文情報なし");
+    expect(html).toContain(
+      `<p class="article-excerpt excerpt-clamp">${english.excerpt}</p>`,
+    );
+    expect(rule(styleOf(html), ".article {")).toContain("padding: 14px 2px");
     expect(html).toContain("script-src 'sha256-");
     expect(html).not.toContain("script-src 'unsafe-inline'");
     expect(html).not.toMatch(/\son\w+=/i);
