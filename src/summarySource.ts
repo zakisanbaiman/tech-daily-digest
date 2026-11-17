@@ -11,7 +11,10 @@ export const MIN_SUMMARY_SOURCE_CHARS = 40;
 /** これより短いタイトルは、本文先頭との偶然の一致と区別しない */
 const MIN_TITLE_PREFIX_CHARS = 12;
 
-/** 要約の材料にならない URL と、hnrss の点数・コメント数などの定型 */
+/**
+ * URL と hnrss の定型（Article URL / Comments URL / Points / # Comments）を除いた本文。
+ * 要約できるかの判定と、ページに出す抜粋の組み立てで同じ規則を使う。
+ */
 export function summarySourceText(excerpt: string): string {
   return excerpt
     .replace(/https?:\/\/\S+/gi, " ")
