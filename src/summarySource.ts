@@ -13,14 +13,27 @@ const MIN_TITLE_PREFIX_CHARS = 12;
 
 /**
  * URL と hnrss の定型（Article URL / Comments URL / Points / # Comments）を除いた本文。
+ * ラベルは値の有無・並び・空白にかかわらず除く。URL を先に消すとラベル同士が隣り合い、
+ * 先行ラベルが区切りの空白まで消費すると「Comments URL:」だけ残る。
  * 要約できるかの判定と、ページに出す抜粋の組み立てで同じ規則を使う。
  */
 export function summarySourceText(excerpt: string): string {
-  return excerpt
-    .replace(/https?:\/\/\S+/gi, " ")
-    .replace(/(?:^|\s)(?:article|comments)\s+url\s*:\s*/gi, " ")
-    .replace(/(?:^|\s)points\s*:\s*\d+/gi, " ")
-    .replace(/(?:^|\s)#\s*comments\s*:\s*\d+/gi, " ")
+  let text = excerpt.replace(/https?:\/\/\S+/gi, " ");
+  let previous: string;
+  do {
+    previous = text;
+    text = text
+      .replace(/\b(?:article|comments)\s+url\s*:/gi, " ")
+      .replace(/(?:^|\s)points\s*:\s*\d+/gi, " ")
+      .replace(/(?:^|\s)#\s*comments\s*:\s*\d+/gi, " ")
+      // 値が無く、直後が終わりか別の定型ラベルだけのとき。単語が続く "points:" は本文なので残す。
+      // 空白なしで隣り合うラベルは 1 回では取り切れないので、消えるまで繰り返す。
+      .replace(
+        /(?:^|\s)(?:points\s*:|#\s*comments\s*:)(?=\s*(?:$|\b(?:article|comments)\s+url\s*:|points\s*:|#\s*comments\s*:))/gi,
+        " ",
+      );
+  } while (text !== previous);
+  return text
     .replace(/[\u0000-\u001F\u007F]/g, " ")
     .replace(/\s+/g, " ")
     .trim();

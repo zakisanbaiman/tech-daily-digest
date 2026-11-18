@@ -283,6 +283,88 @@ describe("抜粋から定型文と裸の URL を除く", () => {
     );
     expect(article?.excerpt).toBe("");
   });
+
+  it("HTML の HN 定型はラベルだけ残さず、抜粋行を出さない", () => {
+    const description = [
+      '<p>Article URL: https://example.com</p>',
+      '<p>Comments URL: <a href="https://news.ycombinator.com/item?id=1">https://news.ycombinator.com/item?id=1</a></p>',
+      "<p>Points: 164</p>",
+      "<p># Comments: 72</p>",
+    ].join("");
+    expect(cleanExcerpt(description)).toBe("");
+
+    const article = normalizeItem(
+      {
+        title: "OpenCode Browse",
+        link: "https://opencode.ai/product/browse",
+        contentSnippet: description,
+      },
+      hnFeed,
+    );
+    expect(article?.excerpt).toBe("");
+    expect(article?.meta).toEqual({
+      points: 164,
+      comments: 72,
+      commentsUrl: "https://news.ycombinator.com/item?id=1",
+    });
+
+    const html = renderDigest(digestOf(article!), { archiveIndexHref: "archive/" });
+    const block = articleBlock(html, article!.title);
+    expect(block).toContain("▲ 164");
+    expect(block).toContain(
+      '<a href="https://news.ycombinator.com/item?id=1">72 comments</a>',
+    );
+    expect(block).not.toContain("article-excerpt");
+    expect(block).not.toContain("Comments URL");
+    expect(block).not.toContain("Article URL");
+    expect(block).not.toContain("Points:");
+    expect(block).not.toContain("# Comments:");
+    expect(html).not.toMatch(/<p class="article-excerpt/);
+  });
+
+  it("プレーンテキストの定型も、値の有無・並び・空白にかかわらず抜粋を空にする", () => {
+    const multiline = [
+      "Article URL: https://example.com",
+      "Comments URL: https://news.ycombinator.com/item?id=1",
+      "Points: 164",
+      "# Comments: 72",
+    ].join("\n");
+    const oneLine =
+      "Article URL: https://example.com Comments URL: https://news.ycombinator.com/item?id=1 Points: 164 # Comments: 72";
+    expect(cleanExcerpt(multiline)).toBe("");
+    expect(cleanExcerpt(oneLine)).toBe("");
+    expect(cleanExcerpt("Comments URL:\nArticle URL:\nPoints:\n# Comments:")).toBe("");
+    expect(cleanExcerpt("Comments URL:")).toBe("");
+    expect(cleanExcerpt("Article URL:")).toBe("");
+    expect(cleanExcerpt("Points:")).toBe("");
+    expect(cleanExcerpt("# Comments:")).toBe("");
+    expect(cleanExcerpt("Article URL:Comments URL:Points:# Comments:")).toBe("");
+    expect(cleanExcerpt("# Comments: 1\nPoints:\nComments URL:\nArticle URL:")).toBe("");
+    expect(
+      cleanExcerpt("Article   URL:\n\nComments\tURL:\nPoints:\t\n#   Comments:   "),
+    ).toBe("");
+  });
+
+  it("本文の前に付いた HTML の定型だけを除き、本文は残す", () => {
+    const description =
+      "<p>Launch notes for the flight.</p>" +
+      '<p>Article URL: https://example.com</p>' +
+      '<p>Comments URL: <a href="https://news.ycombinator.com/item?id=1">https://news.ycombinator.com/item?id=1</a></p>' +
+      "<p>Points: 164</p><p># Comments: 72</p>";
+    expect(cleanExcerpt(description)).toBe("Launch notes for the flight.");
+  });
+
+  it("HN 以外の本文は定型ラベルの除去で変えない", () => {
+    expect(cleanExcerpt("The main points: clarity and speed matter here.")).toBe(
+      "The main points: clarity and speed matter here.",
+    );
+    expect(
+      cleanExcerpt("There were many comments: the API is stable. https://example.com/docs"),
+    ).toBe("There were many comments: the API is stable.");
+    expect(cleanExcerpt("本文の抜粋です。ポイントは速度です。")).toBe(
+      "本文の抜粋です。ポイントは速度です。",
+    );
+  });
 });
 
 describe("normalizeFeed", () => {
