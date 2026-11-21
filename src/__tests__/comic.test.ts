@@ -57,4 +57,45 @@ describe("wrapQuip", () => {
   it("空文字は空1行になる", () => {
     expect(wrapQuip("  ")).toEqual([""]);
   });
+
+  it("ASCII の単語を途中で切らない（AI を A / I に分けない）", () => {
+    const quip = "MAI Code 2とHorizonDB、AI時代の開発を走り抜けよう！";
+    expect(wrapQuip(quip)).toEqual([
+      "MAI Code 2とHorizonDB、",
+      "AI時代の開発を走り抜けよう！",
+    ]);
+    // 見た目の改行だけで文字は落とさない（aria-label は行を連結したもの）
+    expect(wrapQuip(quip).join("")).toBe(quip);
+    expect(wrapQuip("これはAIだよ", 4)).toEqual(["これは", "AIだよ"]);
+  });
+
+  it("版番号のような ASCII の連続を分断しない", () => {
+    expect(wrapQuip("バージョンは2.4です", 7)).toEqual(["バージョンは", "2.4です"]);
+    expect(wrapQuip("版は1.0.0だ", 5)).toEqual(["版は", "1.0.0", "だ"]);
+  });
+
+  it("空白や CJK 境界で折り返す", () => {
+    expect(wrapQuip("Use AI today", 8)).toEqual(["Use AI ", "today"]);
+    expect(wrapQuip("あいABCD", 4)).toEqual(["あい", "ABCD"]);
+  });
+
+  it("日本語だけのセリフは文字数で折り返す", () => {
+    expect(wrapQuip("きょうも気になる記事がいっぱいだ！", 10)).toEqual([
+      "きょうも気になる記事",
+      "がいっぱいだ！",
+    ]);
+    expect(wrapQuip("あいうえお、かきくけこさしすせそ", 8)).toEqual([
+      "あいうえお、かき",
+      "くけこさしすせそ",
+    ]);
+  });
+
+  it("1行に収まらない ASCII の連続は従来どおり文字数で切る", () => {
+    expect(wrapQuip("ABCDEFGHIJ", 4)).toEqual(["ABCD", "EFGH", "IJ"]);
+    expect(wrapQuip("あいABCDEFGH", 4)).toEqual(["あいAB", "CDEF", "GH"]);
+  });
+
+  it("英数字の直後の禁則文字は行頭に出さない", () => {
+    expect(wrapQuip("AI！だよ", 2)).toEqual(["AI！", "だよ"]);
+  });
 });

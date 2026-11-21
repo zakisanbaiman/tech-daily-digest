@@ -140,28 +140,95 @@ export function fallbackQuip(character: ComicCharacter, isoDate: string): string
 /** 行頭に置けない文字（折返し時は前の行にぶら下げる） */
 const KINSOKU = new Set([..."、。，．・：；！？…ーぁぃぅぇぉっゃゅょ」』）｝】!?,.)"]);
 
+const ASCII_ALNUM = /^[A-Za-z0-9]$/;
+
+function isAsciiAlnum(ch: string | undefined): boolean {
+  return ch !== undefined && ASCII_ALNUM.test(ch);
+}
+
+/**
+ * index の直前で切ると、ASCII 英数字の連続を割るか。
+ * 「2.4」「1.0.0」のように英数字に挟まれた '.' も同じ連続とみなす。
+ */
+function splitsAsciiRun(chars: readonly string[], index: number): boolean {
+  const prev = chars[index - 1];
+  const cur = chars[index];
+  if (isAsciiAlnum(prev) && isAsciiAlnum(cur)) return true;
+  if (cur === "." && isAsciiAlnum(prev) && isAsciiAlnum(chars[index + 1])) return true;
+  if (prev === "." && isAsciiAlnum(cur) && isAsciiAlnum(chars[index - 2])) return true;
+  return false;
+}
+
+/** index の位置から続く ASCII 英数字ラン（版番号の '.' を含む）の長さ */
+function asciiRunLength(chars: readonly string[], index: number): number {
+  if (!isAsciiAlnum(chars[index])) return 0;
+  let end = index + 1;
+  while (end < chars.length && splitsAsciiRun(chars, end)) end += 1;
+  return end - index;
+}
+
+/** index の直前で改行できるか。行頭禁則と ASCII 単語の分断は避ける */
+function canBreakBefore(chars: readonly string[], index: number): boolean {
+  if (index <= 0 || index >= chars.length) return false;
+  const ch = chars[index];
+  if (ch === undefined || KINSOKU.has(ch)) return false;
+  return !splitsAsciiRun(chars, index);
+}
+
+/**
+ * 次の行の終端（exclusive）。
+ * 幅いっぱいの位置で切れるならそこで切り、ASCII 単語の途中なら幅の内側で
+ * 最も後ろの区切り（句読点の直後・空白・CJK 境界）まで戻る。
+ * 単語だけで行幅を超えるときは、従来の文字数折り返し（禁則のぶら下げ含む）に戻す。
+ */
+function nextLineEnd(chars: readonly string[], start: number, maxPerLine: number): number {
+  if (chars.length - start <= maxPerLine) return chars.length;
+
+  const limit = start + maxPerLine;
+  let hardEnd = limit;
+  const hangLimit = start + maxPerLine + 2;
+  while (hardEnd < chars.length && hardEnd < hangLimit && KINSOKU.has(chars[hardEnd] ?? "")) {
+    hardEnd += 1;
+  }
+
+  if (hardEnd >= chars.length || canBreakBefore(chars, hardEnd)) return hardEnd;
+  // ぶら下げ上限に達し、次も禁則文字なら従来どおりそこで切る
+  if (KINSOKU.has(chars[hardEnd] ?? "")) return hardEnd;
+
+  for (let end = limit; end > start; end -= 1) {
+    if (!canBreakBefore(chars, end)) continue;
+    // 次行に送っても1行に収まらない連続は、ここで割らず従来の位置で切る
+    if (asciiRunLength(chars, end) > maxPerLine) return hardEnd;
+    return end;
+  }
+  return hardEnd;
+}
+
 /**
  * セリフを1行 maxPerLine 字で折り返す（SVG の text は自動折返しがないため）。
+ * 幅に収まる範囲で、できるだけ後ろの区切りで切る。区切りは日本語句読点
+ * （、。！？）の直後、空白、CJK の文字境界。ASCII 英数字の連続
+ * （AI、HorizonDB、2.4 のような版番号）の途中では切らない。
+ * その連続だけで1行に収まらないときは、従来どおり文字数で切る。
  * 行頭禁則文字は前の行に最大2字までぶら下げる。
  * maxLines を超える分は捨てて末尾を「…」にする。
  */
 export function wrapQuip(quip: string, maxPerLine = 22, maxLines = 3): string[] {
   const chars = [...quip.trim()];
+  if (chars.length === 0) return [""];
+
   const lines: string[] = [];
-  let line: string[] = [];
-  for (const ch of chars) {
-    const hangable = KINSOKU.has(ch) && line.length < maxPerLine + 2;
-    if (line.length >= maxPerLine && !hangable) {
-      lines.push(line.join(""));
-      line = [];
-    }
-    line.push(ch);
+  let start = 0;
+  while (start < chars.length) {
+    const end = nextLineEnd(chars, start, maxPerLine);
+    lines.push(chars.slice(start, end).join(""));
+    start = end;
   }
-  if (line.length > 0) lines.push(line.join(""));
-  if (lines.length === 0) return [""];
+
   if (lines.length > maxLines) {
     const kept = lines.slice(0, maxLines);
-    kept[maxLines - 1] = [...(kept[maxLines - 1] ?? "")].slice(0, maxPerLine - 1).join("") + "…";
+    const last = kept[maxLines - 1] ?? "";
+    kept[maxLines - 1] = [...last].slice(0, maxPerLine - 1).join("") + "…";
     return kept;
   }
   return lines;
