@@ -94,7 +94,7 @@ function contentChars(text: string): number {
 }
 
 /**
- * 抜粋から HN の定型文と裸の http(s) URL を除く。
+ * 抜粋から HN の定型文、GitHub の UI 文言、裸の http(s) URL を除く。
  * 残った文字列が空、または中身が極端に短いときは空文字にし、抜粋行自体を出さない。
  */
 export function cleanExcerpt(raw: string): string {

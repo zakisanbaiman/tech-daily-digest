@@ -367,6 +367,101 @@ describe("抜粋から定型文と裸の URL を除く", () => {
   });
 });
 
+const GITHUB_SESSION_CHROME = [
+  "You signed in with another tab or window. Reload to refresh your session.",
+  "You signed out in another tab or window. Reload to refresh your session.",
+  "You switched accounts on another tab or window. Reload to refresh your session.",
+  "Dismiss alert",
+].join(" ");
+
+const GITHUB_SESSION_HTML = [
+  '<div class="js-stale-session-flash" hidden>',
+  "<span>You signed in with another tab or window. <a href=\"\">Reload</a> to refresh your session.</span>",
+  "<span>You signed out in another tab or window. <a href=\"\">Reload</a> to refresh your session.</span>",
+  "<span>You switched accounts on another tab or window. <a href=\"\">Reload</a> to refresh your session.</span>",
+  "<tool-tip>Dismiss alert</tool-tip>",
+  "</div>",
+].join("");
+
+const GITHUB_REPO_PROSE =
+  "一人で使うソフトウェア工場。エージェントが課題を実装からマージまで流し、人は判断だけを渡す。";
+
+describe("GitHub の UI 定型文を抜粋から除く", () => {
+  it("セッション表示だけなら抜粋を空にし、抜粋行を出さない", () => {
+    expect(cleanExcerpt(GITHUB_SESSION_CHROME)).toBe("");
+    expect(cleanExcerpt(GITHUB_SESSION_HTML)).toBe("");
+    expect(cleanExcerpt("Dismiss alert")).toBe("");
+    expect(cleanExcerpt("Skip to content")).toBe("");
+    expect(
+      cleanExcerpt(
+        "You signed out in another tab or window.\nReload to refresh your session.\nDismiss alert",
+      ),
+    ).toBe("");
+
+    const article = normalizeItem(
+      {
+        title:
+          "GitHub - fkubota/understand-mode: Claude Code の出力を付箋で理解する",
+        link: "https://github.com/fkubota/understand-mode",
+        contentSnippet: GITHUB_SESSION_CHROME,
+      },
+      jaFeed,
+    );
+    expect(article?.excerpt).toBe("");
+
+    const html = renderDigest(digestOf(article!), { archiveIndexHref: "archive/" });
+    const block = articleBlock(html, "understand-mode");
+    expect(block).toContain("understand-mode");
+    expect(block).not.toContain("article-excerpt");
+    expect(block).not.toContain("Dismiss alert");
+    expect(block).not.toContain("signed in");
+    expect(block).not.toContain("Reload to refresh");
+    expect(block).not.toContain("本文情報なし");
+    expect(html).not.toMatch(/<p class="article-excerpt/);
+  });
+
+  it("定型文に本文が混ざっていれば本文だけ残す", () => {
+    expect(cleanExcerpt(`${GITHUB_SESSION_CHROME} ${GITHUB_REPO_PROSE}`)).toBe(GITHUB_REPO_PROSE);
+    expect(cleanExcerpt(`${GITHUB_REPO_PROSE}\n${GITHUB_SESSION_CHROME}`)).toBe(GITHUB_REPO_PROSE);
+    expect(
+      cleanExcerpt(
+        `Skip to content ${GITHUB_SESSION_HTML} <p>${GITHUB_REPO_PROSE}</p>`,
+      ),
+    ).toBe(GITHUB_REPO_PROSE);
+    expect(
+      cleanExcerpt(
+        `You must be signed in to star a repository. ${GITHUB_REPO_PROSE} You must be signed in to fork a repository.`,
+      ),
+    ).toBe(GITHUB_REPO_PROSE);
+
+    const article = normalizeItem(
+      {
+        title: "GitHub - mitaku/andon: a one-person software factory",
+        link: "https://github.com/mitaku/andon",
+        contentSnippet: `${GITHUB_SESSION_CHROME} ${GITHUB_REPO_PROSE}`,
+      },
+      jaFeed,
+    );
+    expect(article?.excerpt).toBe(GITHUB_REPO_PROSE);
+  });
+
+  it("通常の抜粋は変えない", () => {
+    const japanese =
+      "GitHub の新しい pull request 画面では、変更ファイルをレビュー状態ごとにまとめます。";
+    const english =
+      "You signed the release in the project window. Reload the page to refresh your notes.";
+    const alert = "Please dismiss the alert after the build fails.";
+    const skip = "Add a skip to content link for keyboard users.";
+    expect(cleanExcerpt(japanese)).toBe(japanese);
+    expect(cleanExcerpt(english)).toBe(english);
+    expect(cleanExcerpt(alert)).toBe(alert);
+    expect(cleanExcerpt(skip)).toBe(skip);
+    expect(cleanExcerpt("本文の抜粋です。ポイントは速度です。")).toBe(
+      "本文の抜粋です。ポイントは速度です。",
+    );
+  });
+});
+
 describe("normalizeFeed", () => {
   it("maxItems で件数を制限する", () => {
     const items = [1, 2, 3].map((n) => ({

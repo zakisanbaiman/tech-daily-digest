@@ -45,6 +45,22 @@ describe("hasSummarizableSource", () => {
     expect(hasSummarizableSource("Points: 366 # Comments: 210")).toBe(false);
   });
 
+  it("GitHub のセッション表示だけでは要約できない", () => {
+    const chrome = [
+      "You signed in with another tab or window. Reload to refresh your session.",
+      "You signed out in another tab or window. Reload to refresh your session.",
+      "You switched accounts on another tab or window. Reload to refresh your session.",
+      "Dismiss alert",
+    ].join(" ");
+    expect(hasSummarizableSource(chrome, "GitHub - fkubota/understand-mode")).toBe(false);
+    expect(
+      hasSummarizableSource(
+        `${chrome} The page groups changed files by review status and highlights unresolved threads.`,
+        "GitHub - fkubota/understand-mode",
+      ),
+    ).toBe(true);
+  });
+
   it("タイトルそのものや末尾の省略記号だけでは要約できない", () => {
     const title = "GitHub New pull request overview page in public preview";
     expect(title.length).toBeGreaterThanOrEqual(MIN_SUMMARY_SOURCE_CHARS);
