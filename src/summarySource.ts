@@ -12,13 +12,14 @@ export const MIN_SUMMARY_SOURCE_CHARS = 40;
 const MIN_TITLE_PREFIX_CHARS = 12;
 
 /**
- * URL と hnrss の定型（Article URL / Comments URL / Points / # Comments）を除いた本文。
+ * URL、hnrss の定型（Article URL / Comments URL / Points / # Comments）、
+ * GitHub の画面文言（別タブでのサインイン表示など）を除いた本文。
  * ラベルは値の有無・並び・空白にかかわらず除く。URL を先に消すとラベル同士が隣り合い、
  * 先行ラベルが区切りの空白まで消費すると「Comments URL:」だけ残る。
  * 要約できるかの判定と、ページに出す抜粋の組み立てで同じ規則を使う。
  */
 export function summarySourceText(excerpt: string): string {
-  let text = excerpt.replace(/https?:\/\/\S+/gi, " ");
+  let text = stripGithubChrome(excerpt.replace(/https?:\/\/\S+/gi, " "));
   let previous: string;
   do {
     previous = text;
@@ -37,6 +38,29 @@ export function summarySourceText(excerpt: string): string {
     .replace(/[\u0000-\u001F\u007F]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+/**
+ * GitHub のリポジトリページ先頭にある、本文ではない UI。
+ * 隠れているセッション警告と、その閉じるボタン。はてブなどがページ先頭の
+ * テキストを抜粋にすると、これだけが残る。フィードに og:description は無く、
+ * 除いたあとに本文が残らなければ空にし、既存の空抜粋の扱いに任せる。
+ * 「skip to content」はページ先頭のスキップリンクなので、文頭か文末のときだけ除く。
+ */
+function stripGithubChrome(text: string): string {
+  const stripped = text
+    .replace(/you\s+signed\s+in\s+with\s+another\s+tab\s+or\s+window\.?/gi, " ")
+    .replace(/you\s+signed\s+out\s+in\s+another\s+tab\s+or\s+window\.?/gi, " ")
+    .replace(/you\s+switched\s+accounts\s+on\s+another\s+tab\s+or\s+window\.?/gi, " ")
+    .replace(/reload\s+to\s+refresh\s+your\s+session\.?/gi, " ")
+    .replace(/\bdismiss\s+alert\b\.?/gi, " ")
+    .replace(
+      /you\s+must\s+be\s+signed\s+in\s+to\s+(?:change\s+notification\s+settings|fork\s+a\s+repository|star\s+a\s+repository)\.?/gi,
+      " ",
+    );
+  return stripped
+    .replace(/(?:^|\s)skip\s+to\s+content\.?(?=\s*(?:$|[.!?]))/gi, " ")
+    .replace(/^\s*skip\s+to\s+content\.?\s*/gi, "");
 }
 
 /**
