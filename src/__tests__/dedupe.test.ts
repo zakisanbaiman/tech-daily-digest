@@ -53,6 +53,15 @@ describe("canonicalizeUrl", () => {
   it("URLとして解釈できない文字列はそのまま返す", () => {
     expect(canonicalizeUrl("not a url")).toBe("not a url");
   });
+
+  it("クリック ID だけの違いも同一キーにする", () => {
+    expect(canonicalizeUrl("https://example.com/a?msclkid=abc")).toBe(
+      "https://example.com/a",
+    );
+    expect(canonicalizeUrl("https://example.com/a?id=1&fbclid=xyz#section")).toBe(
+      "https://example.com/a?id=1",
+    );
+  });
 });
 
 describe("dedupeArticles", () => {

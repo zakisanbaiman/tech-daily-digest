@@ -137,6 +137,25 @@ describe("normalizeItem", () => {
     expect(article?.url).toBe("https://example.com/p/1");
   });
 
+  it("解決した記事 URL からトラッキング用クエリだけを除く", () => {
+    const qiita = normalizeItem(
+      {
+        title: "Qiita",
+        link: "https://qiita.com/minorun365/items/bd6091f2599a0f37326b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items",
+      },
+      jaFeed,
+    );
+    expect(qiita?.url).toBe(
+      "https://qiita.com/minorun365/items/bd6091f2599a0f37326b",
+    );
+
+    const relative = normalizeItem(
+      { title: "相対", link: "/p/1?utm_source=feed&id=9#top" },
+      jaFeed,
+    );
+    expect(relative?.url).toBe("https://example.com/p/1?id=9#top");
+  });
+
   it("不正な日付は null にする", () => {
     const article = normalizeItem(
       { title: "t", link: "https://example.com/x", pubDate: "not-a-date" },
