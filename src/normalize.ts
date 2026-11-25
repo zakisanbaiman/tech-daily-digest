@@ -1,4 +1,5 @@
 import type Parser from "rss-parser";
+import { stripTrackingParams } from "./stripTrackingParams.js";
 import type { Article, FeedConfig } from "./types.js";
 import { summarySourceText } from "./summarySource.js";
 import { isSafeNavigationUrl } from "./urlSafety.js";
@@ -117,6 +118,7 @@ export function normalizeItem(
     return null;
   }
   if (!isSafeNavigationUrl(url)) return null;
+  url = stripTrackingParams(url);
 
   const rawSnippet =
     item.contentSnippet ?? item.summary ?? item.content ?? "";

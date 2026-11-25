@@ -1,3 +1,4 @@
+import { stripTrackingParams } from "./stripTrackingParams.js";
 import type { Article, FeedResult } from "./types.js";
 
 const TRACKING_PARAMS = [
@@ -10,12 +11,13 @@ const TRACKING_PARAMS = [
 
 /**
  * 重複判定用の正規化キーを作る。
- * http/https の揺れ、トラッキングパラメータ、末尾スラッシュ、フラグメントを吸収する。
+ * トラッキング用クエリは stripTrackingParams と同じものに加え、ref / source も落とす。
+ * http/https の揺れ、末尾スラッシュ、フラグメントも吸収する。
  */
 export function canonicalizeUrl(rawUrl: string): string {
   let url: URL;
   try {
-    url = new URL(rawUrl);
+    url = new URL(stripTrackingParams(rawUrl));
   } catch {
     return rawUrl;
   }
