@@ -1,3 +1,4 @@
+import { mergeSameStories } from "./storyCluster.js";
 import { stripTrackingParams } from "./stripTrackingParams.js";
 import type { Article, FeedResult } from "./types.js";
 
@@ -38,8 +39,9 @@ export function canonicalizeUrl(rawUrl: string): string {
 
 /**
  * フィード横断で重複記事を統合する。
- * 複数フィードに載った記事は sources を統合し、最初に現れた記事の内容を優先する。
- * 返り値はフィード定義順 → フィード内の順を保った一覧。
+ * 同一URLは先に現れた記事を残して sources を統合する。
+ * タイトルが違っても同一ニュースと判断できるものは、そのあと1件にまとめる。
+ * 返り値は、残った記事の相対順（フィード定義順 → フィード内の順）を保つ。
  */
 export function dedupeArticles(feedResults: FeedResult[]): Article[] {
   const byUrl = new Map<string, Article>();
@@ -63,5 +65,5 @@ export function dedupeArticles(feedResults: FeedResult[]): Article[] {
       existing.meta = { ...article.meta, ...existing.meta };
     }
   }
-  return [...byUrl.values()];
+  return mergeSameStories([...byUrl.values()]);
 }
